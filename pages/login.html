@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e8e6e1;--grey-2:#c9c6bd;--grey-3:#76746c;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+    a{color:inherit;text-decoration:none}
+    @media(max-width:860px){body{grid-template-columns:1fr}}
+    /* LEFT — identity panel */
+    .id-panel{background:var(--ink);color:var(--paper);padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    @media(max-width:860px){.id-panel{display:none}}
+    .id-panel::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg, transparent 0px, transparent 2px, rgba(255,0,0,.05) 2px, rgba(255,0,0,.05) 3px)}
+    .id-mark{font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:-.5px;position:relative;z-index:1}
+    .id-mark .dot{color:var(--blue)}
+    .id-quote{font-size:clamp(28px,3vw,42px);font-weight:900;line-height:1.08;letter-spacing:-1.5px;text-transform:uppercase;max-width:420px;position:relative;z-index:1}
+    .id-quote span{color:var(--blue)}
+    .id-specs{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-2);display:flex;flex-direction:column;gap:6px;position:relative;z-index:1}
+    .id-specs div{display:flex;justify-content:space-between;border-top:1px solid #2a2a2a;padding-top:6px;width:280px}
+
+    /* RIGHT — form panel */
+    .form-panel{display:flex;align-items:center;justify-content:center;padding:48px}
+    .form-box{width:100%;max-width:380px}
+    .form-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+    .form-eyebrow::before{content:"";width:20px;height:1px;background:var(--blue)}
+    h2{font-size:32px;font-weight:900;letter-spacing:-1.2px;text-transform:uppercase;margin-bottom:32px}
+    .field{margin-bottom:20px}
+    label{display:block;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--grey-3);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px}
+    input{width:100%;padding:13px 0;border:none;border-bottom:1px solid var(--ink);font-size:15px;font-family:var(--sans);color:var(--ink);background:transparent;border-radius:0}
+    input:focus{outline:none;border-bottom:2px solid var(--blue);padding-bottom:12px}
+    .btn{width:100%;padding:16px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:8px;transition:all .15s}
+    .btn:hover{background:var(--blue);border-color:var(--blue)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .divider{display:flex;align-items:center;gap:14px;margin:28px 0;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-3)}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--grey-1)}
+    .demo-btn{width:100%;padding:14px;background:var(--paper);color:var(--ink);border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+    .demo-btn:hover{background:var(--grey-1)}
+    .footer-link{text-align:center;margin-top:28px;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    .footer-link a{color:var(--ink);font-weight:700;border-bottom:1px solid var(--ink)}
+    .footer-link a:hover{color:var(--blue);border-color:var(--blue)}
+    .error{border:1px solid var(--blue);color:var(--blue);padding:12px 14px;font-size:12px;font-family:var(--mono);margin-bottom:20px;display:none;text-transform:uppercase;letter-spacing:.5px}
+    .error.show{display:block}
+    .spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+
+<div class="id-panel">
+  <div class="id-mark">Cart<span class="dot">·</span>Chat</div>
+  <div class="id-quote">Reliable as<br/>swiss<br/>watch<span>making</span>.</div>
+  <div class="id-specs">
+    <div><span>System</span><span>Claude Sonnet 4.6</span></div>
+    <div><span>Uptime</span><span>24 / 7</span></div>
+    <div><span>Response</span><span>1.2 sec avg</span></div>
+  </div>
+</div>
+
+<div class="form-panel">
+  <div class="form-box">
+    <div class="form-eyebrow">Merchant Dashboard</div>
+    <h2>Sign In</h2>
+    <div class="error" id="err"></div>
+    <div class="field"><label>Email</label><input type="email" id="email" placeholder="you@store.com"/></div>
+    <div class="field"><label>Password</label><input type="password" id="password" placeholder="••••••••"/></div>
+    <button class="btn" id="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="divider">Or</div>
+    <button class="demo-btn" onclick="demoLogin()">Try Demo Account →</button>
+    <div class="footer-link">No account? <a href="signup.html">Sign Up Free</a></div>
+  </div>
+</div>
+
+<script>
+async function doLogin() {
+  const email = document.getElementById("email").value.trim();
+  const pw    = document.getElementById("password").value;
+  const err   = document.getElementById("err");
+  const btn   = document.getElementById("login-btn");
+  err.classList.remove("show");
+  if (!email || !pw) { err.textContent = "Please fill in all fields."; err.classList.add("show"); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Signing In…';
+  try {
+    const res = await fetch("/api/auth/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ email, password: pw }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Login failed");
+    localStorage.setItem("cc_token", data.token);
+    localStorage.setItem("cc_user", JSON.stringify(data.user));
+    window.location.href = "dashboard.html";
+  } catch(e) {
+    err.textContent = e.message;
+    err.classList.add("show");
+    btn.disabled = false;
+    btn.innerHTML = "Sign In";
+  }
+}
+function demoLogin() {
+  localStorage.setItem("cc_token", "demo_token_cartchat");
+  localStorage.setItem("cc_user", JSON.stringify({ id:"demo", name:"Demo Merchant", email:"demo@cartchat.ai", plan:"growth", store:"Lumière Beauty Demo", phone:"+961 1 234 567" }));
+  window.location.href = "dashboard.html";
+}
+document.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+</script>
+</body>
+</html>

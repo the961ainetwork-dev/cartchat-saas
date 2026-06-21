@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Handover Request — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    #back-link{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    #back-link:hover{color:var(--ink)}
+
+    #shell{max-width:680px;margin:0 auto;padding:64px 32px 100px}
+    .form-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+    .form-eyebrow::before{content:"";width:20px;height:1px;background:var(--blue)}
+    h1{font-size:clamp(28px,3.8vw,42px);font-weight:900;letter-spacing:-1.5px;text-transform:uppercase;line-height:1.08;margin-bottom:14px}
+    .sub{font-size:14px;color:var(--grey-3);margin-bottom:44px;line-height:1.6;max-width:520px}
+
+    .field{margin-bottom:24px}
+    .field label{display:block;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--grey-3);margin-bottom:9px;text-transform:uppercase;letter-spacing:1px}
+    .field input,.field select,.field textarea{width:100%;padding:14px 0;border:none;border-bottom:1px solid var(--ink);font-size:15px;font-family:var(--sans);color:var(--ink);background:transparent;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-bottom:2px solid var(--blue);padding-bottom:13px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:560px){.row2{grid-template-columns:1fr}}
+
+    .choice-group{display:flex;flex-wrap:wrap;gap:10px}
+    .choice-pill{padding:11px 18px;border:1px solid var(--ink);font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;transition:all .15s;cursor:pointer}
+    .choice-pill:hover{background:var(--grey-1)}
+    .choice-pill.sel{background:var(--ink);color:var(--paper)}
+
+    .section-divider{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin:36px 0 20px;padding-top:24px;border-top:1px solid var(--grey-1)}
+
+    .info-box{background:var(--grey-1);border-left:3px solid var(--blue);padding:18px 22px;margin-bottom:36px;font-size:13px;line-height:1.6}
+    .info-box b{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+
+    .btn-submit{width:100%;background:var(--blue);color:var(--paper);padding:19px;border:1px solid var(--blue);font-family:var(--mono);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:12px;transition:all .15s}
+    .btn-submit:hover{background:var(--ink);border-color:var(--ink)}
+    .btn-submit:disabled{opacity:.5;cursor:not-allowed}
+    .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    #confirm-screen{display:none;text-align:center;padding:60px 0}
+    #confirm-screen.show{display:block}
+    .confirm-icon{font-size:40px;margin-bottom:24px}
+    .confirm-title{font-size:28px;font-weight:900;text-transform:uppercase;letter-spacing:-1.2px;margin-bottom:16px}
+    .confirm-text{font-size:14px;color:var(--grey-3);max-width:420px;margin:0 auto 32px;line-height:1.7}
+    .confirm-detail{font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--grey-1);padding:16px 20px;margin-bottom:32px;text-align:left;max-width:420px;margin-left:auto;margin-right:auto}
+    .confirm-detail div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--grey-2)}
+    .confirm-detail div:last-child{border-bottom:none}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="nav-mark">Cart<span class="dot">·</span>Chat</div>
+  <a href="post-purchase.html" id="back-link">← Back to options</a>
+</div>
+
+<div id="shell">
+
+  <div id="form-screen">
+    <div class="form-eyebrow">Done-For-You — Handover Brief</div>
+    <h1>Tell our team<br/>how to run this.</h1>
+    <p class="sub">A dedicated account manager will configure and operate your AI agent based on this brief. Expect first contact within 24 hours.</p>
+
+    <div class="info-box">
+      <b>What happens next</b>
+      Our team reviews this brief, configures your AI agent's full catalog and policies, sets up your first campaign, and schedules a 15-minute kickoff call.
+    </div>
+
+    <div class="field"><label>Store Name</label><input type="text" id="h-store"/></div>
+    <div class="row2">
+      <div class="field"><label>Contact Name</label><input type="text" id="h-name"/></div>
+      <div class="field"><label>Best Phone for Kickoff Call</label><input type="text" id="h-phone"/></div>
+    </div>
+
+    <div class="section-divider">Scope of Work</div>
+    <div class="field">
+      <label>What should we prioritize first?</label>
+      <div class="choice-group" id="priority-group">
+        <div class="choice-pill" data-v="Full catalog setup">Full catalog setup</div>
+        <div class="choice-pill" data-v="Order tracking flow">Order tracking flow</div>
+        <div class="choice-pill" data-v="Cart recovery">Cart recovery</div>
+        <div class="choice-pill" data-v="Social campaigns">Social campaigns</div>
+        <div class="choice-pill" data-v="All of the above">All of the above</div>
+      </div>
+    </div>
+    <div class="field"><label>Anything specific we should know?</label><textarea id="h-notes" rows="4" placeholder="Tone of voice, existing brand guidelines, special promotions, peak seasons, current pain points…"></textarea></div>
+
+    <div class="section-divider">Preferred Contact Window</div>
+    <div class="field">
+      <label>When works best for the kickoff call?</label>
+      <div class="choice-group" id="time-group">
+        <div class="choice-pill" data-v="Morning">Morning</div>
+        <div class="choice-pill" data-v="Afternoon">Afternoon</div>
+        <div class="choice-pill" data-v="Evening">Evening</div>
+        <div class="choice-pill" data-v="Anytime">Anytime</div>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="submit-btn" onclick="submitHandover()">Submit Handover Brief →</button>
+  </div>
+
+  <div id="confirm-screen">
+    <div class="confirm-icon">✓</div>
+    <div class="confirm-title">Brief received.</div>
+    <p class="confirm-text">Your account manager will reach out within 24 hours to begin setup. You'll receive a confirmation email shortly.</p>
+    <div class="confirm-detail">
+      <div><span>Store</span><span id="conf-store">—</span></div>
+      <div><span>Priority</span><span id="conf-priority">—</span></div>
+      <div><span>Contact window</span><span id="conf-time">—</span></div>
+      <div><span>Plan</span><span id="conf-plan">—</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const purchase = JSON.parse(localStorage.getItem("cc_purchase") || "null");
+if (purchase && purchase.store) document.getElementById("h-store").value = purchase.store;
+if (purchase && purchase.name) document.getElementById("h-name").value = purchase.name;
+
+function wirePillGroup(id) {
+  const group = document.getElementById(id);
+  group.querySelectorAll(".choice-pill").forEach(p => {
+    p.addEventListener("click", () => {
+      group.querySelectorAll(".choice-pill").forEach(x=>x.classList.remove("sel"));
+      p.classList.add("sel");
+    });
+  });
+}
+wirePillGroup("priority-group");
+wirePillGroup("time-group");
+
+async function submitHandover() {
+  const btn = document.getElementById("submit-btn");
+  const store = document.getElementById("h-store").value.trim();
+  const name = document.getElementById("h-name").value.trim();
+  const phone = document.getElementById("h-phone").value.trim();
+  const priority = document.querySelector("#priority-group .sel")?.dataset.v || "";
+  const time = document.querySelector("#time-group .sel")?.dataset.v || "";
+  const notes = document.getElementById("h-notes").value.trim();
+
+  if (!store || !name || !phone || !priority) {
+    alert("Please fill in store name, contact name, phone, and priority.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Submitting…';
+
+  const handoverData = { store, name, phone, priority, time, notes, plan: purchase?.plan || "Growth", submittedAt: Date.now() };
+
+  try {
+    await fetch("/api/handover/submit", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(handoverData)
+    }).catch(()=>{});
+  } finally {
+    document.getElementById("conf-store").textContent = store;
+    document.getElementById("conf-priority").textContent = priority;
+    document.getElementById("conf-time").textContent = time || "Anytime";
+    document.getElementById("conf-plan").textContent = purchase?.plan || "Growth";
+    document.getElementById("form-screen").style.display = "none";
+    document.getElementById("confirm-screen").classList.add("show");
+  }
+}
+</script>
+</body>
+</html>

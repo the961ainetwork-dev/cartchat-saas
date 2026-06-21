@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0a;--bg1:#111111;--bg2:#1a1a1a;--bg3:#222222;--border:#2a2a2a;
+      --blue:#0047ab;--blue-glow:rgba(0,71,171,.15);
+      --green:#16a34a;--amber:#d97706;--red:#dc2626;
+      --t1:#f5f5f5;--t2:#9ca3af;--t3:#525252;
+      --sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace;
+    }
+    html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--sans)}
+    button{cursor:pointer;border:none;font-family:var(--sans)}
+    input,select,textarea{font-family:var(--sans)}
+    input:focus,select:focus,textarea:focus{outline:none}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    #shell{display:flex;height:100vh;overflow:hidden}
+
+    #sidenav{width:230px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+    #sidenav-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
+    #sidenav-logo .logo{font-weight:900;font-size:16px;letter-spacing:-.3px;text-transform:uppercase}
+    #sidenav-logo .logo span{color:var(--blue)}
+    #sidenav-logo .tag{font-size:10px;font-family:var(--mono);color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+    #nav-links{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+    .nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;background:none;border:none;width:100%;text-align:left;position:relative}
+    .nav-link:hover{background:var(--bg2);color:var(--t1)}
+    .nav-link.active{background:var(--bg3);color:var(--t1);font-weight:600;border-left:2px solid var(--blue)}
+    .nav-link .icon{font-size:15px;width:18px;flex-shrink:0}
+    .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;font-family:var(--mono)}
+    .nav-divider{height:1px;background:var(--border);margin:10px 6px}
+    .nav-section-lbl{font-family:var(--mono);font-size:9.5px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;padding:10px 12px 4px}
+    #sidenav-user{padding:14px;border-top:1px solid var(--border)}
+    .user-row{display:flex;align-items:center;gap:9px}
+    .user-av{width:30px;height:30px;border-radius:6px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+    .user-name{font-size:12px;font-weight:600}
+    .user-role{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase}
+    .logout-btn{margin-top:9px;width:100%;padding:7px;background:none;border:1px solid var(--border);color:var(--t3);font-size:10.5px;transition:all .15s}
+    .logout-btn:hover{color:#fca5a5;border-color:var(--red)}
+
+    #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #topbar{padding:16px 28px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    #topbar-title{font-weight:800;font-size:17px;letter-spacing:-.2px}
+    #topbar-sub{font-size:11px;color:var(--t3);font-family:var(--mono);margin-top:2px}
+    .live-pill{display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--border);padding:6px 13px;font-size:11px;font-family:var(--mono);border-radius:99px}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+    .panel{display:none;flex:1;overflow-y:auto;padding:28px}
+    .panel.active{display:block}
+
+    /* STAT CARDS */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+    .stat-card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:20px}
+    .stat-val{font-size:28px;font-weight:800;font-family:var(--mono);margin-bottom:4px}
+    .stat-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+    .stat-delta{font-size:10.5px;margin-top:6px;font-family:var(--mono)}
+    .stat-delta.up{color:var(--green)}
+
+    /* TABLE */
+    .table-card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+    .table-card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .table-card-head h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .table-search{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px;color:var(--t1);width:220px}
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:11px 20px;background:var(--bg2);font-family:var(--mono);font-weight:600}
+    td{padding:13px 20px;font-size:12.5px;border-top:1px solid var(--border);vertical-align:middle}
+    tr:hover td{background:var(--bg2)}
+    .cell-mono{font-family:var(--mono);font-size:11.5px;color:var(--t2)}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:10.5px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px}
+    .badge-pending{background:rgba(217,119,6,.15);color:#fbbf24}
+    .badge-approved{background:rgba(0,71,171,.15);color:#60a5fa}
+    .badge-paid{background:rgba(22,163,74,.15);color:#4ade80}
+    .badge-sent{background:rgba(22,163,74,.2);color:#4ade80}
+    .badge-rejected{background:rgba(220,38,38,.15);color:#f87171}
+    .badge-trial{background:rgba(156,163,175,.15);color:#9ca3af}
+    .badge-active{background:rgba(22,163,74,.15);color:#4ade80}
+    .row-btn{padding:5px 13px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid var(--border);background:var(--bg2);color:var(--t1);transition:all .15s;margin-right:6px}
+    .row-btn:hover{background:var(--bg3)}
+    .row-btn.approve{border-color:var(--green);color:#4ade80}
+    .row-btn.approve:hover{background:var(--green);color:#fff}
+    .row-btn.reject{border-color:var(--red);color:#f87171}
+    .row-btn.reject:hover{background:var(--red);color:#fff}
+    .row-btn.view{border-color:var(--blue);color:#60a5fa}
+    .row-btn.view:hover{background:var(--blue);color:#fff}
+
+    .empty-state{padding:48px 20px;text-align:center;color:var(--t3);font-size:13px}
+
+    /* MODAL */
+    #modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+    #modal-overlay.show{display:flex}
+    #modal-card{background:var(--bg1);border:1px solid var(--border);border-radius:14px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto}
+    #modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    #modal-title{font-size:15px;font-weight:700}
+    #modal-close{background:none;color:var(--t3);font-size:18px;padding:4px}
+    #modal-close:hover{color:var(--t1)}
+    #modal-body{padding:24px}
+    .modal-field{margin-bottom:16px}
+    .modal-field label{display:block;font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+    .modal-field .val{font-size:13.5px;color:var(--t1);background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:10px 13px;word-break:break-word}
+    .modal-actions{display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
+
+    /* LIST MANAGER */
+    .list-card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px}
+    .list-icon{width:38px;height:38px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+    .list-info{flex:1}
+    .list-name{font-weight:700;font-size:13.5px;margin-bottom:3px}
+    .list-meta{font-size:11px;color:var(--t3);font-family:var(--mono)}
+
+    /* MAILING LIST MANAGER — new add-list form */
+    .mlm-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}
+    .mlm-field label{display:block;font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+    .mlm-field input,.mlm-field select,.mlm-field textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:10px 12px;color:var(--t1);font-size:13px;font-family:var(--sans)}
+    .mlm-field input:focus,.mlm-field select:focus,.mlm-field textarea:focus{outline:none;border-color:var(--blue)}
+    .mlm-field select{appearance:none}
+    .mlm-source-toggle{display:flex;gap:8px;margin-top:6px}
+    .mlm-tab{padding:8px 16px;border-radius:7px;border:1px solid var(--border);background:var(--bg2);color:var(--t2);font-size:12px;transition:all .15s}
+    .mlm-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .upload-zone{border:1.5px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg)}
+    .upload-zone:hover{border-color:var(--blue)}
+    .upload-zone.has-file{border-color:var(--blue);border-style:solid;background:var(--blue-glow)}
+    .upload-zone-text{font-size:12px;color:var(--t2)}
+    .upload-zone-text strong{color:var(--t1)}
+    .cat-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px;background:var(--bg2);color:var(--t2);border:1px solid var(--border)}
+
+    /* CHANNEL SETUP */
+    .chan-status-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:13px;font-weight:600}
+    .chan-dot{width:9px;height:9px;border-radius:50%;background:var(--t3);flex-shrink:0}
+    .chan-dot.live{background:var(--green)}
+    .chan-dot.off{background:var(--red)}
+    .chan-detail{font-size:12px;color:var(--t2);margin-bottom:8px}
+    .chan-code{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:11px 14px;font-family:var(--mono);font-size:12px;color:var(--blue);word-break:break-all;user-select:all}
+    .chan-env-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+    .chan-env-item{display:flex;justify-content:space-between;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:11.5px}
+    .chan-env-status{color:var(--t3)}
+
+    #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);padding:12px 22px;font-size:12.5px;color:var(--t1);opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;border-radius:8px}
+    #toast.show{opacity:1}
+
+    .proto-banner{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#fbbf24;font-family:var(--mono);display:flex;align-items:center;gap:10px}
+  </style>
+</head>
+<body>
+<div id="shell">
+
+  <div id="sidenav">
+    <div id="sidenav-logo">
+      <div class="logo">Cart<span>·</span>Chat</div>
+      <div class="tag">Admin Console</div>
+    </div>
+    <div id="nav-links">
+      <button class="nav-link active" onclick="switchPanel('overview',this)"><span class="icon">📊</span>Overview</button>
+      <button class="nav-link" onclick="switchPanel('customers',this)"><span class="icon">👥</span>Customers &amp; Leads</button>
+      <button class="nav-link" onclick="switchPanel('payments',this)"><span class="icon">💳</span>Payments<span class="nav-badge" id="badge-payments">0</span></button>
+      <div class="nav-section-lbl">Broadcast Service</div>
+      <button class="nav-link" onclick="switchPanel('orders',this)"><span class="icon">📋</span>Broadcast Orders<span class="nav-badge" id="badge-orders">0</span></button>
+      <button class="nav-link" onclick="switchPanel('lists',this)"><span class="icon">📇</span>Contact Lists</button>
+      <div class="nav-section-lbl">Configuration</div>
+      <button class="nav-link" onclick="switchPanel('channels',this)"><span class="icon">📡</span>Channel Setup</button>
+    </div>
+    <div id="sidenav-user">
+      <div class="user-row">
+        <div class="user-av" id="admin-av">A</div>
+        <div><div class="user-name" id="admin-name">Admin</div><div class="user-role" id="admin-role">—</div></div>
+      </div>
+      <button class="logout-btn" onclick="adminLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="topbar">
+      <div><div id="topbar-title">Overview</div><div id="topbar-sub">cartchat.ai admin console</div></div>
+      <div class="live-pill"><div class="live-dot"></div>System Live</div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="panel active" id="panel-overview">
+      <div class="proto-banner">⚠ Prototype data layer — this admin panel currently reads/writes browser localStorage. Connect a real database (Supabase recommended) before production use.</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="st-customers" style="color:#60a5fa">0</div><div class="stat-lbl">Total Customers</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-revenue" style="color:#4ade80">$0</div><div class="stat-lbl">Total Revenue</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-pending-pay" style="color:#fbbf24">0</div><div class="stat-lbl">Pending Payments</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-pending-orders" style="color:#fbbf24">0</div><div class="stat-lbl">Orders Awaiting Approval</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-card-head"><h3>Recent Activity</h3></div>
+        <div id="activity-feed"></div>
+      </div>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div class="panel" id="panel-customers">
+      <div class="table-card">
+        <div class="table-card-head">
+          <h3>Registered Customers &amp; Leads</h3>
+          <input class="table-search" id="customer-search" placeholder="Search by name or email…" oninput="renderCustomers()"/>
+        </div>
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Store</th><th>Plan</th><th>Status</th><th>Total Spent</th><th>Joined</th></tr></thead>
+          <tbody id="customers-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="panel" id="panel-payments">
+      <div class="table-card">
+        <div class="table-card-head"><h3>Payment Receipts &amp; Approvals</h3></div>
+        <table>
+          <thead><tr><th>Customer</th><th>Method</th><th>Amount</th><th>Reference</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
+          <tbody id="payments-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BROADCAST ORDERS -->
+    <div class="panel" id="panel-orders">
+      <div class="table-card">
+        <div class="table-card-head"><h3>Broadcast Orders Queue</h3></div>
+        <table>
+          <thead><tr><th>Customer</th><th>List Type</th><th>List</th><th>Message Preview</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LISTS / MAILING LIST MANAGER -->
+    <div class="panel" id="panel-lists">
+
+      <div class="table-card" style="margin-bottom:24px">
+        <div class="table-card-head"><h3>＋ Add New Mailing List</h3></div>
+        <div style="padding:20px">
+          <div class="mlm-row">
+            <div class="mlm-field">
+              <label>List Name</label>
+              <input type="text" id="seg-name" placeholder="e.g. Active Online Shoppers — UAE"/>
+            </div>
+            <div class="mlm-field">
+              <label>Audience Type</label>
+              <select id="seg-type" onchange="refreshCategoryOptions()">
+                <option value="B2C">B2C — Consumer</option>
+                <option value="B2B">B2B — Business</option>
+              </select>
+            </div>
+          </div>
+          <div class="mlm-row">
+            <div class="mlm-field">
+              <label>Segment Category</label>
+              <select id="seg-category"></select>
+            </div>
+            <div class="mlm-field">
+              <label>Notes (internal)</label>
+              <input type="text" id="seg-notes" placeholder="e.g. Sourced from partner event, opted in"/>
+            </div>
+          </div>
+
+          <div class="mlm-source-toggle">
+            <button class="mlm-tab active" data-v="paste" onclick="selectSegSource(this)">Paste Contacts</button>
+            <button class="mlm-tab" data-v="upload" onclick="selectSegSource(this)">Upload CSV / TXT File</button>
+          </div>
+
+          <div id="seg-paste-panel">
+            <div class="mlm-field" style="margin-top:14px">
+              <label>Contacts (one phone number per line)</label>
+              <textarea id="seg-contacts" rows="5" placeholder="+961 70 111 222&#10;+961 71 222 333&#10;+961 76 333 444"></textarea>
+            </div>
+          </div>
+
+          <div id="seg-upload-panel" style="display:none">
+            <div class="upload-zone" id="seg-upload-zone" onclick="document.getElementById('seg-file').click()" style="margin-top:14px">
+              <input type="file" id="seg-file" accept=".csv,.txt" style="display:none" onchange="handleSegFileUpload(this)"/>
+              <div class="upload-zone-text" id="seg-file-label"><strong>Click to upload</strong> a .csv or .txt file — one contact per line</div>
+            </div>
+            <div id="seg-upload-preview" style="display:none;margin-top:10px;font-size:11.5px;color:var(--t2);font-family:var(--mono)"></div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:18px">
+            <button class="row-btn approve" style="padding:9px 22px;font-size:12px" onclick="submitNewSegment()">＋ Add Mailing List</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-card-head">
+          <h3>House Lists (Managed by You)</h3>
+          <input class="table-search" id="segment-search" placeholder="Search lists…" oninput="renderSegments()"/>
+        </div>
+        <table>
+          <thead><tr><th>List Name</th><th>Type</th><th>Category</th><th>Contacts</th><th>Source</th><th>Added</th><th>Action</th></tr></thead>
+          <tbody id="segments-body"></tbody>
+        </table>
+      </div>
+
+      <div class="table-card" style="margin-top:20px">
+        <div class="table-card-head"><h3>Customer-Submitted Lists</h3></div>
+        <div id="customer-lists"></div>
+      </div>
+    </div>
+
+    <!-- CHANNEL SETUP — Twilio connection status & docs -->
+    <div class="panel" id="panel-channels">
+      <div class="proto-banner">📡 These channels are powered by Twilio — an official Meta Business Solution Provider. Connection status below is informational; actual setup happens in your Vercel Environment Variables and Twilio Console.</div>
+
+      <div class="table-card" style="margin-bottom:20px">
+        <div class="table-card-head"><h3>📱 WhatsApp via Twilio</h3></div>
+        <div style="padding:20px">
+          <div class="chan-status-row">
+            <span class="chan-dot" id="chan-dot-wa"></span>
+            <span id="chan-status-wa">Checking…</span>
+          </div>
+          <div class="chan-detail">Webhook URL to paste into Twilio Console → Messaging → WhatsApp Senders:</div>
+          <div class="chan-code" id="chan-url-wa">—</div>
+          <div class="chan-detail" style="margin-top:14px">Required Vercel environment variables:</div>
+          <div class="chan-env-list">
+            <div class="chan-env-item"><span>TWILIO_ACCOUNT_SID</span><span class="chan-env-status" id="env-sid">—</span></div>
+            <div class="chan-env-item"><span>TWILIO_AUTH_TOKEN</span><span class="chan-env-status" id="env-token">—</span></div>
+            <div class="chan-env-item"><span>TWILIO_WHATSAPP_NUMBER</span><span class="chan-env-status" id="env-wa">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card" style="margin-bottom:20px">
+        <div class="table-card-head"><h3>💬 SMS via Twilio</h3></div>
+        <div style="padding:20px">
+          <div class="chan-detail">Webhook URL to paste into Twilio Console → Phone Numbers → your number → "A message comes in":</div>
+          <div class="chan-code" id="chan-url-sms">—</div>
+          <div class="chan-detail" style="margin-top:14px">Required Vercel environment variable:</div>
+          <div class="chan-env-list">
+            <div class="chan-env-item"><span>TWILIO_SMS_NUMBER</span><span class="chan-env-status" id="env-sms">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card" style="margin-bottom:20px">
+        <div class="table-card-head"><h3>📞 Voice via Twilio</h3></div>
+        <div style="padding:20px">
+          <div class="chan-detail">Webhook URL to paste into Twilio Console → Phone Numbers → your number → "A call comes in":</div>
+          <div class="chan-code" id="chan-url-voice">—</div>
+          <div class="chan-detail" style="margin-top:14px">Calls your AI agent answers automatically using speech recognition + text-to-speech. No extra environment variables beyond ANTHROPIC_API_KEY.</div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-card-head"><h3>🧪 Send a Test Message</h3></div>
+        <div style="padding:20px">
+          <div class="mlm-row">
+            <div class="mlm-field">
+              <label>Channel</label>
+              <select id="test-channel"><option value="whatsapp">WhatsApp</option><option value="sms">SMS</option></select>
+            </div>
+            <div class="mlm-field">
+              <label>To (phone number, e.g. +96170123456)</label>
+              <input type="text" id="test-to" placeholder="+96170123456"/>
+            </div>
+          </div>
+          <div class="mlm-field" style="margin-bottom:14px">
+            <label>Message</label>
+            <textarea id="test-message" rows="2" placeholder="This is a test message from CartChat via Twilio."></textarea>
+          </div>
+          <button class="row-btn approve" style="padding:9px 22px;font-size:12px" onclick="sendTestMessage()">Send Test Message</button>
+          <div id="test-result" style="margin-top:12px;font-size:12.5px;font-family:var(--mono)"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+
+<div id="modal-overlay">
+  <div id="modal-card">
+    <div id="modal-head"><div id="modal-title">Details</div><button id="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+// ── Auth guard ──────────────────────────────────────────────────────────────
+const adminToken = localStorage.getItem("cc_admin_token");
+const adminUser  = JSON.parse(localStorage.getItem("cc_admin_user") || "null");
+if (!adminToken || !adminUser) { window.location.href = "login.html"; }
+
+if (adminUser) {
+  document.getElementById("admin-name").textContent = adminUser.name || "Admin";
+  document.getElementById("admin-role").textContent = (adminUser.role || "admin").replace("_"," ");
+  document.getElementById("admin-av").textContent = (adminUser.name||"A").charAt(0).toUpperCase();
+}
+
+function adminLogout() { localStorage.removeItem("cc_admin_token"); localStorage.removeItem("cc_admin_user"); window.location.href = "login.html"; }
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove("show"), 2400);
+}
+function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtDate(ts){ return new Date(ts).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+function fmtMoney(n){ return "$"+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+const panelTitles = {overview:"Overview",customers:"Customers & Leads",payments:"Payments",orders:"Broadcast Orders",lists:"Contact Lists",channels:"Channel Setup"};
+function switchPanel(name, btn) {
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-link").forEach(b=>b.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  if (btn) btn.classList.add("active");
+  document.getElementById("topbar-title").textContent = panelTitles[name]||name;
+  if (name === "channels") renderChannelSetup();
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+function openModal(title, bodyHtml) {
+  document.getElementById("modal-title").textContent = title;
+  document.getElementById("modal-body").innerHTML = bodyHtml;
+  document.getElementById("modal-overlay").classList.add("show");
+}
+function closeModal() { document.getElementById("modal-overlay").classList.remove("show"); }
+document.getElementById("modal-overlay").addEventListener("click", e => { if (e.target.id === "modal-overlay") closeModal(); });
+
+// ── Render: Overview ───────────────────────────────────────────────────────────
+function renderOverview() {
+  const db = AdminData.load();
+  document.getElementById("st-customers").textContent = db.customers.length;
+  document.getElementById("st-revenue").textContent = fmtMoney(db.customers.reduce((s,c)=>s+(c.totalSpent||0),0));
+  document.getElementById("st-pending-pay").textContent = db.payments.filter(p=>p.status==="pending").length;
+  document.getElementById("st-pending-orders").textContent = db.orders.filter(o=>o.status==="pending").length;
+  document.getElementById("badge-payments").textContent = db.payments.filter(p=>p.status==="pending").length;
+  document.getElementById("badge-orders").textContent = db.orders.filter(o=>o.status==="pending").length;
+
+  const feed = document.getElementById("activity-feed");
+  const events = [
+    ...db.customers.map(c=>({type:"customer", time:c.joinedAt, text:`New customer registered: ${c.name} (${c.store})`})),
+    ...db.payments.map(p=>({type:"payment", time:p.submittedAt, text:`Payment ${p.status} — ${fmtMoney(p.amount)} via ${p.method} from ${p.customerName}`})),
+    ...db.orders.map(o=>({type:"order", time:o.submittedAt, text:`Broadcast order ${o.status} — ${o.listType} list "${o.listName}" from ${o.customerName}`})),
+  ].sort((a,b)=>b.time-a.time).slice(0,10);
+
+  if (!events.length) { feed.innerHTML = `<div class="empty-state">No activity yet</div>`; return; }
+  feed.innerHTML = events.map(e => `
+    <table style="margin:0"><tr><td style="border-top:1px solid var(--border)">
+      <span style="margin-right:10px">${e.type==="customer"?"👤":e.type==="payment"?"💳":"📋"}</span>
+      ${escH(e.text)}
+      <span style="float:right;color:var(--t3);font-family:var(--mono);font-size:11px">${fmtDate(e.time)}</span>
+    </td></tr></table>
+  `).join("");
+}
+
+// ── Render: Customers ──────────────────────────────────────────────────────────
+function renderCustomers() {
+  const db = AdminData.load();
+  const q = (document.getElementById("customer-search").value || "").toLowerCase();
+  const body = document.getElementById("customers-body");
+  const rows = db.customers.filter(c => !q || c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q));
+  if (!rows.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">No customers found</td></tr>`; return; }
+  body.innerHTML = rows.map(c => `
+    <tr>
+      <td><strong>${escH(c.name)}</strong></td>
+      <td class="cell-mono">${escH(c.email)}</td>
+      <td>${escH(c.store)}</td>
+      <td><span class="badge badge-trial">${escH(c.plan)}</span></td>
+      <td><span class="badge badge-${c.status}">${escH(c.status)}</span></td>
+      <td class="cell-mono">${fmtMoney(c.totalSpent)}</td>
+      <td class="cell-mono">${fmtDate(c.joinedAt)}</td>
+    </tr>
+  `).join("");
+}
+
+// ── Render: Payments ────────────────────────────────────────────────────────────
+function renderPayments() {
+  const db = AdminData.load();
+  const body = document.getElementById("payments-body");
+  if (!db.payments.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">No payments submitted yet</td></tr>`; return; }
+  body.innerHTML = db.payments.slice().reverse().map(p => `
+    <tr>
+      <td><strong>${escH(p.customerName)}</strong><br/><span class="cell-mono">${escH(p.customerEmail)}</span></td>
+      <td>${escH(p.method)}</td>
+      <td class="cell-mono">${fmtMoney(p.amount)}</td>
+      <td class="cell-mono">${escH(p.reference||"—")}</td>
+      <td><span class="badge badge-${p.status}">${escH(p.status)}</span></td>
+      <td class="cell-mono">${fmtDate(p.submittedAt)}</td>
+      <td>
+        <button class="row-btn view" onclick="viewPayment('${p.id}')">View</button>
+        ${p.status==="pending" ? `<button class="row-btn approve" onclick="updatePaymentStatus('${p.id}','paid')">Approve</button><button class="row-btn reject" onclick="updatePaymentStatus('${p.id}','rejected')">Reject</button>` : ""}
+      </td>
+    </tr>
+  `).join("");
+}
+
+function viewPayment(id) {
+  const db = AdminData.load();
+  const p = db.payments.find(x=>x.id===id);
+  if (!p) return;
+  openModal("Payment Details", `
+    <div class="modal-field"><label>Customer</label><div class="val">${escH(p.customerName)} — ${escH(p.customerEmail)}</div></div>
+    <div class="modal-field"><label>Method</label><div class="val">${escH(p.method)}</div></div>
+    <div class="modal-field"><label>Amount</label><div class="val">${fmtMoney(p.amount)}</div></div>
+    <div class="modal-field"><label>Reference / Transaction ID</label><div class="val">${escH(p.reference||"Not provided")}</div></div>
+    <div class="modal-field"><label>Notes from customer</label><div class="val">${escH(p.notes||"—")}</div></div>
+    <div class="modal-field"><label>Status</label><div class="val"><span class="badge badge-${p.status}">${escH(p.status)}</span></div></div>
+    <div class="modal-field"><label>Submitted</label><div class="val">${fmtDate(p.submittedAt)}</div></div>
+    ${p.status==="pending" ? `
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="updatePaymentStatus('${p.id}','paid');closeModal()">✓ Approve Payment</button>
+      <button class="row-btn reject" style="flex:1;padding:10px" onclick="updatePaymentStatus('${p.id}','rejected');closeModal()">✕ Reject</button>
+    </div>` : ""}
+  `);
+}
+
+function updatePaymentStatus(id, status) {
+  const db = AdminData.load();
+  const p = db.payments.find(x=>x.id===id);
+  if (!p) return;
+  p.status = status;
+  // If approved, mark linked customer's order as paid too (if linked)
+  if (status === "paid" && p.orderId) {
+    const o = db.orders.find(x=>x.id===p.orderId);
+    if (o) o.status = "paid";
+  }
+  AdminData.save(db);
+  toast(status === "paid" ? "✅ Payment approved" : "Payment rejected");
+  renderPayments(); renderOverview(); renderOrders();
+}
+
+// ── Render: Broadcast Orders ────────────────────────────────────────────────────
+function renderOrders() {
+  const db = AdminData.load();
+  const body = document.getElementById("orders-body");
+  if (!db.orders.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">No broadcast orders yet</td></tr>`; return; }
+  body.innerHTML = db.orders.slice().reverse().map(o => `
+    <tr>
+      <td><strong>${escH(o.customerName)}</strong><br/><span class="cell-mono">${escH(o.customerEmail)}</span></td>
+      <td><span class="badge badge-trial">${escH(o.listType)}</span></td>
+      <td>${escH(o.listName)}</td>
+      <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(o.message)}</td>
+      <td><span class="badge badge-${o.status}">${escH(o.status)}</span></td>
+      <td class="cell-mono">${fmtDate(o.submittedAt)}</td>
+      <td>
+        <button class="row-btn view" onclick="viewOrder('${o.id}')">View</button>
+        ${o.status==="pending" ? `<button class="row-btn approve" onclick="updateOrderStatus('${o.id}','approved')">Approve</button><button class="row-btn reject" onclick="updateOrderStatus('${o.id}','rejected')">Reject</button>` : ""}
+        ${o.status==="paid" ? `<button class="row-btn approve" onclick="updateOrderStatus('${o.id}','sent')">Mark Sent</button>` : ""}
+      </td>
+    </tr>
+  `).join("");
+}
+
+function viewOrder(id) {
+  const db = AdminData.load();
+  const o = db.orders.find(x=>x.id===id);
+  if (!o) return;
+  openModal("Broadcast Order Details", `
+    <div class="modal-field"><label>Customer</label><div class="val">${escH(o.customerName)} — ${escH(o.customerEmail)}</div></div>
+    <div class="modal-field"><label>List Type</label><div class="val">${escH(o.listType)}</div></div>
+    <div class="modal-field"><label>List Name</label><div class="val">${escH(o.listName)}</div></div>
+    <div class="modal-field"><label>Contacts</label><div class="val" style="white-space:pre-wrap;max-height:140px;overflow-y:auto">${escH(o.listContacts||"(house list — managed separately)")}</div></div>
+    <div class="modal-field"><label>Message</label><div class="val" style="white-space:pre-wrap">${escH(o.message)}</div></div>
+    <div class="modal-field"><label>Status</label><div class="val"><span class="badge badge-${o.status}">${escH(o.status)}</span></div></div>
+    <div class="modal-field"><label>Submitted</label><div class="val">${fmtDate(o.submittedAt)}</div></div>
+    ${o.status==="pending" ? `
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="updateOrderStatus('${o.id}','approved');closeModal()">✓ Approve Order</button>
+      <button class="row-btn reject" style="flex:1;padding:10px" onclick="updateOrderStatus('${o.id}','rejected');closeModal()">✕ Reject</button>
+    </div>` : ""}
+    ${o.status==="paid" ? `
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="updateOrderStatus('${o.id}','sent');closeModal()">✓ Mark as Sent via WhatsApp</button>
+    </div>` : ""}
+  `);
+}
+
+function updateOrderStatus(id, status) {
+  const db = AdminData.load();
+  const o = db.orders.find(x=>x.id===id);
+  if (!o) return;
+  o.status = status;
+  AdminData.save(db);
+  toast(`Order marked as ${status}`);
+  renderOrders(); renderOverview();
+}
+
+// ── Mailing List Manager — segments CRUD ───────────────────────────────────────
+let segSource = "paste"; // 'paste' | 'upload'
+let segUploadedText = "";
+
+function refreshCategoryOptions() {
+  const type = document.getElementById("seg-type").value;
+  const catSelect = document.getElementById("seg-category");
+  const cats = AdminData.SEGMENT_CATEGORIES[type] || [];
+  catSelect.innerHTML = cats.map(c => `<option value="${c.key}">${escH(c.label)} — ${escH(c.sub)}</option>`).join("");
+}
+
+function selectSegSource(btn) {
+  segSource = btn.dataset.v;
+  document.querySelectorAll(".mlm-tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("seg-paste-panel").style.display = segSource === "paste" ? "block" : "none";
+  document.getElementById("seg-upload-panel").style.display = segSource === "upload" ? "block" : "none";
+}
+
+function handleSegFileUpload(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const zone = document.getElementById("seg-upload-zone");
+  const label = document.getElementById("seg-file-label");
+  const preview = document.getElementById("seg-upload-preview");
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    segUploadedText = e.target.result;
+    const parsed = AdminData.parseContactsText(segUploadedText);
+    zone.classList.add("has-file");
+    label.innerHTML = `<strong>✓ ${escH(file.name)}</strong> uploaded — click to change`;
+    preview.style.display = "block";
+    preview.textContent = `Parsed ${parsed.count} contact line(s) from file.`;
+  };
+  reader.readAsText(file);
+}
+
+function submitNewSegment() {
+  const name = document.getElementById("seg-name").value.trim();
+  const type = document.getElementById("seg-type").value;
+  const category = document.getElementById("seg-category").value;
+  const notes = document.getElementById("seg-notes").value.trim();
+
+  if (!name) { toast("⚠ Please enter a list name"); return; }
+
+  let contactsText = "", source = "Manually entered";
+  if (segSource === "paste") {
+    contactsText = document.getElementById("seg-contacts").value.trim();
+    if (!contactsText) { toast("⚠ Please paste at least one contact"); return; }
+  } else {
+    if (!segUploadedText) { toast("⚠ Please upload a file first"); return; }
+    contactsText = segUploadedText;
+    source = "CSV upload: " + (document.getElementById("seg-file").files[0]?.name || "uploaded file");
+  }
+
+  const parsed = AdminData.parseContactsText(contactsText);
+  const cats = AdminData.SEGMENT_CATEGORIES[type] || [];
+  const catMeta = cats.find(c => c.key === category);
+
+  AdminData.addSegment({
+    id: "seg_" + Math.random().toString(36).slice(2,9),
+    name, type, category,
+    categoryLabel: catMeta ? catMeta.label : category,
+    count: parsed.count,
+    contacts: parsed.contacts,
+    notes, source,
+    addedAt: Date.now(),
+  });
+
+  // Reset form
+  document.getElementById("seg-name").value = "";
+  document.getElementById("seg-notes").value = "";
+  document.getElementById("seg-contacts").value = "";
+  segUploadedText = "";
+  document.getElementById("seg-upload-zone").classList.remove("has-file");
+  document.getElementById("seg-file-label").innerHTML = "<strong>Click to upload</strong> a .csv or .txt file — one contact per line";
+  document.getElementById("seg-upload-preview").style.display = "none";
+
+  toast(`✅ Added "${name}" — ${parsed.count} contacts`);
+  renderSegments();
+}
+
+function renderSegments() {
+  const db = AdminData.load();
+  const q = (document.getElementById("segment-search")?.value || "").toLowerCase();
+  const body = document.getElementById("segments-body");
+  const rows = db.segments.filter(s => !q || s.name.toLowerCase().includes(q));
+
+  if (!rows.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">No mailing lists yet — add one above</td></tr>`; return; }
+
+  body.innerHTML = rows.slice().reverse().map(s => `
+    <tr>
+      <td><strong>${escH(s.name)}</strong>${s.notes ? `<br/><span style="color:var(--t3);font-size:11px">${escH(s.notes)}</span>` : ""}</td>
+      <td><span class="badge badge-trial">${escH(s.type)}</span></td>
+      <td><span class="cat-pill">${escH(s.categoryLabel || s.category)}</span></td>
+      <td class="cell-mono">${s.count}</td>
+      <td class="cell-mono" style="font-size:10.5px">${escH(s.source||"—")}</td>
+      <td class="cell-mono">${fmtDate(s.addedAt)}</td>
+      <td>
+        <button class="row-btn view" onclick="viewSegment('${s.id}')">View</button>
+        <button class="row-btn" onclick="editSegment('${s.id}')">Edit</button>
+        <button class="row-btn reject" onclick="deleteSegmentConfirm('${s.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function viewSegment(id) {
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  if (!s) return;
+  openModal(s.name, `
+    <div class="modal-field"><label>Type / Category</label><div class="val">${escH(s.type)} — ${escH(s.categoryLabel||s.category)}</div></div>
+    <div class="modal-field"><label>Notes</label><div class="val">${escH(s.notes||"—")}</div></div>
+    <div class="modal-field"><label>Source</label><div class="val">${escH(s.source||"—")}</div></div>
+    <div class="modal-field"><label>Contacts (${s.count})</label><div class="val" style="white-space:pre-wrap;max-height:240px;overflow-y:auto;font-family:var(--mono);font-size:12px">${escH(s.contacts||"(no contact data stored)")}</div></div>
+  `);
+}
+
+function editSegment(id) {
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  if (!s) return;
+  const cats = AdminData.SEGMENT_CATEGORIES[s.type] || [];
+  openModal("Edit: " + s.name, `
+    <div class="modal-field"><label>List Name</label><input type="text" class="val" id="edit-seg-name" value="${escH(s.name)}" style="width:100%;border:1px solid var(--border);background:var(--bg2);color:var(--t1);padding:10px;border-radius:7px;font-size:13px"/></div>
+    <div class="modal-field"><label>Category</label>
+      <select id="edit-seg-category" style="width:100%;border:1px solid var(--border);background:var(--bg2);color:var(--t1);padding:10px;border-radius:7px;font-size:13px">
+        ${cats.map(c => `<option value="${c.key}" ${c.key===s.category?"selected":""}>${escH(c.label)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="modal-field"><label>Notes</label><input type="text" id="edit-seg-notes" value="${escH(s.notes||"")}" style="width:100%;border:1px solid var(--border);background:var(--bg2);color:var(--t1);padding:10px;border-radius:7px;font-size:13px"/></div>
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="saveSegmentEdit('${s.id}')">✓ Save Changes</button>
+    </div>
+  `);
+}
+
+function saveSegmentEdit(id) {
+  const name = document.getElementById("edit-seg-name").value.trim();
+  const category = document.getElementById("edit-seg-category").value;
+  const notes = document.getElementById("edit-seg-notes").value.trim();
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  const cats = AdminData.SEGMENT_CATEGORIES[s.type] || [];
+  const catMeta = cats.find(c => c.key === category);
+  AdminData.updateSegment(id, { name, category, categoryLabel: catMeta?catMeta.label:category, notes });
+  toast("✅ List updated");
+  closeModal();
+  renderSegments();
+}
+
+function deleteSegmentConfirm(id) {
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  if (!s) return;
+  openModal("Delete List?", `
+    <p style="font-size:13.5px;line-height:1.6;margin-bottom:20px">Are you sure you want to delete <strong>${escH(s.name)}</strong>? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="row-btn reject" style="flex:1;padding:10px" onclick="AdminData.deleteSegment('${id}');closeModal();renderSegments();toast('List deleted')">Delete Permanently</button>
+    </div>
+  `);
+}
+
+// ── Render: Customer-Submitted Lists (unchanged read-only view) ────────────────
+function renderCustomerSubmittedLists() {
+  const db = AdminData.load();
+  const custEl = document.getElementById("customer-lists");
+  custEl.innerHTML = db.customerLists.length ? db.customerLists.map(l => `
+    <div class="list-card">
+      <div class="list-icon">📥</div>
+      <div class="list-info">
+        <div class="list-name">${escH(l.name)} <span style="color:var(--t3);font-weight:400">— submitted by ${escH(l.submittedBy)}</span></div>
+        <div class="list-meta">${escH(l.type)} • ${l.count} contacts • ${fmtDate(l.addedAt)}</div>
+      </div>
+      <button class="row-btn view" onclick="viewCustomerList('${l.id}')">View Contacts</button>
+    </div>
+  `).join("") : `<div class="empty-state">No customer-submitted lists yet</div>`;
+}
+
+function renderLists() {
+  refreshCategoryOptions();
+  renderSegments();
+  renderCustomerSubmittedLists();
+}
+
+function viewCustomerList(id) {
+  const db = AdminData.load();
+  const l = db.customerLists.find(x=>x.id===id);
+  if (!l) return;
+  openModal(l.name, `
+    <div class="modal-field"><label>Submitted By</label><div class="val">${escH(l.submittedBy)}</div></div>
+    <div class="modal-field"><label>List Type</label><div class="val">${escH(l.type)}</div></div>
+    <div class="modal-field"><label>Contacts (${l.count})</label><div class="val" style="white-space:pre-wrap;max-height:240px;overflow-y:auto;font-family:var(--mono);font-size:12px">${escH(l.contacts)}</div></div>
+  `);
+}
+
+// ── Channel Setup (Twilio) ──────────────────────────────────────────────────────
+async function renderChannelSetup() {
+  const origin = window.location.origin;
+  document.getElementById("chan-url-wa").textContent = `${origin}/api/twilio/whatsapp`;
+  document.getElementById("chan-url-sms").textContent = `${origin}/api/twilio/sms`;
+  document.getElementById("chan-url-voice").textContent = `${origin}/api/twilio/voice`;
+
+  // Best-effort status check — calls a lightweight status endpoint that reports
+  // which env vars are set, WITHOUT exposing their actual values.
+  try {
+    const res = await fetch("/api/twilio/status");
+    const data = await res.json();
+    const dot = document.getElementById("chan-dot-wa");
+    const status = document.getElementById("chan-status-wa");
+    if (data.waConfigured) {
+      dot.classList.add("live"); dot.classList.remove("off");
+      status.textContent = "WhatsApp channel configured";
+    } else {
+      dot.classList.add("off"); dot.classList.remove("live");
+      status.textContent = "WhatsApp channel not yet configured";
+    }
+    document.getElementById("env-sid").textContent = data.sidSet ? "✓ Set" : "✕ Missing";
+    document.getElementById("env-token").textContent = data.tokenSet ? "✓ Set" : "✕ Missing";
+    document.getElementById("env-wa").textContent = data.waSet ? "✓ Set" : "✕ Missing";
+    document.getElementById("env-sms").textContent = data.smsSet ? "✓ Set" : "✕ Missing";
+  } catch {
+    document.getElementById("chan-status-wa").textContent = "Could not check status — verify manually in Vercel";
+  }
+}
+
+async function sendTestMessage() {
+  const channel = document.getElementById("test-channel").value;
+  const to = document.getElementById("test-to").value.trim();
+  const message = document.getElementById("test-message").value.trim() || "This is a test message from CartChat via Twilio.";
+  const resultEl = document.getElementById("test-result");
+
+  if (!to) { resultEl.textContent = "⚠ Enter a phone number first"; resultEl.style.color = "var(--amber)"; return; }
+
+  resultEl.textContent = "Sending…";
+  resultEl.style.color = "var(--t2)";
+  try {
+    const res = await fetch("/api/twilio/send", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ channel, to, message })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Send failed");
+    resultEl.textContent = `✓ Sent — Twilio SID: ${data.sid} (status: ${data.status})`;
+    resultEl.style.color = "var(--green)";
+  } catch (e) {
+    resultEl.textContent = "✕ " + e.message;
+    resultEl.style.color = "var(--red)";
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+AdminData.seedIfEmpty();
+renderOverview();
+renderCustomers();
+renderPayments();
+renderOrders();
+renderLists();
+</script>
+</body>
+</html>

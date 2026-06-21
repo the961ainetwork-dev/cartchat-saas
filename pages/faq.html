@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FAQ — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:var(--blue)}
+    button{font-family:var(--sans);cursor:pointer}
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase;text-decoration:none;color:var(--ink)}
+    .nav-mark .dot{color:var(--blue)}
+    #back-link{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;text-decoration:none}
+    #back-link:hover{color:var(--ink)}
+    .hero{padding:80px 32px 56px;border-bottom:1px solid var(--ink);text-align:center}
+    .eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:18px}
+    .hero h1{font-size:clamp(30px,4.6vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1.8px;line-height:1.06}
+    #shell{max-width:760px;margin:0 auto;padding:60px 32px}
+
+    .cat-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin:40px 0 16px}
+    .cat-label:first-child{margin-top:0}
+
+    .faq-item{border-bottom:1px solid var(--grey-2)}
+    .faq-q{padding:18px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700;font-size:14.5px}
+    .faq-q .plus{font-family:var(--mono);font-size:18px;color:var(--blue);transition:transform .2s;flex-shrink:0;margin-left:16px}
+    .faq-item.open .plus{transform:rotate(45deg)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .faq-item.open .faq-a{max-height:300px}
+    .faq-a-inner{padding-bottom:18px;font-size:13.5px;color:var(--grey-3);line-height:1.7}
+
+    footer{padding:32px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;border-top:1px solid var(--ink)}
+  </style>
+</head>
+<body>
+<div id="topbar">
+  <a href="../index.html" class="nav-mark">Cart<span class="dot">·</span>Chat</a>
+  <a href="../index.html" id="back-link">← Back to Homepage</a>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Frequently Asked Questions</div>
+  <h1>Got questions?<br/>We've got answers.</h1>
+</div>
+
+<div id="shell">
+
+  <div class="cat-label">Getting Started</div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">How does the 24-hour demo work? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">After filling out the demo request form, you get instant access to a fully working sandbox configured around your store. You can test the AI agent, generate sample social posts, and explore the dashboard for 24 hours before deciding to activate a paid plan.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Do I need a credit card to start the demo? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">No. The 24-hour sandbox is completely free, no credit card required. You only pay if you choose to activate a plan afterward.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">How long does setup take? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Most merchants are live within 10 minutes — connecting your WhatsApp Business number and configuring your product catalog and policies is the bulk of the process.</div></div>
+  </div>
+
+  <div class="cat-label">Payments &amp; Billing</div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">What payment methods do you accept? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">We accept Credit Card, OMT Transfer, Bank Transfer, and Cash on Delivery / Bill Me. For OMT and Bank Transfer, you'll enter your transaction reference and upload a receipt for our team to verify, usually within a few hours.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Can I cancel anytime? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Yes, all plans are month-to-month with no long-term contract. You can cancel at any time from your dashboard or by contacting support.</div></div>
+  </div>
+
+  <div class="cat-label">Broadcast Service</div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">How much does a broadcast cost? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Your first WhatsApp broadcast is $29 flat. Every additional broadcast after that gets a 10% discount, applied automatically.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Can I use my own contact list? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Yes — you can submit your own list (paste contacts or upload a file), or choose from our segmented house lists. All lists go through a brief admin review before sending.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">What can I send in a broadcast? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Broadcasts must be strictly commercial — promotions, product updates, event invites, partnership messages, etc. Political content, advocacy messaging, or anything infringing on third-party rights is not permitted. See our <a href="acceptable-use.html">Acceptable Use Policy</a>.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Who approves my broadcast order? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Our team reviews every order's message and list before anything is sent or charged. Once approved, you'll be invited to complete payment, and we handle the actual sending.</div></div>
+  </div>
+
+  <div class="cat-label">Technical</div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Does this work with Shopify or WooCommerce? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Yes, both are supported as connectable integrations. You can also set up your catalog manually if you don't use either platform.</div></div>
+  </div>
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">Does the AI support Arabic? <span class="plus">+</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Yes — the AI automatically detects whether a customer is messaging in Arabic or English and responds accordingly, no configuration required.</div></div>
+  </div>
+
+</div>
+
+<footer>Cart·Chat — © 2026 — Built with Claude AI</footer>
+
+<script>
+function toggleFaq(el) {
+  const wasOpen = el.classList.contains("open");
+  document.querySelectorAll(".faq-item").forEach(f => f.classList.remove("open"));
+  if (!wasOpen) el.classList.add("open");
+}
+</script>
+</body>
+</html>

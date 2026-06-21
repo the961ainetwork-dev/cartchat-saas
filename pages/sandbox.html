@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Sandbox — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#ffffff;--bg1:#ffffff;--bg2:#e7e9ee;--bg3:#dde0e8;--border:#0a0a0a;
+      --brand:#0047ab;--brand-glow:rgba(0,71,171,.08);
+      --t1:#0a0a0a;--t2:#6b7280;--t3:#a4a9b3;
+      --sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace;
+    }
+    html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--sans)}
+    button{cursor:pointer;border:none;font-family:var(--sans)}
+    textarea,input,select{font-family:var(--sans)}
+    textarea:focus,input:focus,select:focus{outline:none}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--t3)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,71,171,.4)}70%{box-shadow:0 0 0 7px rgba(0,71,171,0)}100%{box-shadow:0 0 0 0 rgba(0,71,171,0)}}
+    @keyframes urgentPulse{0%,100%{background:var(--brand)}50%{background:#003580}}
+
+    #countdown-banner{background:var(--t1);color:var(--bg);padding:11px 24px;display:flex;align-items:center;justify-content:center;gap:16px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;flex-shrink:0;position:relative;z-index:60}
+    #countdown-banner.urgent{animation:urgentPulse 1.5s infinite}
+    #cd-timer{font-weight:700;font-size:14px;letter-spacing:1px;background:var(--brand);padding:4px 12px}
+    #cd-cta{background:var(--bg);color:var(--t1);padding:6px 16px;font-weight:700;letter-spacing:.5px;transition:all .15s;margin-left:8px}
+    #cd-cta:hover{background:var(--brand);color:var(--bg)}
+
+    #shell{display:flex;height:calc(100vh - 42px);overflow:hidden}
+
+    #sidenav{width:228px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+    #sidenav-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
+    #sidenav-logo .logo{font-weight:900;font-size:17px;letter-spacing:-.3px;text-transform:uppercase}
+    #sidenav-logo .logo span{color:var(--brand)}
+    #sidenav-logo .plan{font-size:10px;font-family:var(--mono);color:var(--t2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+    #sidenav-logo .plan::before{content:"";width:6px;height:6px;background:var(--brand);border-radius:50%;animation:pulse 2s infinite}
+    #nav-links{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:1px}
+    .nav-link{display:flex;align-items:center;gap:11px;padding:10px 12px;font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;background:none;border:none;width:100%;text-align:left;text-transform:uppercase;letter-spacing:.5px;position:relative}
+    .nav-link:hover{background:var(--bg2);color:var(--t1)}
+    .nav-link.active{background:var(--t1);color:var(--bg);font-weight:700}
+    .nav-link .icon{font-size:14px;width:18px;flex-shrink:0}
+    .nav-divider{height:1px;background:var(--border);margin:10px 4px}
+    #sidenav-user{padding:16px;border-top:1px solid var(--border)}
+    .user-row{display:flex;align-items:center;gap:10px}
+    .user-av{width:32px;height:32px;background:var(--t1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--bg);flex-shrink:0;font-family:var(--mono)}
+    .user-name{font-size:12px;font-weight:700;color:var(--t1)}
+    .user-email{font-size:10px;color:var(--t2);font-family:var(--mono)}
+    .upgrade-btn{margin-top:10px;width:100%;padding:10px;background:var(--brand);color:var(--bg);font-size:11px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+    .upgrade-btn:hover{background:var(--t1)}
+
+    #main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+    #topbar{padding:16px 24px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    #topbar-title{font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:-.3px}
+    .status-pill{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);padding:6px 13px;font-size:10.5px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--brand);animation:pulse 2s infinite}
+
+    .panel{display:none;flex:1;overflow:hidden}
+    .panel.active{display:flex;flex-direction:column}
+    .panel-scroll{flex:1;overflow-y:auto;padding:28px}
+
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;margin-bottom:28px;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .stat-card{background:var(--bg1);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px}
+    .stat-val{font-size:30px;font-weight:900;font-family:var(--mono);margin-bottom:6px;letter-spacing:-1px}
+    .stat-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;font-family:var(--mono)}
+
+    #conv-layout{display:flex;flex:1;overflow:hidden}
+    #conv-sidebar{width:280px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+    #conv-list{flex:1;overflow-y:auto}
+    .conv-item{padding:13px 14px;border-bottom:1px solid var(--bg2);cursor:pointer;transition:background .15s}
+    .conv-item:hover{background:var(--bg2)}
+    .conv-item.active{background:var(--t1);color:var(--bg)}
+    .conv-name{font-weight:700;font-size:13px}
+    .conv-time{font-size:10px;color:var(--t2);font-family:var(--mono)}
+    .conv-preview{font-size:12px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #chat-pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #chat-top{padding:14px 20px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:13px;flex-shrink:0}
+    #chat-av{width:36px;height:36px;background:var(--t1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;color:var(--bg);font-family:var(--mono)}
+    #chat-msgs{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:11px}
+    .cmsg{display:flex;animation:fadeUp .2s ease}
+    .cmsg.in{justify-content:flex-start}
+    .cmsg.out{justify-content:flex-end}
+    .cbubble{max-width:68%;padding:11px 15px;font-size:13.5px;line-height:1.55}
+    .cmsg.in .cbubble{background:var(--bg2);border:1px solid var(--border)}
+    .cmsg.out .cbubble{background:var(--t1);color:var(--bg);border:1px solid var(--t1)}
+    .cmsg-label{font-size:9.5px;font-family:var(--mono);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;color:var(--brand)}
+    .cmsg.out .cmsg-label{color:var(--bg);opacity:.6}
+    .cmsg-time{font-size:10px;color:var(--t2);margin-top:6px;text-align:right;font-family:var(--mono)}
+    .cmsg.out .cmsg-time{color:var(--bg2)}
+    #chat-input-bar{padding:14px 18px;background:var(--bg1);border-top:1px solid var(--border);display:flex;gap:11px;align-items:flex-end;flex-shrink:0}
+    #chat-input-wrap{flex:1;background:var(--bg);border:1px solid var(--border);padding:11px 15px}
+    #chat-input-wrap:focus-within{border-color:var(--brand)}
+    #chat-textarea{width:100%;background:none;border:none;resize:none;color:var(--t1);font-size:13.5px;line-height:1.5;max-height:100px}
+    #chat-send{width:46px;height:46px;background:var(--t1);color:var(--bg);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+    #chat-send:hover:not(:disabled){background:var(--brand)}
+    #chat-send:disabled{background:var(--bg2);color:var(--t3);cursor:not-allowed}
+    #typing-wrap{display:none;justify-content:flex-end;padding:6px 20px}
+
+    .config-inner{max-width:700px}
+    .cfg-card{background:var(--bg1);border:1px solid var(--border);padding:26px;margin-bottom:20px}
+    .cfg-card h3{font-weight:900;font-size:14px;margin-bottom:5px;text-transform:uppercase}
+    .cfg-card p{font-size:12px;color:var(--t2);margin-bottom:18px;font-family:var(--mono)}
+    .cfg-field{margin-bottom:16px}
+    .cfg-field label{display:block;font-family:var(--mono);font-size:10px;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+    .cfg-field input,.cfg-field textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:11px 13px;color:var(--t1);font-size:13px}
+    .cfg-field input:focus,.cfg-field textarea:focus{border-color:var(--brand);outline:none}
+    .save-btn{background:var(--t1);color:var(--bg);font-weight:700;font-size:11px;padding:12px 26px;font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+    .save-btn:hover{background:var(--brand)}
+
+    #tour-overlay{position:fixed;inset:0;background:rgba(10,10,10,.7);z-index:300;display:none;align-items:center;justify-content:center}
+    #tour-overlay.show{display:flex}
+    #tour-card{background:var(--bg);max-width:480px;width:90%;padding:40px;border:1px solid var(--t1);position:relative}
+    #tour-step-num{font-family:var(--mono);font-size:11px;color:var(--brand);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+    #tour-step-num::before{content:"";width:20px;height:1px;background:var(--brand)}
+    #tour-title{font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:14px;line-height:1.15}
+    #tour-body{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:28px}
+    #tour-actions{display:flex;justify-content:space-between;align-items:center}
+    #tour-skip{font-family:var(--mono);font-size:11px;color:var(--t3);text-decoration:underline}
+    #tour-next{background:var(--t1);color:var(--bg);padding:13px 28px;font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+    #tour-next:hover{background:var(--brand)}
+    .tour-dots{display:flex;gap:6px;margin-bottom:20px}
+    .tour-dot{width:24px;height:3px;background:var(--bg2)}
+    .tour-dot.done{background:var(--t1)}
+    .tour-dot.active{background:var(--brand)}
+
+    #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--t1);border:none;padding:12px 24px;font-size:12px;color:var(--bg);opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px}
+    #toast.show{opacity:1}
+
+    @media(max-width:768px){#sidenav{width:60px}.nav-text,#sidenav-logo .logo-text,#sidenav-user .user-info,#sidenav-logo .plan span{display:none}#conv-sidebar{width:200px}}
+  </style>
+</head>
+<body>
+
+<div id="countdown-banner">
+  <span>⏱ Your sandbox expires in</span>
+  <span id="cd-timer">23:59:47</span>
+  <span>— upgrade now to keep this configuration</span>
+  <button id="cd-cta" onclick="window.location.href='checkout.html'">Activate Plan →</button>
+</div>
+
+<div id="shell">
+
+  <div id="sidenav">
+    <div id="sidenav-logo">
+      <div class="logo"><span class="logo-text">Cart<span style="color:var(--brand)">·</span>Chat</span></div>
+      <div class="plan"><span>Sandbox — Growth Trial</span></div>
+    </div>
+    <div id="nav-links">
+      <button class="nav-link active" onclick="switchPanel('overview',this)"><span class="icon">📊</span><span class="nav-text">Overview</span></button>
+      <button class="nav-link" onclick="switchPanel('conversations',this)"><span class="icon">💬</span><span class="nav-text">Conversations</span></button>
+      <button class="nav-link" onclick="switchPanel('social',this)"><span class="icon">📣</span><span class="nav-text">Social Campaigns</span></button>
+      <div class="nav-divider"></div>
+      <button class="nav-link" onclick="switchPanel('config',this)"><span class="icon">⚙️</span><span class="nav-text">AI Agent Config</span></button>
+    </div>
+    <div id="sidenav-user">
+      <div class="user-row">
+        <div class="user-av" id="user-av">DM</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Loading…</div>
+          <div class="user-email" id="user-email">…</div>
+        </div>
+      </div>
+      <button class="upgrade-btn" onclick="window.location.href='checkout.html'">Activate Plan →</button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="topbar">
+      <div id="topbar-title">Overview</div>
+      <div class="status-pill"><div class="live-dot"></div><span id="store-name">Store</span> • Sandbox Live</div>
+    </div>
+
+    <div class="panel active" id="panel-overview">
+      <div class="panel-scroll">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-val" id="ov-vol">0</div><div class="stat-lbl">Configured Monthly Volume</div></div>
+          <div class="stat-card"><div class="stat-val">1.1s</div><div class="stat-lbl">Avg. Response Time</div></div>
+          <div class="stat-card"><div class="stat-val" id="ov-plan">Growth</div><div class="stat-lbl">Plan Being Trialed</div></div>
+          <div class="stat-card"><div class="stat-val" id="ov-goal-stat">—</div><div class="stat-lbl">Your Primary Goal</div></div>
+        </div>
+        <div class="cfg-card">
+          <h3>👋 Welcome to your sandbox, <span id="welcome-name">there</span></h3>
+          <p>Configured specifically for <span id="welcome-store">your store</span></p>
+          <p style="font-family:var(--sans);color:var(--t1);font-size:14px;line-height:1.7;margin-top:6px">This sandbox is pre-loaded with sample conversations and configured around the goal you selected: <strong id="welcome-goal">—</strong>. Head to <strong>Conversations</strong> to talk to your AI agent directly, or <strong>Social Campaigns</strong> to generate content. Everything here reflects the <strong id="welcome-plan">Growth</strong> plan.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-conversations">
+      <div id="conv-layout">
+        <div id="conv-sidebar"><div id="conv-list"></div></div>
+        <div id="chat-pane">
+          <div id="chat-top">
+            <div id="chat-av">DF</div>
+            <div><div style="font-weight:600;font-size:14px" id="chat-name">Dana F.</div><div style="font-size:11px;color:var(--t2)" id="chat-phone">Sample conversation</div></div>
+          </div>
+          <div id="chat-msgs"></div>
+          <div id="typing-wrap">
+            <div style="background:var(--bg2);border:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:8px">
+              <div style="width:13px;height:13px;border:2px solid var(--brand);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite"></div>
+              <span style="font-size:12px;color:var(--t3);font-family:var(--mono)">Claude thinking…</span>
+            </div>
+          </div>
+          <div id="chat-input-bar">
+            <div id="chat-input-wrap"><textarea id="chat-textarea" rows="1" placeholder="Try it yourself — ask about an order…"></textarea></div>
+            <button id="chat-send" onclick="sendChatMsg()" disabled>➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-social">
+      <div class="panel-scroll">
+        <div class="config-inner">
+          <div class="cfg-card">
+            <h3>📣 Social Campaign Generator</h3>
+            <p>Try generating real content for your store</p>
+            <div class="cfg-field"><label>Campaign idea</label><input id="sf-brand" placeholder="e.g. Summer Glow Collection Launch"/></div>
+            <div class="save-btn" style="display:inline-block;margin-top:8px" onclick="generateSample()">Generate Sample Post →</div>
+            <div id="sample-post" style="margin-top:20px;display:none;background:var(--bg);border:1px solid var(--border);padding:18px;font-size:13px;line-height:1.6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-config">
+      <div class="panel-scroll">
+        <div class="config-inner">
+          <div class="cfg-card">
+            <h3>⚙️ Your Sandbox Configuration</h3>
+            <p>Pulled directly from your demo request — editable here, permanent after activation</p>
+            <div class="cfg-field"><label>Store Name</label><input id="cfg-name" readonly/></div>
+            <div class="cfg-field"><label>Platform</label><input id="cfg-platform" readonly/></div>
+            <div class="cfg-field"><label>Primary Goal</label><input id="cfg-goal" readonly/></div>
+            <div class="cfg-field"><label>Support Team Size</label><input id="cfg-team" readonly/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="tour-overlay">
+  <div id="tour-card">
+    <div class="tour-dots" id="tour-dots"></div>
+    <div id="tour-step-num">Guided Tour</div>
+    <h2 id="tour-title">—</h2>
+    <p id="tour-body">—</p>
+    <div id="tour-actions">
+      <button id="tour-skip" onclick="skipTour()">Skip tour</button>
+      <button id="tour-next" onclick="nextTourStep()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let session = JSON.parse(localStorage.getItem("cc_demo_session") || "null");
+if (!session) { window.location.href = "demo-request.html"; }
+
+function ts(){ return new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"}); }
+function escH(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+let toastTimer;
+function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"),2400); }
+
+document.getElementById("user-name").textContent = session.name || "Demo User";
+document.getElementById("user-email").textContent = session.email || "";
+document.getElementById("user-av").textContent = (session.name||"DU").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+document.getElementById("store-name").textContent = session.store || "Your Store";
+document.getElementById("welcome-name").textContent = (session.name||"there").split(" ")[0];
+document.getElementById("welcome-store").textContent = session.store || "your store";
+document.getElementById("welcome-goal").textContent = session.goal || "general AI automation";
+document.getElementById("welcome-plan").textContent = session.plan || "Growth";
+document.getElementById("ov-vol").textContent = (session.volume>=3000?"3,000+":Number(session.volume||0).toLocaleString());
+document.getElementById("ov-plan").textContent = session.plan || "Growth";
+document.getElementById("ov-goal-stat").textContent = (session.goal||"—").split(" ").slice(0,2).join(" ");
+document.getElementById("cfg-name").value = session.store || "";
+document.getElementById("cfg-platform").value = session.platform || "";
+document.getElementById("cfg-goal").value = session.goal || "";
+document.getElementById("cfg-team").value = session.team ? session.team + " staff" : "";
+
+function updateCountdown() {
+  const remaining = session.expiresAt - Date.now();
+  const banner = document.getElementById("countdown-banner");
+  if (remaining <= 0) {
+    document.getElementById("cd-timer").textContent = "00:00:00";
+    banner.classList.add("urgent");
+    toast("⏱ Your sandbox has expired — activate a plan to continue");
+    return;
+  }
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  document.getElementById("cd-timer").textContent = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  banner.classList.toggle("urgent", remaining < 60*60*1000);
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+const panelTitles = {overview:"Overview",conversations:"Conversations",social:"Social Campaigns",config:"AI Agent Config"};
+function switchPanel(name, btn) {
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-link").forEach(b=>b.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  if (btn) btn.classList.add("active");
+  document.getElementById("topbar-title").textContent = panelTitles[name]||name;
+}
+
+function buildSampleConvo() {
+  const store = session.store || "the store";
+  const goalMsgs = {
+    "Reduce 'where is my order' tickets": [
+      {role:"in", text:`Hey, where's my order #4471? It's been 3 days 😬`},
+      {role:"out", text:`Hi! 📦 Order #4471 shipped yesterday and is currently in transit, expected tomorrow by 6 PM at ${store}. Here's your tracking link. Anything else?`, ai:true},
+    ],
+    "Recover abandoned carts": [
+      {role:"in", text:`I left some items in my cart but got distracted, can you help?`},
+      {role:"out", text:`Of course! I can see your cart has 2 items totaling $48.00. Want me to send you a direct checkout link? I can also apply a 10% welcome discount 🎁`, ai:true},
+    ],
+    "Help customers find products": [
+      {role:"in", text:`Do you have the rose serum in stock?`},
+      {role:"out", text:`Yes! ✨ Rose Glow Face Serum — $28.00, 30ml, in stock at ${store}. Free shipping over $50. Want me to add it to a new order?`, ai:true},
+    ],
+  };
+  return goalMsgs[session.goal] || goalMsgs["Reduce 'where is my order' tickets"];
+}
+
+const sampleConvo = buildSampleConvo();
+let convMessages = sampleConvo.map(m => ({...m, time: ts()}));
+let isLoading = false;
+
+function renderConvList() {
+  const list = document.getElementById("conv-list");
+  list.innerHTML = "";
+  const div = document.createElement("div");
+  div.className = "conv-item active";
+  const last = convMessages[convMessages.length-1];
+  div.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:5px"><span class="conv-name">Sample Customer</span><span class="conv-time">${last.time}</span></div><div class="conv-preview">${last.role==="out"?"🤖 ":""}${escH(last.text)}</div>`;
+  list.appendChild(div);
+}
+
+function renderMessages() {
+  const container = document.getElementById("chat-msgs");
+  container.innerHTML = "";
+  convMessages.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "cmsg "+(m.role==="in"?"in":"out");
+    const label = m.role==="in" ? `<div class="cmsg-label">Customer</div>` : (m.ai ? `<div class="cmsg-label">🤖 CartChat AI</div>` : "");
+    div.innerHTML = `<div class="cbubble">${label}<div style="font-size:13.5px;line-height:1.55">${escH(m.text)}</div><div class="cmsg-time">${m.time}${m.role==="out"?" ✓✓":""}</div></div>`;
+    container.appendChild(div);
+  });
+  container.scrollTop = 99999;
+}
+
+async function sendChatMsg() {
+  const ta = document.getElementById("chat-textarea");
+  const text = ta.value.trim();
+  if (!text || isLoading) return;
+  ta.value = "";
+  document.getElementById("chat-send").disabled = true;
+  // Operator/tester-typed messages render on the right ("out") but are semantically
+  // the CUSTOMER speaking to the AI, so they must map to role "user" for the API.
+  convMessages.push({role:"out", text, time:ts(), ai:false, apiRole:"user"});
+  renderMessages(); renderConvList();
+  isLoading = true;
+  document.getElementById("typing-wrap").style.display = "flex";
+
+  const systemPrompt = `You are CartChat, the AI WhatsApp assistant for ${session.store||"an online store"} (platform: ${session.platform||"unknown"}).
+Primary goal: ${session.goal||"general assistance"}. Support team size: ${session.team||"unknown"}.
+Guidelines: Be warm, concise (2-3 sentences), use emojis naturally, proactively help with orders/products, respond in the customer's language. This is a SANDBOX DEMO — showcase capability clearly.`;
+
+  // Build history using explicit apiRole when present, otherwise infer from display role.
+  // Also collapse consecutive same-role turns (API requires strict alternation) by merging text.
+  const rawHistory = convMessages
+    .filter(m => !m.error) // never replay error messages back to the API
+    .map(m => ({
+      role: m.apiRole || (m.role === "in" ? "user" : "assistant"),
+      content: m.text,
+    }));
+  const history = [];
+  for (const msg of rawHistory) {
+    if (history.length && history[history.length - 1].role === msg.role) {
+      history[history.length - 1].content += "\n" + msg.content;
+    } else {
+      history.push({ ...msg });
+    }
+  }
+  // Final safety net: API requires the conversation to end on a user turn.
+  if (history.length && history[history.length - 1].role !== "user") {
+    history.push({ role: "user", content: text });
+  }
+
+  try {
+    const res = await fetch("/api/chat", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:1000, system:systemPrompt, messages:history })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    convMessages.push({role:"out", text:data.content[0].text, time:ts(), ai:true, apiRole:"assistant"});
+  } catch(e) {
+    convMessages.push({role:"out", text:"⚠️ Demo error — "+e.message, time:ts(), error:true});
+  } finally {
+    isLoading = false;
+    document.getElementById("typing-wrap").style.display = "none";
+    renderMessages(); renderConvList();
+    document.getElementById("chat-send").disabled = false;
+  }
+}
+const chatTA = document.getElementById("chat-textarea");
+chatTA.addEventListener("input", () => { document.getElementById("chat-send").disabled = !chatTA.value.trim(); chatTA.style.height="auto"; chatTA.style.height=Math.min(chatTA.scrollHeight,100)+"px"; });
+chatTA.addEventListener("keydown", e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChatMsg();} });
+
+async function generateSample() {
+  const idea = document.getElementById("sf-brand").value.trim() || "a new product drop";
+  const out = document.getElementById("sample-post");
+  out.style.display = "block";
+  out.innerHTML = "Generating…";
+  try {
+    const res = await fetch("/api/chat", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:300, messages:[{role:"user", content:`Write one short, punchy Instagram caption (with emojis and 3 hashtags) for ${session.store||"an online store"} promoting: ${idea}. Just the caption, nothing else.`}] })
+    });
+    const data = await res.json();
+    out.textContent = data.content?.[0]?.text || "Could not generate — try again.";
+  } catch(e) { out.textContent = "Error generating sample."; }
+}
+
+const tourSteps = [
+  { title:"Welcome to your sandbox", body:"This is a fully working AI agent, configured around your store's details. You have 24 hours to explore every feature before this expires.", target:null },
+  { title:"Overview — your control center", body:"See your configured message volume, selected plan, and primary goal at a glance. This is what your dashboard looks like once live.", target:"overview" },
+  { title:"Conversations — talk to your AI", body:"This is the core of CartChat. A sample conversation is pre-loaded around your goal. Type a message yourself and watch Claude respond as your store's AI agent.", target:"conversations" },
+  { title:"Social Campaigns — generate content", body:"Try generating a real Instagram caption for a promotion. This is included in your Growth plan trial.", target:"social" },
+  { title:"AI Agent Config — your data", body:"This is the information you gave us, already configured. Once you activate, you'll be able to edit your full catalog, policies, and shipping rules here.", target:"config" },
+];
+let tourIdx = 0;
+
+function renderTourDots() {
+  const dots = document.getElementById("tour-dots");
+  dots.innerHTML = "";
+  tourSteps.forEach((_,i) => {
+    const d = document.createElement("div");
+    d.className = "tour-dot" + (i<tourIdx?" done":"") + (i===tourIdx?" active":"");
+    dots.appendChild(d);
+  });
+}
+
+function showTourStep() {
+  const step = tourSteps[tourIdx];
+  document.getElementById("tour-title").textContent = step.title;
+  document.getElementById("tour-body").textContent = step.body;
+  document.getElementById("tour-next").textContent = tourIdx === tourSteps.length-1 ? "Start Exploring →" : "Next →";
+  renderTourDots();
+  if (step.target) {
+    const map = {overview:0, conversations:1, social:2, config:3};
+    const navBtns = document.querySelectorAll(".nav-link");
+    switchPanel(step.target, navBtns[map[step.target]] || navBtns[0]);
+  }
+}
+
+function nextTourStep() {
+  tourIdx++;
+  if (tourIdx >= tourSteps.length) { skipTour(); return; }
+  showTourStep();
+}
+
+function skipTour() {
+  document.getElementById("tour-overlay").classList.remove("show");
+  switchPanel("overview", document.querySelectorAll(".nav-link")[0]);
+}
+
+function startTour() {
+  tourIdx = 0;
+  document.getElementById("tour-overlay").classList.add("show");
+  showTourStep();
+}
+
+renderConvList();
+renderMessages();
+startTour();
+</script>
+</body>
+</html>
