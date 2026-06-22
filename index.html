@@ -183,18 +183,18 @@
     #lock-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
     #lock-toast .lt-icon{color:var(--blue)}
     /* ── DASHBOARD SLIDER ── */
-    .slider-section{background:var(--ink);color:var(--paper);padding:72px 0 56px;border-bottom:1px solid var(--blue);margin-left:28px}
+    .slider-section{background:var(--paper);color:var(--ink);padding:72px 0 56px;border-bottom:1px solid var(--ink);border-top:1px solid var(--ink);margin-left:28px}
     @media(max-width:900px){.slider-section{margin-left:0}}
     .slider-header{text-align:center;padding:0 32px;margin-bottom:40px}
     .slider-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:14px}
-    .slider-title{font-size:clamp(26px,3.6vw,42px);font-weight:900;text-transform:uppercase;letter-spacing:-1.5px;line-height:1.08;margin-bottom:12px}
-    .slider-sub{font-size:14px;color:#9ca3af;max-width:480px;margin:0 auto;line-height:1.6}
+    .slider-title{font-size:clamp(26px,3.6vw,42px);font-weight:900;text-transform:uppercase;letter-spacing:-1.5px;line-height:1.08;margin-bottom:12px;color:var(--ink)}
+    .slider-sub{font-size:14px;color:var(--grey-3);max-width:480px;margin:0 auto;line-height:1.6}
 
     .slider-wrap{position:relative;overflow:hidden;width:100%}
-    .slider-track{display:flex;transition:transform .4s cubic-bezier(.4,0,.2,1);will-change:transform}
+    .slider-track{display:flex;transition:transform .9s cubic-bezier(.4,0,.2,1);will-change:transform}
 
-    .slide{flex:0 0 100%;padding:0 32px;box-sizing:border-box}
-    .slide-screen{background:#111;border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;height:340px;display:flex;margin:0 auto;max-width:860px}
+    .slide{flex:0 0 100%;padding:0 40px;box-sizing:border-box}
+    .slide-screen{background:#111;border:1px solid #2a2a2a;border-radius:14px;overflow:hidden;height:460px;display:flex;margin:0 auto;max-width:980px;box-shadow:0 20px 60px rgba(0,0,0,.18)}
     .ss-sidebar{width:160px;background:#0a0a0a;border-right:1px solid #1a1a1a;padding:14px 10px;flex-shrink:0;display:flex;flex-direction:column;gap:2px}
     .ss-logo{font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:-.3px;color:#fff;padding:0 6px 12px;border-bottom:1px solid #1a1a1a;margin-bottom:6px}
     .ss-nav-item{padding:7px 10px;font-size:10px;color:#6b7280;border-radius:6px;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .15s}
@@ -240,25 +240,26 @@
     .ss-bar-row{display:flex;align-items:center;gap:8px;padding:4px 0}
     .ss-bar{height:6px;border-radius:3px;transition:width .3s}
 
-    .slide-label{display:flex;align-items:center;gap:12px;padding:18px 8px 0;max-width:860px;margin:0 auto}
-    .slide-icon{font-size:22px}
-    .slide-name{font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:-.3px}
-    .slide-desc{font-size:12px;color:#9ca3af;margin-left:4px}
+    .slide-label{display:flex;align-items:center;gap:12px;padding:22px 8px 0;max-width:980px;margin:0 auto}
+    .slide-icon{font-size:24px}
+    .slide-name{font-weight:800;font-size:17px;text-transform:uppercase;letter-spacing:-.3px;color:var(--ink)}
+    .slide-desc{font-size:12.5px;color:var(--grey-3);margin-left:4px}
 
-    .slider-arrow{position:absolute;top:50%;transform:translateY(-60%);background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;width:42px;height:42px;border-radius:50%;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;z-index:10;line-height:1}
-    .slider-arrow:hover{background:var(--blue);border-color:var(--blue)}
+    .slider-arrow{position:absolute;top:50%;transform:translateY(-60%);background:var(--paper);border:1px solid var(--ink);color:var(--ink);width:46px;height:46px;border-radius:50%;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;z-index:10;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .slider-arrow:hover{background:var(--blue);border-color:var(--blue);color:#fff}
     .slider-arrow.left{left:10px}
     .slider-arrow.right{right:10px}
 
-    .slider-dots{display:flex;justify-content:center;gap:6px;padding:18px 0 4px}
-    .slider-dot{width:6px;height:6px;border-radius:50%;background:#2a2a2a;cursor:pointer;transition:all .2s}
-    .slider-dot.active{background:var(--blue);width:20px;border-radius:3px}
+    .slider-dots{display:flex;justify-content:center;gap:6px;padding:20px 0 4px}
+    .slider-dot{width:6px;height:6px;border-radius:50%;background:var(--grey-2);cursor:pointer;transition:all .2s}
+    .slider-dot.active{background:var(--blue);width:22px;border-radius:3px}
 
-    .slider-tabs{display:flex;justify-content:center;gap:0;flex-wrap:wrap;padding:0 32px;margin-top:6px}
-    .slider-tabs button{background:none;border:none;color:#6b7280;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;cursor:pointer;transition:all .15s;white-space:nowrap}
-    .slider-tabs button:hover{color:#fff}
+    .slider-tabs{display:flex;justify-content:center;gap:0;flex-wrap:wrap;padding:0 32px;margin-top:8px}
+    .slider-tabs button{background:none;border:none;color:var(--grey-3);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .slider-tabs button:hover{color:var(--ink)}
     .slider-tabs button.active{color:var(--blue);border-bottom:2px solid var(--blue)}
   </style>
+</head>
 </head>
 <body>
 
@@ -648,7 +649,7 @@
   </div>
 
   <div style="text-align:center;margin-top:28px">
-    <a href="pages/demo-request.html" class="cta-big-btn" style="display:inline-block">Get Your Own Dashboard →</a>
+    <a href="pages/demo-request.html" style="display:inline-block;padding:18px 44px;background:var(--blue);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s" onmouseover="this.style.background='var(--ink)';this.style.borderColor='var(--ink)'" onmouseout="this.style.background='var(--blue)';this.style.borderColor='var(--blue)'">Get Your Own Dashboard →</a>
   </div>
 </div>
 
@@ -886,7 +887,7 @@ track.addEventListener("touchend", e => {
 });
 
 // Auto-advance every 5 seconds
-let autoPlay = setInterval(() => slideMove(1), 5000);
+let autoPlay = setInterval(() => slideMove(1), 8000);
 track.addEventListener("touchstart", () => clearInterval(autoPlay), { passive: true });
 document.querySelectorAll(".slider-arrow, .slider-tabs button").forEach(el => {
   el.addEventListener("click", () => { clearInterval(autoPlay); });
