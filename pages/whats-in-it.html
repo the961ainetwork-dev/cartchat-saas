@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What's In It For You — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    /* ── NAV ── */
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;background:var(--paper);z-index:40}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    .nav-top-links{display:flex;gap:28px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    .nav-top-links a{color:var(--grey-3);transition:color .15s}
+    .nav-top-links a:hover,.nav-top-links a.active{color:var(--ink)}
+    .nav-cta{background:var(--ink);color:var(--paper);padding:9px 20px;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s;border:none}
+    .nav-cta:hover{background:var(--blue)}
+    @media(max-width:800px){.nav-top-links{display:none}}
+
+    /* ── HERO ── */
+    .hero{padding:80px 32px 64px;border-bottom:1px solid var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;max-width:1100px;margin:0 auto}
+    @media(max-width:800px){.hero{grid-template-columns:1fr;padding:60px 24px 48px}}
+    .hero-left{}
+    .hero-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+    .hero-eyebrow::before{content:"";width:20px;height:1px;background:var(--blue)}
+    .hero h1{font-size:clamp(34px,5vw,60px);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:1.02;margin-bottom:20px}
+    .hero h1 em{color:var(--blue);font-style:normal}
+    .hero-lead{font-size:16px;color:var(--grey-3);line-height:1.75;max-width:440px}
+    .hero-right{display:flex;flex-direction:column;gap:14px;padding-bottom:4px}
+    .hero-stat{border-top:1px solid var(--grey-2);padding-top:14px;display:flex;justify-content:space-between;align-items:baseline}
+    .hero-stat-num{font-family:var(--mono);font-size:28px;font-weight:900;color:var(--ink)}
+    .hero-stat-lbl{font-family:var(--mono);font-size:10px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;text-align:right;max-width:160px;line-height:1.4}
+
+    /* ── PILLARS ── */
+    #pillars{max-width:1100px;margin:0 auto;padding:0 32px 0}
+    @media(max-width:800px){#pillars{padding:0 24px}}
+
+    .pillar{display:grid;grid-template-columns:120px 1fr;gap:0;border-bottom:1px solid var(--ink);padding:64px 0}
+    @media(max-width:800px){.pillar{grid-template-columns:1fr;padding:48px 0}}
+    .pillar:first-child{border-top:1px solid var(--ink)}
+
+    .pillar-num-col{padding-right:32px;padding-top:4px}
+    .pillar-num{font-family:var(--mono);font-size:52px;font-weight:900;color:var(--grey-1);line-height:1;display:block}
+    .pillar-icon{font-size:28px;display:block;margin-top:12px}
+
+    .pillar-content{}
+    .pillar-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:12px}
+    .pillar-title{font-size:clamp(22px,2.8vw,32px);font-weight:900;text-transform:uppercase;letter-spacing:-1px;line-height:1.08;margin-bottom:16px}
+    .pillar-lead{font-size:15px;color:var(--grey-3);line-height:1.75;margin-bottom:36px;max-width:600px}
+
+    .sub-points{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:700px){.sub-points{grid-template-columns:1fr}}
+    .sub-point{border:1px solid var(--grey-2);padding:24px}
+    .sub-point-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .sub-point-tag{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);background:#eef3fb;padding:3px 10px;border-radius:99px}
+    .sub-point-title{font-size:13.5px;font-weight:800;text-transform:uppercase;letter-spacing:-.2px;margin-bottom:8px}
+    .sub-point-body{font-size:13px;color:var(--grey-3);line-height:1.65}
+
+    /* ── SUMMARY GRID ── */
+    .summary-section{background:var(--grey-1);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:64px 32px}
+    .summary-inner{max-width:1100px;margin:0 auto}
+    .summary-title{font-size:clamp(24px,3vw,36px);font-weight:900;text-transform:uppercase;letter-spacing:-1.2px;margin-bottom:40px;text-align:center}
+    .summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+    @media(max-width:900px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:500px){.summary-grid{grid-template-columns:1fr}}
+    .summary-item{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px 20px}
+    .summary-item-icon{font-size:24px;margin-bottom:12px}
+    .summary-item-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:-.2px;margin-bottom:6px}
+    .summary-item-body{font-size:11.5px;color:var(--grey-3);line-height:1.55}
+
+    /* ── CTA BANNER ── */
+    .cta-banner{background:var(--ink);color:var(--paper);padding:80px 32px;text-align:center;border-top:3px solid var(--blue)}
+    .cta-banner-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:20px}
+    .cta-banner h2{font-size:clamp(32px,5vw,64px);font-weight:900;text-transform:uppercase;letter-spacing:-2.5px;line-height:1.02;margin-bottom:10px}
+    .cta-banner h2 em{color:var(--blue);font-style:normal}
+    .cta-banner-sub{font-size:16px;color:#9ca3af;max-width:520px;margin:0 auto 40px;line-height:1.65}
+    .cta-banner-actions{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
+    .cta-primary{background:var(--blue);color:#fff;padding:20px 48px;font-family:var(--mono);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s;display:inline-block}
+    .cta-primary:hover{background:#fff;color:var(--ink);border-color:#fff}
+    .cta-secondary{color:#9ca3af;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:20px 24px;border:1px solid #2a2a2a;transition:all .15s;display:inline-block}
+    .cta-secondary:hover{border-color:#9ca3af;color:#fff}
+    .cta-note{margin-top:20px;font-family:var(--mono);font-size:11px;color:#4b5563;text-transform:uppercase;letter-spacing:.5px}
+
+    footer{padding:32px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;border-top:1px solid var(--ink);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    .footer-links{display:flex;gap:24px;flex-wrap:wrap}
+    .footer-links a{color:var(--grey-3);transition:color .15s}
+    .footer-links a:hover{color:var(--ink)}
+
+    /* scroll reveal */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="../index.html"><div class="nav-mark">Cart<span class="dot">·</span>Chat</div></a>
+  <div class="nav-top-links">
+    <a href="whats-in-it.html" class="active">What's In It For You</a>
+    <a href="lists.html">Our Lists</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="broadcast.html">Broadcast</a>
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQ</a>
+  </div>
+  <a href="demo-request.html" class="nav-cta">Claim Your Test Period →</a>
+</div>
+
+<!-- HERO -->
+<div style="border-bottom:1px solid var(--ink)">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">The Real Case for AI on WhatsApp</div>
+      <h1>What's in it<br/>for <em>you?</em></h1>
+      <p class="hero-lead">Traditional automation is one-way noise. An AI agent on WhatsApp is a live, two-way intelligence layer that operates at machine speed — around the clock, across every time zone, in the exact channel your audience already lives in.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stat"><span class="hero-stat-num">0s</span><span class="hero-stat-lbl">Latency on inbound response</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">24/7</span><span class="hero-stat-lbl">Availability across all time zones</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">∞</span><span class="hero-stat-lbl">Simultaneous conversations, no degradation</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">1</span><span class="hero-stat-lbl">Channel your audience already uses every day</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 PILLARS -->
+<div id="pillars">
+
+  <!-- 01 -->
+  <div class="pillar reveal">
+    <div class="pillar-num-col">
+      <span class="pillar-num">01</span>
+      <span class="pillar-icon">🔁</span>
+    </div>
+    <div class="pillar-content">
+      <div class="pillar-label">Pillar One</div>
+      <div class="pillar-title">True Asynchronous,<br/>Two-Way Engagement</div>
+      <p class="pillar-lead">Traditional automation is often one-way — sending a broadcast or a transaction receipt — or rigidly linear, like pressing 1 for sales and 2 for support. AI agents break that constraint entirely. Every message is the beginning of a real conversation.</p>
+      <div class="sub-points">
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Outbound</span></div>
+          <div class="sub-point-title">Context-Aware Outreach</div>
+          <div class="sub-point-body">AI agents don't just blast notifications — they open live conversations. If an agent sends a proactive alert or outreach message and the recipient replies with a complex question, the AI immediately processes context and converses naturally, without breaking the thread.</div>
+        </div>
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Inbound</span></div>
+          <div class="sub-point-title">Zero-Latency Front Desk</div>
+          <div class="sub-point-body">When a user initiates contact, the AI agent acts as an instantly available, zero-latency front desk. It understands intent, extracts key data, and resolves queries — all without making the user wait for a human agent to become available.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="pillar reveal">
+    <div class="pillar-num-col">
+      <span class="pillar-num">02</span>
+      <span class="pillar-icon">🧠</span>
+    </div>
+    <div class="pillar-content">
+      <div class="pillar-label">Pillar Two</div>
+      <div class="pillar-title">Contextual Data Ingestion<br/>and Processing</div>
+      <p class="pillar-lead">An AI-driven WhatsApp service bridges the gap between unstructured chat data and your structured backend systems. It doesn't just read messages — it interprets them, extracts meaning, and acts on them.</p>
+      <div class="sub-points">
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Multi-Modal</span></div>
+          <div class="sub-point-title">Text, Voice, Images, Documents</div>
+          <div class="sub-point-body">Advanced AI agents handle text, voice notes, images, and documents like PDFs or receipts sent via WhatsApp. They can parse an image of an invoice, transcribe a frantic voice note, or extract structured data from a document — instantly.</div>
+        </div>
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Integration</span></div>
+          <div class="sub-point-title">Live Backend Synchronization</div>
+          <div class="sub-point-body">The agent acts as an intermediary that can fetch data from or write data to your CRMs, ERPs, databases, or project management boards based on a simple text command — keeping backend records perfectly synchronized in real time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="pillar reveal">
+    <div class="pillar-num-col">
+      <span class="pillar-num">03</span>
+      <span class="pillar-icon">⚡</span>
+    </div>
+    <div class="pillar-content">
+      <div class="pillar-label">Pillar Three</div>
+      <div class="pillar-title">Scalability with<br/>"Always-On" Reliability</div>
+      <p class="pillar-lead">Human teams are constrained by working hours, shifting time zones, and cognitive bandwidth. An AI agent layer operates without any of those constraints — at any hour, at any volume, without degradation.</p>
+      <div class="sub-points">
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Scale</span></div>
+          <div class="sub-point-title">Unlimited Parallelism</div>
+          <div class="sub-point-body">An AI agent layer can handle thousands of detailed, simultaneous conversations without dropping context, lagging, or lowering the quality of communication. One agent, infinite bandwidth.</div>
+        </div>
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Availability</span></div>
+          <div class="sub-point-title">24/7/365 Operational Coverage</div>
+          <div class="sub-point-body">Critical operations, urgent requests, and cross-border communications do not have to wait for the next business morning. The service remains fully operational — Beirut time, Dubai time, and everywhere in between.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="pillar reveal">
+    <div class="pillar-num-col">
+      <span class="pillar-num">04</span>
+      <span class="pillar-icon">🎯</span>
+    </div>
+    <div class="pillar-content">
+      <div class="pillar-label">Pillar Four</div>
+      <div class="pillar-title">Operational Speed in<br/>High-Volatility Environments</div>
+      <p class="pillar-lead">In fast-moving environments, information decay happens rapidly. Waiting hours to process an inbound lead, verify a transaction, or update a status can break an entire process chain. Speed is not a feature — it is a competitive requirement.</p>
+      <div class="sub-points">
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Speed</span></div>
+          <div class="sub-point-title">Instant Verification Loops</div>
+          <div class="sub-point-body">Automated workflows trigger immediate verification the second a message hits the system — confirming receipt of goods, validating an identity, or updating a ledger entry — without human delay in the middle of the chain.</div>
+        </div>
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Proactive</span></div>
+          <div class="sub-point-title">Exception Handling at Source</div>
+          <div class="sub-point-body">If an internal system detects an anomaly, the outbound AI agent immediately reaches out to the relevant stakeholder via WhatsApp to flag the issue and gather necessary input — fixing it on the spot, not in tomorrow's standup.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="pillar reveal">
+    <div class="pillar-num-col">
+      <span class="pillar-num">05</span>
+      <span class="pillar-icon">🤝</span>
+    </div>
+    <div class="pillar-content">
+      <div class="pillar-label">Pillar Five</div>
+      <div class="pillar-title">Seamless Human-in-the-Loop<br/>Handoffs</div>
+      <p class="pillar-lead">Automating WhatsApp with AI agents does not mean removing humans entirely — it optimizes their time. The AI handles the volume; humans handle the moments that genuinely require judgment, empathy, or authority.</p>
+      <div class="sub-points">
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Triage</span></div>
+          <div class="sub-point-title">Filtering the Signal from the Noise</div>
+          <div class="sub-point-body">The AI handles the high-volume, repetitive, or low-complexity baseline communication — freeing your team to focus exclusively on the conversations that require a human touch, not every notification that comes in.</div>
+        </div>
+        <div class="sub-point">
+          <div class="sub-point-head"><span class="sub-point-tag">Escalation</span></div>
+          <div class="sub-point-title">Intelligent Context Transfer</div>
+          <div class="sub-point-body">When a conversation hits a threshold of complexity, emotional sensitivity, or a strict edge case, the AI packages the full chat transcript, a summary, and context — then hands it to a human coordinator without forcing the user to repeat themselves from scratch.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUMMARY GRID -->
+<div class="summary-section">
+  <div class="summary-inner">
+    <div class="summary-title">Five reasons. One platform.</div>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-item-icon">🔁</div>
+        <div class="summary-item-title">Two-Way Engagement</div>
+        <div class="summary-item-body">Every notification becomes a live conversation. Every inbound message gets an instant, intelligent reply.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-icon">🧠</div>
+        <div class="summary-item-title">Data Processing</div>
+        <div class="summary-item-body">Text, voice, images, and documents — ingested, interpreted, and synced to your backend in real time.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-icon">⚡</div>
+        <div class="summary-item-title">Always-On Scale</div>
+        <div class="summary-item-body">Thousands of simultaneous conversations, zero latency, 24/7 — with no degradation as volume grows.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-icon">🎯</div>
+        <div class="summary-item-title">Operational Speed</div>
+        <div class="summary-item-body">Instant verification, proactive exception handling, and zero wait time in high-volatility pipelines.</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-icon">🤝</div>
+        <div class="summary-item-title">Human + AI</div>
+        <div class="summary-item-body">AI handles the volume. Humans handle the moments. Seamless handoff, full context preserved.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div class="cta-banner-eyebrow">No Credit Card Required</div>
+  <h2>Claim your<br/><em>testing period.</em></h2>
+  <p class="cta-banner-sub">See all five pillars working on your actual store — in a live, AI-powered sandbox configured around your business. Two minutes to set up. Twenty-four hours to explore.</p>
+  <div class="cta-banner-actions">
+    <a href="demo-request.html" class="cta-primary">Claim Your Testing Period →</a>
+    <a href="pricing.html" class="cta-secondary">View Pricing</a>
+  </div>
+  <div class="cta-note">Free 24-hour sandbox · Configured for your store · No commitment</div>
+</div>
+
+<footer>
+  <div>Cart·Chat — © 2026</div>
+  <div class="footer-links">
+    <a href="../index.html">Home</a>
+    <a href="whats-in-it.html">What's In It For You</a>
+    <a href="lists.html">Our Lists</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQ</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
