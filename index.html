@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CartChat — Reliable as Swiss Watchmaking</title>
+  <title>CartChat — Signal Through the Noise</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
@@ -25,16 +25,40 @@
     @media(max-width:900px){nav{left:0}}
     .nav-mark{font-weight:900;font-size:18px;letter-spacing:-0.5px;text-transform:uppercase}
     .nav-mark .dot{color:var(--blue)}
-    .nav-links{display:flex;align-items:center;gap:40px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+    .nav-links{display:flex;align-items:center;gap:32px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px}
     .nav-links span{color:var(--grey-2);cursor:not-allowed;display:flex;align-items:center;gap:6px}
     .nav-links span::after{content:"🔒";font-size:9px}
+    .nav-links a{color:var(--ink);transition:color .15s}
+    .nav-links a:hover{color:var(--blue)}
     .nav-cta{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:9px 22px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;transition:all .15s}
     .nav-cta:hover{background:var(--blue);border-color:var(--blue)}
     @media(max-width:900px){.nav-links{display:none}}
 
+    /* ── HERO ── */
     .hero{padding:140px 32px 0;margin-left:28px}
     @media(max-width:900px){.hero{margin-left:0;padding-top:120px}}
-    .hero-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-bottom:28px}
+
+    /* Intelligence Dashboard banner — big bold statement above headline */
+    .hero-intelligence-banner{
+      background:var(--ink);color:var(--paper);
+      padding:18px 32px;margin-bottom:0;
+      display:flex;align-items:center;justify-content:space-between;
+      border-bottom:3px solid var(--blue);
+      margin-left:-32px;margin-right:-32px;
+      flex-wrap:wrap;gap:12px;
+    }
+    .hero-intelligence-banner .banner-headline{
+      font-size:clamp(16px,2vw,22px);font-weight:900;
+      letter-spacing:-0.5px;text-transform:uppercase;
+    }
+    .hero-intelligence-banner .banner-headline span{color:var(--blue)}
+    .hero-intelligence-banner .banner-sub{
+      font-family:var(--mono);font-size:11px;color:var(--grey-2);
+      text-transform:uppercase;letter-spacing:1.5px;max-width:420px;line-height:1.5;
+    }
+    @media(max-width:900px){.hero-intelligence-banner{margin-left:0;margin-right:0}}
+
+    .hero-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-top:36px;margin-bottom:28px}
     .hero-eyebrow::before{content:"";width:24px;height:1px;background:var(--blue)}
     .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:48px}
     .hero-headline{grid-column:1/9}
@@ -50,6 +74,17 @@
     .btn-primary{background:var(--blue);color:var(--paper);padding:20px 44px;font-family:var(--mono);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;transition:all .15s;border:1px solid var(--blue)}
     .btn-primary:hover{background:var(--ink);border-color:var(--ink)}
     .btn-locked{padding:20px 36px;font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--grey-2);border-left:none;color:var(--grey-2);cursor:not-allowed;display:flex;align-items:center;gap:8px}
+
+    /* ── CTA — moved directly after hero ── */
+    .cta-section{background:var(--ink);color:var(--paper);border-bottom:1px solid var(--blue);text-align:center;padding:72px 32px;margin-left:28px}
+    @media(max-width:900px){.cta-section{margin-left:0}}
+    .cta-inner{max-width:640px;margin:0 auto}
+    .cta-inner h2{font-size:clamp(30px,4vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1.8px;line-height:1.08;margin-bottom:18px}
+    .cta-inner h2 .accent{color:var(--blue)}
+    .cta-inner p{color:var(--grey-2);font-size:15px;margin-bottom:36px}
+    .cta-big-btn{background:var(--blue);color:var(--paper);padding:22px 52px;font-family:var(--mono);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s;display:inline-block}
+    .cta-big-btn:hover{background:var(--paper);color:var(--ink)}
+    .cta-sub{margin-top:18px;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
 
     .visual-block{margin-top:0;height:380px;position:relative;overflow:hidden;background:var(--ink)}
     .visual-block .duotone{position:absolute;inset:0;background:repeating-linear-gradient(115deg, transparent 0px, transparent 2px, rgba(0,71,171,.08) 2px, rgba(0,71,171,.08) 3px),radial-gradient(ellipse at 30% 40%, #2a2a2a 0%, #0a0a0a 70%)}
@@ -93,38 +128,52 @@
     .ledger-desc{font-size:12.5px;color:var(--grey-3);line-height:1.5}
     .ledger-tag{font-family:var(--mono);font-size:9.5px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;justify-self:end;border:1px solid var(--grey-2);padding:3px 9px}
 
-    .price-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
-    @media(max-width:900px){.price-grid{grid-template-columns:1fr}}
-    .price-card{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:32px 26px;display:flex;flex-direction:column;position:relative}
-    .price-card.featured{background:var(--ink);color:var(--paper)}
-    .price-tier{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin-bottom:18px}
-    .price-num{font-size:50px;font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:6px}
-    .price-num span{font-size:13px;font-weight:400;letter-spacing:0;color:var(--grey-3)}
-    .price-card.featured .price-num span{color:var(--grey-2)}
-    .price-desc{font-size:12px;color:var(--grey-3);margin-bottom:24px;line-height:1.6}
-    .price-card.featured .price-desc{color:var(--grey-2)}
-    .price-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;flex:1}
-    .price-list li{font-size:12.5px;display:flex;gap:10px;align-items:baseline}
-    .price-list li::before{content:"—";color:var(--blue);font-weight:700;flex-shrink:0}
-    .price-btn{padding:13px;text-align:center;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--ink);transition:all .15s;background:var(--paper);color:var(--ink)}
-    .price-card:not(.featured) .price-btn:hover{background:var(--ink);color:var(--paper)}
-    .price-card.featured .price-btn{border-color:var(--paper);background:var(--paper);color:var(--ink)}
-    .price-card.featured .price-btn:hover{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+    /* ── LISTS SECTION (Our Lists) ── */
+    .lists-intro{font-family:var(--mono);font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+    .lists-intro::before{content:"";width:20px;height:1px;background:var(--blue)}
+    .lists-tagline{font-size:clamp(18px,2.2vw,26px);font-weight:700;letter-spacing:-.5px;color:var(--ink);max-width:680px;line-height:1.35;margin-bottom:40px;font-style:italic}
+    .lists-two-col{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+    @media(max-width:760px){.lists-two-col{grid-template-columns:1fr}}
+    .lists-col{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:32px}
+    .lists-col-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:14px}
+    .lists-col-title{font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:-.5px;margin-bottom:8px}
+    .lists-col-desc{font-size:13px;color:var(--grey-3);line-height:1.65;margin-bottom:24px}
+    .lists-cats{display:flex;flex-direction:column;gap:10px}
+    .lists-cat{padding:14px 16px;border:1px solid var(--grey-2);display:flex;align-items:flex-start;gap:12px}
+    .lists-cat-name{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:-.2px;margin-bottom:3px}
+    .lists-cat-sub{font-family:var(--mono);font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+    .lists-cat-desc{font-size:12px;color:var(--grey-3);line-height:1.5}
+    .lists-cat-num{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--grey-2);flex-shrink:0;width:24px}
+    .lists-cta{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap}
+    .lists-cta a{padding:12px 24px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+    .lists-cta a:hover{background:var(--ink);color:var(--paper)}
+    .lists-cta a.primary{background:var(--ink);color:var(--paper)}
+    .lists-cta a.primary:hover{background:var(--blue);border-color:var(--blue)}
 
-    .cta-section{background:var(--ink);color:var(--paper);border-bottom:none;text-align:center;padding:90px 32px}
-    .cta-section .section-num,.cta-section .section-head{display:none}
-    .cta-inner{max-width:640px;margin:0 auto}
-    .cta-inner h2{font-size:clamp(30px,4vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1.8px;line-height:1.08;margin-bottom:18px}
-    .cta-inner h2 .accent{color:var(--blue)}
-    .cta-inner p{color:var(--grey-2);font-size:15px;margin-bottom:36px}
-    .cta-big-btn{background:var(--blue);color:var(--paper);padding:22px 52px;font-family:var(--mono);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s;display:inline-block}
-    .cta-big-btn:hover{background:var(--paper);color:var(--ink)}
-    .cta-sub{margin-top:18px;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    /* ── BROADCAST BANNER ── */
+    .broadcast-banner{background:var(--grey-1);border-bottom:1px solid var(--ink);margin-left:28px;padding:72px 32px}
+    @media(max-width:900px){.broadcast-banner{margin-left:0}}
+    .bb-head{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-bottom:0}
+    .bb-title{grid-column:1/8}
+    .bb-title h2{font-size:clamp(26px,3.2vw,44px);font-weight:900;letter-spacing:-1.4px;text-transform:uppercase;line-height:1.05;margin-bottom:14px}
+    .bb-title .bb-tagline{font-size:14px;color:var(--grey-3);line-height:1.7;font-style:italic;max-width:480px}
+    .bb-stats{grid-column:8/13;display:flex;flex-direction:column;gap:0;border-left:1px solid var(--ink);padding-left:32px}
+    @media(max-width:900px){.bb-title{grid-column:1/13}.bb-stats{grid-column:1/13;border-left:none;padding-left:0;margin-top:32px;border-top:1px solid var(--ink);padding-top:24px}}
+    .bb-stat{padding:18px 0;border-bottom:1px solid var(--grey-2);display:flex;justify-content:space-between;align-items:center}
+    .bb-stat:last-child{border-bottom:none}
+    .bb-stat-num{font-family:var(--mono);font-size:28px;font-weight:900;color:var(--ink)}
+    .bb-stat-lbl{font-family:var(--mono);font-size:10px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;text-align:right}
+    .bb-actions{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap}
+    .bb-actions a{padding:15px 28px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+    .bb-actions a:hover{background:var(--ink);color:var(--paper)}
+    .bb-actions a.primary{background:var(--ink);color:var(--paper)}
+    .bb-actions a.primary:hover{background:var(--blue);border-color:var(--blue)}
 
     footer{margin-left:28px;padding:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--grey-3)}
     @media(max-width:900px){footer{margin-left:0}}
-    .footer-links span{color:var(--grey-2);cursor:not-allowed}
-    .footer-links{display:flex;gap:28px}
+    .footer-links{display:flex;gap:24px;flex-wrap:wrap}
+    .footer-links a{color:var(--grey-3);transition:color .15s}
+    .footer-links a:hover{color:var(--ink)}
 
     .fade-in{opacity:0;transform:translateY(16px);animation:fadeIn .7s ease forwards}
     @keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
@@ -146,13 +195,22 @@
   <div class="nav-mark">Cart<span class="dot">·</span>Chat</div>
   <div class="nav-links">
     <span class="locked-nav">Use Cases</span>
-    <span class="locked-nav">Integrations</span>
-    <a href="pages/broadcast.html" style="color:var(--blue);text-decoration:none">Broadcast Service →</a>
+    <a href="pages/lists.html">Our Lists</a>
+    <a href="pages/pricing.html">Pricing</a>
+    <a href="pages/broadcast.html" style="color:var(--blue)">Broadcast →</a>
   </div>
   <a href="pages/demo-request.html" class="nav-cta">Request a Demo →</a>
 </nav>
 
+<!-- HERO -->
 <div class="hero">
+
+  <!-- Intelligence Dashboard Banner -->
+  <div class="hero-intelligence-banner">
+    <div class="banner-headline">Signal Through the Noise: <span>Your New Intelligence Dashboard</span></div>
+    <div class="banner-sub">Navigating regional macroeconomics and volatile markets requires precision. You need the signal, not the noise.</div>
+  </div>
+
   <div class="hero-eyebrow">Built for Online Stores — MENA Region</div>
   <div class="hero-grid">
     <div class="hero-headline fade-in">
@@ -173,7 +231,18 @@
   </div>
 </div>
 
-<div class="visual-block">
+<!-- CTA — directly after hero -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <h2>Stop reading about it.<br/>Talk to your<span class="accent"> ai salesperson.</span></h2>
+    <p>Two-minute qualifier form. Instant 24-hour sandbox. No credit card required.</p>
+    <a href="pages/demo-request.html" class="cta-big-btn">Request a Demo</a>
+    <div class="cta-sub">100% free for 24 hours · Configured for your store</div>
+  </div>
+</div>
+
+<!-- VISUAL -->
+<div class="visual-block" style="margin-left:28px">
   <div class="duotone"></div>
   <div class="box"></div>
   <div class="visual-caption">Lumière Beauty Store — Order #4471</div>
@@ -183,6 +252,7 @@
   </div>
 </div>
 
+<!-- USE CASES -->
 <section id="usecases">
   <div class="section-head">
     <div class="section-num">01</div>
@@ -211,6 +281,7 @@
   </div>
 </section>
 
+<!-- FEATURES LEDGER -->
 <section id="features">
   <div class="section-head">
     <div class="section-num">02</div>
@@ -228,74 +299,150 @@
   </div>
 </section>
 
-<section id="pricing">
+<!-- OUR LISTS — B2B/B2C Segment Section -->
+<section id="our-lists">
   <div class="section-head">
     <div class="section-num">03</div>
-    <div class="section-title"><h2>Pricing.<br/>Choose in your demo.</h2></div>
-    <div class="section-desc"><p>You'll select a plan to trial as the final step of your demo request. No charge until you activate.</p></div>
+    <div class="section-title"><h2>Our Lists.<br/>Your audience.</h2></div>
+    <div class="section-desc"><p>Pre-built, precision-segmented B2B and B2C contact lists. Choose the audience that fits your message — or submit your own.</p></div>
   </div>
-  <div class="price-grid">
-    <div class="price-card">
-      <div class="price-tier">Starter</div>
-      <div class="price-num">$59<span> / month</span></div>
-      <div class="price-desc">For small stores getting started with WhatsApp automation.</div>
-      <ul class="price-list"><li>1 WhatsApp number</li><li>500 conversations / month</li><li>Order tracking &amp; product Q&amp;A</li><li>Social campaign generator</li></ul>
-      <a href="pages/demo-request.html" class="price-btn">Trial This Plan</a>
+
+  <div class="lists-intro">Audience Intelligence</div>
+  <div class="lists-tagline">"Navigating regional macroeconomics and volatile markets requires precision. You need the signal, not the noise."</div>
+
+  <div class="lists-two-col">
+    <!-- B2B -->
+    <div class="lists-col">
+      <div class="lists-col-label">B2B — The Strategic Ecosystem</div>
+      <div class="lists-col-title">Business Lists</div>
+      <div class="lists-col-desc">B2B segmentation focuses on logic, ROI, and organizational structures. These lists are typically used for partnership building, capital raising, and enterprise sales.</div>
+      <div class="lists-cats">
+        <div class="lists-cat">
+          <div class="lists-cat-num">01</div>
+          <div>
+            <div class="lists-cat-name">Firmographic</div>
+            <div class="lists-cat-sub">Company Attributes</div>
+            <div class="lists-cat-desc">Industry vertical, headcount, revenue, geographic focus (MENA, GCC), or operating model (NGO vs. corporate).</div>
+          </div>
+        </div>
+        <div class="lists-cat">
+          <div class="lists-cat-num">02</div>
+          <div>
+            <div class="lists-cat-name">Technographic</div>
+            <div class="lists-cat-sub">Technology Stack</div>
+            <div class="lists-cat-desc">Legacy vs. cloud-native. Companies integrating Agentic AI workflows and multi-agent systems.</div>
+          </div>
+        </div>
+        <div class="lists-cat">
+          <div class="lists-cat-num">03</div>
+          <div>
+            <div class="lists-cat-name">Persona &amp; Role-Based</div>
+            <div class="lists-cat-sub">The Decision Makers</div>
+            <div class="lists-cat-desc">Diaspora investors, policy directors, C-suite executives, university innovation scouts.</div>
+          </div>
+        </div>
+        <div class="lists-cat">
+          <div class="lists-cat-num">04</div>
+          <div>
+            <div class="lists-cat-name">Intent &amp; Lifecycle</div>
+            <div class="lists-cat-sub">Active Behavior Now</div>
+            <div class="lists-cat-desc">Early-stage ventures seeking sandboxes, recently funded companies, enterprises scaling internationally.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lists-cta">
+        <a href="pages/lists.html" class="primary">Explore B2B Lists →</a>
+        <a href="pages/broadcast-order.html?type=B2B">Order a Broadcast</a>
+      </div>
     </div>
-    <div class="price-card featured">
-      <div class="price-tier">Growth — Most Popular</div>
-      <div class="price-num">$179<span> / month</span></div>
-      <div class="price-desc">For growing stores needing full automation and recovery tools.</div>
-      <ul class="price-list"><li>3 WhatsApp numbers</li><li>Unlimited conversations</li><li>Shopify / WooCommerce sync</li><li>Abandoned cart recovery</li><li>Advanced analytics</li></ul>
-      <a href="pages/demo-request.html" class="price-btn">Trial This Plan</a>
-    </div>
-    <div class="price-card">
-      <div class="price-tier">Agency</div>
-      <div class="price-num">$449<span> / month</span></div>
-      <div class="price-desc">Manage multiple store clients from one account.</div>
-      <ul class="price-list"><li>Unlimited stores</li><li>White-label dashboard</li><li>API access</li><li>Dedicated account manager</li></ul>
-      <a href="pages/demo-request.html" class="price-btn">Trial This Plan</a>
+
+    <!-- B2C -->
+    <div class="lists-col">
+      <div class="lists-col-label">B2C — The Consumer Audience</div>
+      <div class="lists-col-title">Consumer Lists</div>
+      <div class="lists-col-desc">B2C segmentation relies on behavior, identity, and engagement rhythms. These lists drive direct sales, subscriptions, and brand loyalty.</div>
+      <div class="lists-cats">
+        <div class="lists-cat">
+          <div class="lists-cat-num">01</div>
+          <div>
+            <div class="lists-cat-name">Demographic &amp; Geographic</div>
+            <div class="lists-cat-sub">Fundamental Descriptors</div>
+            <div class="lists-cat-desc">Age brackets, income, education, Beirut residents vs. international diaspora.</div>
+          </div>
+        </div>
+        <div class="lists-cat">
+          <div class="lists-cat-num">02</div>
+          <div>
+            <div class="lists-cat-name">Behavioral &amp; Engagement</div>
+            <div class="lists-cat-sub">Platform Interaction</div>
+            <div class="lists-cat-desc">Daily news readers, cart abandoners, inactive subscribers, highly engaged content advocates.</div>
+          </div>
+        </div>
+        <div class="lists-cat">
+          <div class="lists-cat-num">03</div>
+          <div>
+            <div class="lists-cat-name">Psychographic</div>
+            <div class="lists-cat-sub">Interests &amp; Lifestyles</div>
+            <div class="lists-cat-desc">Early tech adopters, smart-citizenship advocates, artisanal product buyers, sports fans.</div>
+          </div>
+        </div>
+        <div class="lists-cat">
+          <div class="lists-cat-num">04</div>
+          <div>
+            <div class="lists-cat-name">Transactional &amp; Geospatial</div>
+            <div class="lists-cat-sub">Purchase &amp; Location</div>
+            <div class="lists-cat-desc">High-frequency buyers, seasonal purchasers, foot-traffic segments for localized activations.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lists-cta">
+        <a href="pages/lists.html" class="primary">Explore B2C Lists →</a>
+        <a href="pages/broadcast-order.html?type=B2C">Order a Broadcast</a>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- BROADCAST SERVICE BANNER -->
-<section id="broadcast-banner" style="background:var(--grey-1);border-bottom:1px solid var(--ink)">
-  <div class="section-head">
-    <div class="section-num">06</div>
-    <div class="section-title"><h2>Build your own list.<br/>Or use ours.</h2></div>
-    <div class="section-desc"><p>Beyond the AI agent, CartChat runs a WhatsApp Broadcast Service — send a single commercial campaign to a precisely segmented B2B or B2C audience. Build your own contact list, or choose from our pre-segmented house lists across firmographic, behavioral, persona, and more.</p></div>
-  </div>
-  <div style="display:flex;gap:0;border-top:1px solid var(--ink);flex-wrap:wrap">
-    <div style="flex:1;min-width:240px;padding:28px 32px;border-right:1px solid var(--ink)">
-      <div style="font-family:var(--mono);font-size:30px;font-weight:900;color:var(--red);margin-bottom:6px">$29</div>
-      <div style="font-size:12px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;font-family:var(--mono)">First Broadcast</div>
+<div class="broadcast-banner">
+  <div class="bb-head section-head" style="margin-bottom:0">
+    <div class="bb-title" style="grid-column:1/8">
+      <h2>Build your own list.<br/>Or use ours.</h2>
+      <div class="bb-tagline">"Navigating regional macroeconomics and volatile markets requires precision. You need the signal, not the noise."</div>
+      <div class="bb-actions" style="margin-top:28px">
+        <a href="pages/lists.html" class="primary">Browse All Lists →</a>
+        <a href="pages/segments.html">Segment Guide</a>
+        <a href="pages/broadcast.html">Start a Broadcast</a>
+      </div>
     </div>
-    <div style="flex:1;min-width:240px;padding:28px 32px;border-right:1px solid var(--ink)">
-      <div style="font-family:var(--mono);font-size:30px;font-weight:900;color:var(--red);margin-bottom:6px">-10%</div>
-      <div style="font-size:12px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;font-family:var(--mono)">Every Broadcast After</div>
-    </div>
-    <div style="flex:1;min-width:240px;padding:28px 32px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-      <a href="pages/segments.html" style="padding:13px 26px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--paper)">Explore Segments →</a>
-      <a href="pages/broadcast.html" style="padding:13px 26px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--ink);color:var(--paper)">Start Broadcast →</a>
+    <div class="bb-stats" style="grid-column:9/13">
+      <div class="bb-stat">
+        <div class="bb-stat-num">$29</div>
+        <div class="bb-stat-lbl">First Broadcast</div>
+      </div>
+      <div class="bb-stat">
+        <div class="bb-stat-num">-10%</div>
+        <div class="bb-stat-lbl">Every Broadcast After</div>
+      </div>
+      <div class="bb-stat">
+        <div class="bb-stat-num">24h</div>
+        <div class="bb-stat-lbl">Review Turnaround</div>
+      </div>
+      <div class="bb-stat">
+        <div class="bb-stat-num">B2B+B2C</div>
+        <div class="bb-stat-lbl">Segment Coverage</div>
+      </div>
     </div>
   </div>
-</section>
-
-<section class="cta-section">
-  <div class="cta-inner">
-    <h2>Stop reading about it.<br/>Talk to your<span class="accent"> ai salesperson.</span></h2>
-    <p>Two-minute qualifier form. Instant 24-hour sandbox. No credit card required.</p>
-    <a href="pages/demo-request.html" class="cta-big-btn">Request a Demo</a>
-    <div class="cta-sub">100% free for 24 hours · Configured for your store</div>
-  </div>
-</section>
+</div>
 
 <footer>
   <div>Cart·Chat — © 2026</div>
   <div class="footer-links">
     <a href="pages/about.html">About</a>
     <a href="pages/faq.html">FAQ</a>
+    <a href="pages/lists.html">Our Lists</a>
+    <a href="pages/pricing.html">Pricing</a>
     <a href="pages/privacy.html">Privacy</a>
     <a href="pages/terms.html">Terms</a>
     <a href="pages/acceptable-use.html">Acceptable Use</a>
