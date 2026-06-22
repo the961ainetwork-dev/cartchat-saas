@@ -51,7 +51,7 @@
       font-size:clamp(16px,2vw,22px);font-weight:900;
       letter-spacing:-0.5px;text-transform:uppercase;
     }
-    .hero-intelligence-banner .banner-headline span{color:var(--blue)}
+    .hero-intelligence-banner .banner-headline span{color:#ffffff}
     .hero-intelligence-banner .banner-sub{
       font-family:var(--mono);font-size:11px;color:var(--grey-2);
       text-transform:uppercase;letter-spacing:1.5px;max-width:420px;line-height:1.5;
@@ -199,7 +199,10 @@
     <a href="pages/pricing.html">Pricing</a>
     <a href="pages/broadcast.html" style="color:var(--blue)">Broadcast →</a>
   </div>
-  <a href="pages/demo-request.html" class="nav-cta">Request a Demo →</a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="pages/login.html" style="font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-3);transition:color .15s" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--grey-3)'">Sign In</a>
+    <a href="pages/demo-request.html" class="nav-cta">Request a Demo →</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -242,45 +245,6 @@
 </div>
 
 <!-- VISUAL -->
-<div class="visual-block" style="margin-left:28px">
-  <div class="duotone"></div>
-  <div class="box"></div>
-  <div class="visual-caption">Lumière Beauty Store — Order #4471</div>
-  <div class="visual-lock" onclick="showLockToast()">
-    <div class="visual-lock-icon">🔒</div>
-    <div class="visual-lock-text">Available in your 24-hour demo</div>
-  </div>
-</div>
-
-<!-- USE CASES -->
-<section id="usecases">
-  <div class="section-head">
-    <div class="section-num">01</div>
-    <div class="section-title"><h2>Three problems<br/>solved by design.</h2></div>
-    <div class="section-desc"><p>Every capability below runs unattended in your store once activated. Request a demo to interact with the live agent yourself.</p></div>
-  </div>
-  <div class="usecases-grid">
-    <div class="usecase" onclick="showLockToast()">
-      <div class="usecase-locktag">🔒 Demo Only</div>
-      <div class="usecase-num">01</div>
-      <h3>Order Status &amp; Tracking <span class="lock">🔒</span></h3>
-      <p>Customers ask "where's my order?" constantly. CartChat replies instantly with live tracking — pulled from your store.</p>
-    </div>
-    <div class="usecase" onclick="showLockToast()">
-      <div class="usecase-locktag">🔒 Demo Only</div>
-      <div class="usecase-num">02</div>
-      <h3>Product Catalog <span class="lock">🔒</span></h3>
-      <p>Customers browse and ask about products directly in WhatsApp. The AI recommends items like a personal shopper.</p>
-    </div>
-    <div class="usecase" onclick="showLockToast()">
-      <div class="usecase-locktag">🔒 Demo Only</div>
-      <div class="usecase-num">03</div>
-      <h3>Cart Recovery <span class="lock">🔒</span></h3>
-      <p>When a customer leaves items in their cart, CartChat sends a personalized WhatsApp follow-up automatically.</p>
-    </div>
-  </div>
-</section>
-
 <!-- FEATURES LEDGER -->
 <section id="features">
   <div class="section-head">
