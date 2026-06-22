@@ -194,51 +194,51 @@
     .slider-track{display:flex;transition:transform .9s cubic-bezier(.4,0,.2,1);will-change:transform}
 
     .slide{flex:0 0 100%;padding:0 40px;box-sizing:border-box}
-    .slide-screen{background:#111;border:1px solid #2a2a2a;border-radius:14px;overflow:hidden;height:460px;display:flex;margin:0 auto;max-width:980px;box-shadow:0 20px 60px rgba(0,0,0,.18)}
-    .ss-sidebar{width:160px;background:#0a0a0a;border-right:1px solid #1a1a1a;padding:14px 10px;flex-shrink:0;display:flex;flex-direction:column;gap:2px}
-    .ss-logo{font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:-.3px;color:#fff;padding:0 6px 12px;border-bottom:1px solid #1a1a1a;margin-bottom:6px}
-    .ss-nav-item{padding:7px 10px;font-size:10px;color:#6b7280;border-radius:6px;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .15s}
-    .ss-nav-item.active{background:#0047ab22;color:#60a5fa;font-weight:600}
-    .ss-main{flex:1;padding:14px;overflow:hidden;display:flex;flex-direction:column;gap:10px}
-    .ss-topbar{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid #1a1a1a;flex-shrink:0}
-    .ss-page-title{font-weight:700;font-size:13px;color:#f5f5f5}
-    .ss-live{font-family:monospace;font-size:9px;color:#4ade80;text-transform:uppercase;letter-spacing:.5px}
-    .ss-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex-shrink:0}
-    .ss-stat{background:#1a1a1a;border-radius:8px;padding:10px 8px}
-    .ss-stat-val{font-size:16px;font-weight:900;font-family:monospace;margin-bottom:3px}
-    .ss-stat-lbl{font-size:8px;color:#6b7280;text-transform:uppercase;letter-spacing:.3px}
-    .ss-card{background:#1a1a1a;border-radius:8px;padding:10px 12px;flex:1;overflow:hidden}
-    .ss-card-title{font-size:9.5px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px}
-    .ss-activity-row{display:flex;align-items:center;gap:7px;font-size:9.5px;color:#d1d5db;padding:4px 0;border-bottom:1px solid #2a2a2a}
+    .slide-screen{background:#f8f9fb;border:1px solid #d1d5db;border-radius:14px;overflow:hidden;height:460px;display:flex;margin:0 auto;max-width:980px;box-shadow:0 20px 60px rgba(0,0,0,.10)}
+    .ss-sidebar{width:180px;background:#fff;border-right:1px solid #e5e7eb;padding:16px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:2px}
+    .ss-logo{font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:-.3px;color:#0a0a0a;padding:0 6px 14px;border-bottom:1px solid #e5e7eb;margin-bottom:8px}
+    .ss-nav-item{padding:8px 12px;font-size:11px;color:#6b7280;border-radius:7px;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .15s;font-weight:500}
+    .ss-nav-item.active{background:#eef3fb;color:#0047ab;font-weight:700}
+    .ss-main{flex:1;padding:16px;overflow:hidden;display:flex;flex-direction:column;gap:12px}
+    .ss-topbar{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #e5e7eb;flex-shrink:0}
+    .ss-page-title{font-weight:800;font-size:15px;color:#0a0a0a}
+    .ss-live{font-family:monospace;font-size:10px;color:#16a34a;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+    .ss-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex-shrink:0}
+    .ss-stat{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 10px}
+    .ss-stat-val{font-size:18px;font-weight:900;font-family:monospace;margin-bottom:4px}
+    .ss-stat-lbl{font-size:9px;color:#6b7280;text-transform:uppercase;letter-spacing:.3px}
+    .ss-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;flex:1;overflow:hidden}
+    .ss-card-title{font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:10px;font-weight:600}
+    .ss-activity-row{display:flex;align-items:center;gap:8px;font-size:11px;color:#374151;padding:5px 0;border-bottom:1px solid #f3f4f6}
     .ss-activity-row:last-child{border-bottom:none}
-    .ss-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-    .ss-dot.green{background:#4ade80}.ss-dot.blue{background:#60a5fa}.ss-dot.yellow{background:#fbbf24}
-    .ss-conv-item{padding:10px 12px;border-bottom:1px solid #1a1a1a;cursor:default}
-    .ss-conv-item.active{background:#0047ab22}
-    .ss-bubble{max-width:85%;padding:7px 10px;border-radius:8px;font-size:9.5px;line-height:1.4;color:#f5f5f5}
-    .ss-bubble.in{background:#2a2a2a;align-self:flex-start}
-    .ss-bubble.out{background:#0047ab;align-self:flex-end}
-    .ss-table{display:flex;flex-direction:column;gap:1px}
-    .ss-table-head{display:grid;grid-template-columns:60px 1fr 60px 70px;gap:8px;font-size:8px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;padding:6px 8px;background:#0a0a0a;border-radius:6px}
-    .ss-table-row{display:grid;grid-template-columns:60px 1fr 60px 70px;gap:8px;font-size:9.5px;color:#d1d5db;padding:7px 8px;background:#1a1a1a;border-radius:6px;align-items:center}
-    .ss-badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:8px;font-weight:600;font-family:monospace;text-transform:uppercase}
-    .ss-badge.green{background:#16a34a22;color:#4ade80}
-    .ss-badge.blue{background:#0047ab22;color:#60a5fa}
-    .ss-badge.yellow{background:#d9770622;color:#fbbf24}
-    .ss-badge.grey{background:#1a1a1a;color:#6b7280}
-    .ss-product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .ss-product{background:#1a1a1a;border-radius:8px;overflow:hidden}
-    .ss-product-img{height:52px}
-    .ss-product-name{font-size:9px;font-weight:700;color:#f5f5f5;padding:5px 7px 2px}
-    .ss-product-price{font-size:9px;color:#60a5fa;padding:0 7px 5px;font-family:monospace}
-    .ss-cfg-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #2a2a2a;font-size:9px;color:#9ca3af}
+    .ss-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    .ss-dot.green{background:#16a34a}.ss-dot.blue{background:#0047ab}.ss-dot.yellow{background:#d97706}
+    .ss-conv-item{padding:11px 14px;border-bottom:1px solid #f3f4f6;cursor:default}
+    .ss-conv-item.active{background:#eef3fb}
+    .ss-bubble{max-width:85%;padding:8px 12px;border-radius:10px;font-size:11px;line-height:1.45;color:#0a0a0a}
+    .ss-bubble.in{background:#f3f4f6;align-self:flex-start}
+    .ss-bubble.out{background:#0047ab;color:#fff;align-self:flex-end}
+    .ss-table{display:flex;flex-direction:column;gap:2px}
+    .ss-table-head{display:grid;grid-template-columns:60px 1fr 60px 80px;gap:8px;font-size:9px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;padding:7px 10px;background:#f3f4f6;border-radius:7px}
+    .ss-table-row{display:grid;grid-template-columns:60px 1fr 60px 80px;gap:8px;font-size:11px;color:#374151;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;border-radius:7px;align-items:center}
+    .ss-badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:9px;font-weight:700;font-family:monospace;text-transform:uppercase}
+    .ss-badge.green{background:#dcfce7;color:#16a34a}
+    .ss-badge.blue{background:#dbeafe;color:#1d4ed8}
+    .ss-badge.yellow{background:#fef3c7;color:#d97706}
+    .ss-badge.grey{background:#f3f4f6;color:#6b7280}
+    .ss-product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .ss-product{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
+    .ss-product-img{height:56px}
+    .ss-product-name{font-size:10px;font-weight:700;color:#0a0a0a;padding:6px 8px 2px}
+    .ss-product-price{font-size:10px;color:#0047ab;padding:0 8px 6px;font-family:monospace;font-weight:700}
+    .ss-cfg-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:10px;color:#6b7280}
     .ss-cfg-row:last-child{border-bottom:none}
-    .ss-cfg-row span:last-child{color:#d1d5db;font-weight:500}
-    .ss-integration-row{display:flex;align-items:center;gap:10px;background:#1a1a1a;border-radius:8px;padding:8px 12px}
-    .ss-int-icon{font-size:14px}
-    .ss-int-name{flex:1;font-size:10.5px;font-weight:600;color:#f5f5f5}
-    .ss-bar-row{display:flex;align-items:center;gap:8px;padding:4px 0}
-    .ss-bar{height:6px;border-radius:3px;transition:width .3s}
+    .ss-cfg-row span:last-child{color:#0a0a0a;font-weight:600}
+    .ss-integration-row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:9px 14px}
+    .ss-int-icon{font-size:16px}
+    .ss-int-name{flex:1;font-size:12px;font-weight:600;color:#0a0a0a}
+    .ss-bar-row{display:flex;align-items:center;gap:8px;padding:5px 0}
+    .ss-bar{height:7px;border-radius:4px;transition:width .3s}
 
     .slide-label{display:flex;align-items:center;gap:12px;padding:22px 8px 0;max-width:980px;margin:0 auto}
     .slide-icon{font-size:24px}
@@ -312,16 +312,6 @@
   </div>
 </div>
 
-<!-- CTA — directly after hero -->
-<div class="cta-section">
-  <div class="cta-inner">
-    <h2>Stop reading about it.<br/>Talk to your<span class="accent"> ai salesperson.</span></h2>
-    <p>Two-minute qualifier form. Instant 24-hour sandbox. No credit card required.</p>
-    <a href="pages/demo-request.html" class="cta-big-btn">Request a Demo</a>
-    <div class="cta-sub">100% free for 24 hours · Configured for your store</div>
-  </div>
-</div>
-
 <!-- DASHBOARD SLIDER -->
 <div class="slider-section">
   <div class="slider-header">
@@ -380,16 +370,16 @@
           <div class="ss-main" style="padding:0">
             <div class="ss-topbar" style="padding:12px 16px"><span class="ss-page-title">Conversations</span><span class="ss-live">● 3 Active</span></div>
             <div style="display:flex;height:calc(100% - 40px)">
-              <div style="width:180px;border-right:1px solid #2a2a2a;overflow:hidden">
-                <div class="ss-conv-item active"><div style="font-size:11px;font-weight:700">Dana F.</div><div style="font-size:9px;color:#9ca3af">Where's my order? 📦</div></div>
-                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Ahmad K.</div><div style="font-size:9px;color:#9ca3af">Do you have the rose serum?</div></div>
-                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Sara M.</div><div style="font-size:9px;color:#9ca3af">I want to return my order</div></div>
+              <div style="width:180px;border-right:1px solid #e5e7eb;overflow:hidden">
+                <div class="ss-conv-item active"><div style="font-size:11px;font-weight:700">Dana F.</div><div style="font-size:10px;color:#6b7280">Where's my order? 📦</div></div>
+                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Ahmad K.</div><div style="font-size:10px;color:#6b7280">Do you have the rose serum?</div></div>
+                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Sara M.</div><div style="font-size:10px;color:#6b7280">I want to return my order</div></div>
               </div>
               <div style="flex:1;padding:12px;display:flex;flex-direction:column;gap:8px">
                 <div class="ss-bubble in">Hi! Where's my order #4471? 😬</div>
                 <div class="ss-bubble out">Hi Dana! 📦 Order #4471 shipped yesterday and is in transit — expected tomorrow by 6 PM. Here's your tracking link!</div>
                 <div class="ss-bubble in">Oh amazing, thank you! 🙏</div>
-                <div class="ss-bubble out" style="background:#1e3a5f">You're welcome! Is there anything else I can help with? 😊</div>
+                <div class="ss-bubble out">You're welcome! Is there anything else I can help with? 😊</div>
               </div>
             </div>
           </div>
@@ -444,7 +434,7 @@
               <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#1a1a2e,#e94560)"></div><div class="ss-product-name">Night Cream</div><div class="ss-product-price">$55</div></div>
               <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#2d6a4f,#40916c)"></div><div class="ss-product-name">Toner</div><div class="ss-product-price">$22</div></div>
             </div>
-            <div style="font-size:9px;color:#6b7280;margin-top:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px">AI recommends these based on customer queries</div>
+            <div style="font-size:10px;color:#6b7280;margin-top:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px">AI recommends these based on customer queries</div>
           </div>
         </div>
         <div class="slide-label"><span class="slide-icon">🛍️</span><span class="slide-name">Product Catalog</span><span class="slide-desc">AI browses and recommends for every customer</span></div>
@@ -495,13 +485,13 @@
             <div class="ss-topbar"><span class="ss-page-title">Social Campaigns</span></div>
             <div class="ss-card" style="margin-bottom:10px">
               <div class="ss-card-title">Generate Campaign Post</div>
-              <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:9px 12px;font-size:9px;color:#9ca3af;margin-bottom:8px">Summer Glow Collection Launch →</div>
-              <div style="background:#0047ab22;border:1px solid #0047ab44;border-radius:6px;padding:9px 12px;font-size:9px;color:#93c5fd;line-height:1.5">✨ Summer Glow is HERE! Our bestselling Rose Serum + Glow Oil bundle is now 20% off for 48 hours only. Limited stock — tap the link to shop now! 🌹<br/><br/>#LumiereBeauty #SummerGlow #SkincareMENA</div>
+              <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:9px 12px;font-size:11px;color:#374151;margin-bottom:8px">Summer Glow Collection Launch →</div>
+              <div style="background:#eef3fb;border:1px solid #bfdbfe;border-radius:8px;padding:11px 13px;font-size:11px;color:#1d4ed8;line-height:1.55">✨ Summer Glow is HERE! Our bestselling Rose Serum + Glow Oil bundle is now 20% off for 48 hours only. Limited stock — tap the link to shop now! 🌹<br/><br/>#LumiereBeauty #SummerGlow #SkincareMENA</div>
             </div>
             <div style="display:flex;gap:6px">
-              <div style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:8px;font-size:8px;color:#9ca3af;text-align:center">📸 Instagram</div>
-              <div style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:8px;font-size:8px;color:#9ca3af;text-align:center">👤 Facebook</div>
-              <div style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:8px;font-size:8px;color:#9ca3af;text-align:center">🎵 TikTok</div>
+              <div style="flex:1;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:9px;font-size:10px;color:#374151;text-align:center;font-weight:600">📸 Instagram</div>
+              <div style="flex:1;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:9px;font-size:10px;color:#374151;text-align:center;font-weight:600">👤 Facebook</div>
+              <div style="flex:1;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:9px;font-size:10px;color:#374151;text-align:center;font-weight:600">🎵 TikTok</div>
             </div>
           </div>
         </div>
@@ -529,9 +519,9 @@
             </div>
             <div class="ss-card">
               <div class="ss-card-title">Top Queries This Month</div>
-              <div class="ss-bar-row"><span style="font-size:9px;width:100px;color:#9ca3af">Order tracking</span><div class="ss-bar" style="width:80%;background:#0047ab"></div><span style="font-size:9px;color:#9ca3af">312</span></div>
-              <div class="ss-bar-row"><span style="font-size:9px;width:100px;color:#9ca3af">Product price</span><div class="ss-bar" style="width:55%;background:#0047ab88"></div><span style="font-size:9px;color:#9ca3af">214</span></div>
-              <div class="ss-bar-row"><span style="font-size:9px;width:100px;color:#9ca3af">Returns</span><div class="ss-bar" style="width:30%;background:#0047ab55"></div><span style="font-size:9px;color:#9ca3af">118</span></div>
+              <div class="ss-bar-row"><span style="font-size:11px;width:110px;color:#374151">Order tracking</span><div class="ss-bar" style="width:80%;background:#0047ab"></div><span style="font-size:11px;color:#374151;font-weight:700">312</span></div>
+              <div class="ss-bar-row"><span style="font-size:11px;width:110px;color:#374151">Product price</span><div class="ss-bar" style="width:55%;background:#6b9ef4"></div><span style="font-size:11px;color:#374151;font-weight:700">214</span></div>
+              <div class="ss-bar-row"><span style="font-size:11px;width:110px;color:#374151">Returns</span><div class="ss-bar" style="width:30%;background:#a5c0f8"></div><span style="font-size:11px;color:#374151;font-weight:700">118</span></div>
             </div>
           </div>
         </div>
@@ -776,6 +766,16 @@
     </div>
   </div>
 </section>
+
+<!-- CTA — after Our Lists -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <h2>Stop reading about it.<br/>Talk to your<span class="accent"> ai salesperson.</span></h2>
+    <p>Two-minute qualifier form. Instant 24-hour sandbox. No credit card required.</p>
+    <a href="pages/demo-request.html" class="cta-big-btn">Request a Demo</a>
+    <div class="cta-sub">100% free for 24 hours · Configured for your store</div>
+  </div>
+</div>
 
 <!-- BROADCAST SERVICE BANNER -->
 <div class="broadcast-banner">
