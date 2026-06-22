@@ -182,6 +182,82 @@
     #lock-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:14px 24px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.5px;opacity:0;transition:all .25s;pointer-events:none;z-index:200;display:flex;align-items:center;gap:10px;border:1px solid var(--blue)}
     #lock-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
     #lock-toast .lt-icon{color:var(--blue)}
+    /* ── DASHBOARD SLIDER ── */
+    .slider-section{background:var(--ink);color:var(--paper);padding:72px 0 56px;border-bottom:1px solid var(--blue);margin-left:28px}
+    @media(max-width:900px){.slider-section{margin-left:0}}
+    .slider-header{text-align:center;padding:0 32px;margin-bottom:40px}
+    .slider-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:14px}
+    .slider-title{font-size:clamp(26px,3.6vw,42px);font-weight:900;text-transform:uppercase;letter-spacing:-1.5px;line-height:1.08;margin-bottom:12px}
+    .slider-sub{font-size:14px;color:#9ca3af;max-width:480px;margin:0 auto;line-height:1.6}
+
+    .slider-wrap{position:relative;overflow:hidden;width:100%}
+    .slider-track{display:flex;transition:transform .4s cubic-bezier(.4,0,.2,1);will-change:transform}
+
+    .slide{flex:0 0 100%;padding:0 32px;box-sizing:border-box}
+    .slide-screen{background:#111;border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;height:340px;display:flex;margin:0 auto;max-width:860px}
+    .ss-sidebar{width:160px;background:#0a0a0a;border-right:1px solid #1a1a1a;padding:14px 10px;flex-shrink:0;display:flex;flex-direction:column;gap:2px}
+    .ss-logo{font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:-.3px;color:#fff;padding:0 6px 12px;border-bottom:1px solid #1a1a1a;margin-bottom:6px}
+    .ss-nav-item{padding:7px 10px;font-size:10px;color:#6b7280;border-radius:6px;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .15s}
+    .ss-nav-item.active{background:#0047ab22;color:#60a5fa;font-weight:600}
+    .ss-main{flex:1;padding:14px;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+    .ss-topbar{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid #1a1a1a;flex-shrink:0}
+    .ss-page-title{font-weight:700;font-size:13px;color:#f5f5f5}
+    .ss-live{font-family:monospace;font-size:9px;color:#4ade80;text-transform:uppercase;letter-spacing:.5px}
+    .ss-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex-shrink:0}
+    .ss-stat{background:#1a1a1a;border-radius:8px;padding:10px 8px}
+    .ss-stat-val{font-size:16px;font-weight:900;font-family:monospace;margin-bottom:3px}
+    .ss-stat-lbl{font-size:8px;color:#6b7280;text-transform:uppercase;letter-spacing:.3px}
+    .ss-card{background:#1a1a1a;border-radius:8px;padding:10px 12px;flex:1;overflow:hidden}
+    .ss-card-title{font-size:9.5px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px}
+    .ss-activity-row{display:flex;align-items:center;gap:7px;font-size:9.5px;color:#d1d5db;padding:4px 0;border-bottom:1px solid #2a2a2a}
+    .ss-activity-row:last-child{border-bottom:none}
+    .ss-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .ss-dot.green{background:#4ade80}.ss-dot.blue{background:#60a5fa}.ss-dot.yellow{background:#fbbf24}
+    .ss-conv-item{padding:10px 12px;border-bottom:1px solid #1a1a1a;cursor:default}
+    .ss-conv-item.active{background:#0047ab22}
+    .ss-bubble{max-width:85%;padding:7px 10px;border-radius:8px;font-size:9.5px;line-height:1.4;color:#f5f5f5}
+    .ss-bubble.in{background:#2a2a2a;align-self:flex-start}
+    .ss-bubble.out{background:#0047ab;align-self:flex-end}
+    .ss-table{display:flex;flex-direction:column;gap:1px}
+    .ss-table-head{display:grid;grid-template-columns:60px 1fr 60px 70px;gap:8px;font-size:8px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;padding:6px 8px;background:#0a0a0a;border-radius:6px}
+    .ss-table-row{display:grid;grid-template-columns:60px 1fr 60px 70px;gap:8px;font-size:9.5px;color:#d1d5db;padding:7px 8px;background:#1a1a1a;border-radius:6px;align-items:center}
+    .ss-badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:8px;font-weight:600;font-family:monospace;text-transform:uppercase}
+    .ss-badge.green{background:#16a34a22;color:#4ade80}
+    .ss-badge.blue{background:#0047ab22;color:#60a5fa}
+    .ss-badge.yellow{background:#d9770622;color:#fbbf24}
+    .ss-badge.grey{background:#1a1a1a;color:#6b7280}
+    .ss-product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .ss-product{background:#1a1a1a;border-radius:8px;overflow:hidden}
+    .ss-product-img{height:52px}
+    .ss-product-name{font-size:9px;font-weight:700;color:#f5f5f5;padding:5px 7px 2px}
+    .ss-product-price{font-size:9px;color:#60a5fa;padding:0 7px 5px;font-family:monospace}
+    .ss-cfg-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #2a2a2a;font-size:9px;color:#9ca3af}
+    .ss-cfg-row:last-child{border-bottom:none}
+    .ss-cfg-row span:last-child{color:#d1d5db;font-weight:500}
+    .ss-integration-row{display:flex;align-items:center;gap:10px;background:#1a1a1a;border-radius:8px;padding:8px 12px}
+    .ss-int-icon{font-size:14px}
+    .ss-int-name{flex:1;font-size:10.5px;font-weight:600;color:#f5f5f5}
+    .ss-bar-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+    .ss-bar{height:6px;border-radius:3px;transition:width .3s}
+
+    .slide-label{display:flex;align-items:center;gap:12px;padding:18px 8px 0;max-width:860px;margin:0 auto}
+    .slide-icon{font-size:22px}
+    .slide-name{font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:-.3px}
+    .slide-desc{font-size:12px;color:#9ca3af;margin-left:4px}
+
+    .slider-arrow{position:absolute;top:50%;transform:translateY(-60%);background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;width:42px;height:42px;border-radius:50%;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;z-index:10;line-height:1}
+    .slider-arrow:hover{background:var(--blue);border-color:var(--blue)}
+    .slider-arrow.left{left:10px}
+    .slider-arrow.right{right:10px}
+
+    .slider-dots{display:flex;justify-content:center;gap:6px;padding:18px 0 4px}
+    .slider-dot{width:6px;height:6px;border-radius:50%;background:#2a2a2a;cursor:pointer;transition:all .2s}
+    .slider-dot.active{background:var(--blue);width:20px;border-radius:3px}
+
+    .slider-tabs{display:flex;justify-content:center;gap:0;flex-wrap:wrap;padding:0 32px;margin-top:6px}
+    .slider-tabs button{background:none;border:none;color:#6b7280;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;cursor:pointer;transition:all .15s;white-space:nowrap}
+    .slider-tabs button:hover{color:#fff}
+    .slider-tabs button.active{color:var(--blue);border-bottom:2px solid var(--blue)}
   </style>
 </head>
 <body>
@@ -241,6 +317,338 @@
     <p>Two-minute qualifier form. Instant 24-hour sandbox. No credit card required.</p>
     <a href="pages/demo-request.html" class="cta-big-btn">Request a Demo</a>
     <div class="cta-sub">100% free for 24 hours · Configured for your store</div>
+  </div>
+</div>
+
+<!-- DASHBOARD SLIDER -->
+<div class="slider-section">
+  <div class="slider-header">
+    <div class="slider-eyebrow">Inside the Dashboard</div>
+    <div class="slider-title">Everything you need.<br/>One place.</div>
+    <div class="slider-sub">Swipe through the full dashboard — from AI conversations to analytics to WhatsApp setup.</div>
+  </div>
+
+  <div class="slider-wrap">
+    <div class="slider-track" id="sliderTrack">
+
+      <!-- SLIDE 1: Overview -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item active">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item">📦 Orders</div>
+            <div class="ss-nav-item">🛍️ Product Catalog</div>
+            <div class="ss-nav-item">🔄 Cart Recovery</div>
+            <div class="ss-nav-item">📣 Social Campaigns</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">Overview</span><span class="ss-live">● Live</span></div>
+            <div class="ss-stats">
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#60a5fa">247</div><div class="ss-stat-lbl">Conversations Today</div></div>
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#4ade80">$1,840</div><div class="ss-stat-lbl">Recovered Revenue</div></div>
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#fbbf24">18%</div><div class="ss-stat-lbl">Cart Recovery Rate</div></div>
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#a78bfa">1.1s</div><div class="ss-stat-lbl">Avg. Response</div></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-card-title">Recent Activity</div>
+              <div class="ss-activity-row"><span class="ss-dot green"></span>Order #4471 tracked — replied in 0.9s</div>
+              <div class="ss-activity-row"><span class="ss-dot blue"></span>Cart recovery sent to +961 70 *** ***</div>
+              <div class="ss-activity-row"><span class="ss-dot yellow"></span>New product inquiry — Rose Serum</div>
+              <div class="ss-activity-row"><span class="ss-dot green"></span>Return initiated — Order #4438</div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">📊</span><span class="slide-name">Overview</span><span class="slide-desc">Real-time performance at a glance</span></div>
+      </div>
+
+      <!-- SLIDE 2: Conversations -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item active">💬 Conversations</div>
+            <div class="ss-nav-item">📦 Orders</div>
+            <div class="ss-nav-item">🛍️ Product Catalog</div>
+            <div class="ss-nav-item">🔄 Cart Recovery</div>
+            <div class="ss-nav-item">📣 Social Campaigns</div>
+          </div>
+          <div class="ss-main" style="padding:0">
+            <div class="ss-topbar" style="padding:12px 16px"><span class="ss-page-title">Conversations</span><span class="ss-live">● 3 Active</span></div>
+            <div style="display:flex;height:calc(100% - 40px)">
+              <div style="width:180px;border-right:1px solid #2a2a2a;overflow:hidden">
+                <div class="ss-conv-item active"><div style="font-size:11px;font-weight:700">Dana F.</div><div style="font-size:9px;color:#9ca3af">Where's my order? 📦</div></div>
+                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Ahmad K.</div><div style="font-size:9px;color:#9ca3af">Do you have the rose serum?</div></div>
+                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Sara M.</div><div style="font-size:9px;color:#9ca3af">I want to return my order</div></div>
+              </div>
+              <div style="flex:1;padding:12px;display:flex;flex-direction:column;gap:8px">
+                <div class="ss-bubble in">Hi! Where's my order #4471? 😬</div>
+                <div class="ss-bubble out">Hi Dana! 📦 Order #4471 shipped yesterday and is in transit — expected tomorrow by 6 PM. Here's your tracking link!</div>
+                <div class="ss-bubble in">Oh amazing, thank you! 🙏</div>
+                <div class="ss-bubble out" style="background:#1e3a5f">You're welcome! Is there anything else I can help with? 😊</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">💬</span><span class="slide-name">Conversations</span><span class="slide-desc">AI replies to every customer in real-time</span></div>
+      </div>
+
+      <!-- SLIDE 3: Orders -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item active">📦 Orders</div>
+            <div class="ss-nav-item">🛍️ Product Catalog</div>
+            <div class="ss-nav-item">🔄 Cart Recovery</div>
+            <div class="ss-nav-item">📣 Social Campaigns</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">Orders</span><span class="ss-live">247 this month</span></div>
+            <div class="ss-table">
+              <div class="ss-table-head"><span>Order</span><span>Customer</span><span>Amount</span><span>Status</span></div>
+              <div class="ss-table-row"><span>#4471</span><span>Dana F.</span><span>$48</span><span class="ss-badge blue">In Transit</span></div>
+              <div class="ss-table-row"><span>#4470</span><span>Ahmad K.</span><span>$112</span><span class="ss-badge green">Delivered</span></div>
+              <div class="ss-table-row"><span>#4469</span><span>Sara M.</span><span>$67</span><span class="ss-badge yellow">Return</span></div>
+              <div class="ss-table-row"><span>#4468</span><span>Karim R.</span><span>$29</span><span class="ss-badge green">Delivered</span></div>
+              <div class="ss-table-row"><span>#4467</span><span>Lina H.</span><span>$88</span><span class="ss-badge blue">Processing</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">📦</span><span class="slide-name">Orders</span><span class="slide-desc">Track and manage every order status</span></div>
+      </div>
+
+      <!-- SLIDE 4: Product Catalog -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item">📦 Orders</div>
+            <div class="ss-nav-item active">🛍️ Product Catalog</div>
+            <div class="ss-nav-item">🔄 Cart Recovery</div>
+            <div class="ss-nav-item">📣 Social Campaigns</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">Product Catalog</span><span class="ss-live">48 products</span></div>
+            <div class="ss-product-grid">
+              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"></div><div class="ss-product-name">Rose Serum</div><div class="ss-product-price">$28</div></div>
+              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#0f3460,#533483)"></div><div class="ss-product-name">Glow Oil</div><div class="ss-product-price">$42</div></div>
+              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#1a1a2e,#e94560)"></div><div class="ss-product-name">Night Cream</div><div class="ss-product-price">$55</div></div>
+              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#2d6a4f,#40916c)"></div><div class="ss-product-name">Toner</div><div class="ss-product-price">$22</div></div>
+            </div>
+            <div style="font-size:9px;color:#6b7280;margin-top:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px">AI recommends these based on customer queries</div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">🛍️</span><span class="slide-name">Product Catalog</span><span class="slide-desc">AI browses and recommends for every customer</span></div>
+      </div>
+
+      <!-- SLIDE 5: Cart Recovery -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item">📦 Orders</div>
+            <div class="ss-nav-item">🛍️ Product Catalog</div>
+            <div class="ss-nav-item active">🔄 Cart Recovery</div>
+            <div class="ss-nav-item">📣 Social Campaigns</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">Cart Recovery</span><span class="ss-live" style="color:#4ade80">18% recovered</span></div>
+            <div class="ss-stats" style="grid-template-columns:1fr 1fr;margin-bottom:12px">
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#4ade80">$1,840</div><div class="ss-stat-lbl">Revenue Recovered</div></div>
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#60a5fa">63</div><div class="ss-stat-lbl">Carts Recovered</div></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-card-title">Latest Recovery Messages Sent</div>
+              <div class="ss-activity-row"><span class="ss-dot green"></span>+961 70 *** *** — $48 cart — Opened ✓</div>
+              <div class="ss-activity-row"><span class="ss-dot yellow"></span>+961 71 *** *** — $112 cart — Sent</div>
+              <div class="ss-activity-row"><span class="ss-dot green"></span>+961 76 *** *** — $29 cart — Purchased ✓</div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">🔄</span><span class="slide-name">Cart Recovery</span><span class="slide-desc">Automatic WhatsApp follow-ups for abandoned carts</span></div>
+      </div>
+
+      <!-- SLIDE 6: Social Campaigns -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item">📦 Orders</div>
+            <div class="ss-nav-item">🛍️ Product Catalog</div>
+            <div class="ss-nav-item">🔄 Cart Recovery</div>
+            <div class="ss-nav-item active">📣 Social Campaigns</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">Social Campaigns</span></div>
+            <div class="ss-card" style="margin-bottom:10px">
+              <div class="ss-card-title">Generate Campaign Post</div>
+              <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:9px 12px;font-size:9px;color:#9ca3af;margin-bottom:8px">Summer Glow Collection Launch →</div>
+              <div style="background:#0047ab22;border:1px solid #0047ab44;border-radius:6px;padding:9px 12px;font-size:9px;color:#93c5fd;line-height:1.5">✨ Summer Glow is HERE! Our bestselling Rose Serum + Glow Oil bundle is now 20% off for 48 hours only. Limited stock — tap the link to shop now! 🌹<br/><br/>#LumiereBeauty #SummerGlow #SkincareMENA</div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <div style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:8px;font-size:8px;color:#9ca3af;text-align:center">📸 Instagram</div>
+              <div style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:8px;font-size:8px;color:#9ca3af;text-align:center">👤 Facebook</div>
+              <div style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:8px;font-size:8px;color:#9ca3af;text-align:center">🎵 TikTok</div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">📣</span><span class="slide-name">Social Campaigns</span><span class="slide-desc">AI-generated posts for Instagram, Facebook, TikTok</span></div>
+      </div>
+
+      <!-- SLIDE 7: Analytics -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item">📦 Orders</div>
+            <div class="ss-nav-item">🛍️ Product Catalog</div>
+            <div class="ss-nav-item active">📈 Analytics</div>
+            <div class="ss-nav-item">⚙️ AI Config</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">Analytics</span><span class="ss-live">Last 30 days</span></div>
+            <div class="ss-stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#4ade80;font-size:18px">↑ 34%</div><div class="ss-stat-lbl">Response Rate</div></div>
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#60a5fa;font-size:18px">4.8★</div><div class="ss-stat-lbl">Satisfaction</div></div>
+              <div class="ss-stat"><div class="ss-stat-val" style="color:#fbbf24;font-size:18px">92%</div><div class="ss-stat-lbl">Resolved by AI</div></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-card-title">Top Queries This Month</div>
+              <div class="ss-bar-row"><span style="font-size:9px;width:100px;color:#9ca3af">Order tracking</span><div class="ss-bar" style="width:80%;background:#0047ab"></div><span style="font-size:9px;color:#9ca3af">312</span></div>
+              <div class="ss-bar-row"><span style="font-size:9px;width:100px;color:#9ca3af">Product price</span><div class="ss-bar" style="width:55%;background:#0047ab88"></div><span style="font-size:9px;color:#9ca3af">214</span></div>
+              <div class="ss-bar-row"><span style="font-size:9px;width:100px;color:#9ca3af">Returns</span><div class="ss-bar" style="width:30%;background:#0047ab55"></div><span style="font-size:9px;color:#9ca3af">118</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">📈</span><span class="slide-name">Analytics</span><span class="slide-desc">Peak hours, top queries, sentiment, response time</span></div>
+      </div>
+
+      <!-- SLIDE 8: AI Agent Config -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item">📦 Orders</div>
+            <div class="ss-nav-item">🛍️ Product Catalog</div>
+            <div class="ss-nav-item active">⚙️ AI Config</div>
+            <div class="ss-nav-item">🔌 Integrations</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">AI Agent Config</span></div>
+            <div class="ss-card" style="margin-bottom:10px">
+              <div class="ss-card-title">Store Identity</div>
+              <div class="ss-cfg-row"><span>Store Name</span><span>Lumière Beauty Store</span></div>
+              <div class="ss-cfg-row"><span>Persona</span><span>Warm, expert, bilingual</span></div>
+              <div class="ss-cfg-row"><span>Language</span><span>Arabic + English (auto)</span></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-card-title">Policies</div>
+              <div class="ss-cfg-row"><span>Shipping</span><span>Free over $50</span></div>
+              <div class="ss-cfg-row"><span>Returns</span><span>14 days, no questions</span></div>
+              <div class="ss-cfg-row"><span>Support Hours</span><span>AI: 24/7 · Human: 9–6</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">⚙️</span><span class="slide-name">AI Agent Config</span><span class="slide-desc">Set your store identity, policies, and AI personality</span></div>
+      </div>
+
+      <!-- SLIDE 9: Integrations -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item active">🔌 Integrations</div>
+            <div class="ss-nav-item">📱 WhatsApp Setup</div>
+            <div class="ss-nav-item">⚙️ AI Config</div>
+            <div class="ss-nav-item">📈 Analytics</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">Integrations</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div class="ss-integration-row"><span class="ss-int-icon">🛒</span><span class="ss-int-name">Shopify</span><span class="ss-badge green">Connected</span></div>
+              <div class="ss-integration-row"><span class="ss-int-icon">🌐</span><span class="ss-int-name">WooCommerce</span><span class="ss-badge grey">Not connected</span></div>
+              <div class="ss-integration-row"><span class="ss-int-icon">📦</span><span class="ss-int-name">Aramex</span><span class="ss-badge green">Connected</span></div>
+              <div class="ss-integration-row"><span class="ss-int-icon">🚚</span><span class="ss-int-name">DHL Express</span><span class="ss-badge grey">Not connected</span></div>
+              <div class="ss-integration-row"><span class="ss-int-icon">💳</span><span class="ss-int-name">Stripe</span><span class="ss-badge green">Connected</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">🔌</span><span class="slide-name">Integrations</span><span class="slide-desc">Shopify, WooCommerce, couriers, payments</span></div>
+      </div>
+
+      <!-- SLIDE 10: WhatsApp Setup -->
+      <div class="slide">
+        <div class="slide-screen">
+          <div class="ss-sidebar">
+            <div class="ss-logo">Cart·Chat</div>
+            <div class="ss-nav-item">📊 Overview</div>
+            <div class="ss-nav-item">💬 Conversations</div>
+            <div class="ss-nav-item">🔌 Integrations</div>
+            <div class="ss-nav-item active">📱 WhatsApp</div>
+            <div class="ss-nav-item">⚙️ AI Config</div>
+            <div class="ss-nav-item">📈 Analytics</div>
+          </div>
+          <div class="ss-main">
+            <div class="ss-topbar"><span class="ss-page-title">WhatsApp Setup</span></div>
+            <div class="ss-card" style="margin-bottom:10px">
+              <div class="ss-card-title">Connected Numbers</div>
+              <div class="ss-cfg-row"><span>+961 70 XXX XXX</span><span class="ss-badge green">Active</span></div>
+              <div class="ss-cfg-row"><span>+961 71 XXX XXX</span><span class="ss-badge blue">Pending</span></div>
+            </div>
+            <div class="ss-card">
+              <div class="ss-card-title">Channel Status</div>
+              <div class="ss-cfg-row"><span>📱 WhatsApp</span><span class="ss-badge green">● Live</span></div>
+              <div class="ss-cfg-row"><span>💬 SMS</span><span class="ss-badge green">● Live</span></div>
+              <div class="ss-cfg-row"><span>📞 Voice IVR</span><span class="ss-badge green">● Live</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-label"><span class="slide-icon">📱</span><span class="slide-name">WhatsApp Setup</span><span class="slide-desc">Manage your numbers, SMS, and Voice channels</span></div>
+      </div>
+
+    </div><!-- end slider-track -->
+
+    <!-- Navigation arrows -->
+    <button class="slider-arrow left" id="sliderPrev" onclick="slideMove(-1)">‹</button>
+    <button class="slider-arrow right" id="sliderNext" onclick="slideMove(1)">›</button>
+  </div>
+
+  <!-- Dot indicators -->
+  <div class="slider-dots" id="sliderDots"></div>
+
+  <!-- Tab nav below slider -->
+  <div class="slider-tabs" id="sliderTabs">
+    <button onclick="slideTo(0)">📊 Overview</button>
+    <button onclick="slideTo(1)">💬 Conversations</button>
+    <button onclick="slideTo(2)">📦 Orders</button>
+    <button onclick="slideTo(3)">🛍️ Catalog</button>
+    <button onclick="slideTo(4)">🔄 Recovery</button>
+    <button onclick="slideTo(5)">📣 Social</button>
+    <button onclick="slideTo(6)">📈 Analytics</button>
+    <button onclick="slideTo(7)">⚙️ AI Config</button>
+    <button onclick="slideTo(8)">🔌 Integrations</button>
+    <button onclick="slideTo(9)">📱 WhatsApp</button>
+  </div>
+
+  <div style="text-align:center;margin-top:28px">
+    <a href="pages/demo-request.html" class="cta-big-btn" style="display:inline-block">Get Your Own Dashboard →</a>
   </div>
 </div>
 
@@ -425,6 +833,68 @@ function showLockToast() {
   toastTimer = setTimeout(()=>t.classList.remove("show"), 3200);
 }
 document.querySelectorAll(".locked-nav").forEach(el => el.addEventListener("click", showLockToast));
+
+// ── Dashboard Slider ──────────────────────────────────────────────────────────
+let currentSlide = 0;
+const totalSlides = 10;
+
+function buildDots() {
+  const dotsEl = document.getElementById("sliderDots");
+  dotsEl.innerHTML = "";
+  for (let i = 0; i < totalSlides; i++) {
+    const d = document.createElement("div");
+    d.className = "slider-dot" + (i === currentSlide ? " active" : "");
+    d.onclick = () => slideTo(i);
+    dotsEl.appendChild(d);
+  }
+}
+
+function updateTabs() {
+  document.querySelectorAll(".slider-tabs button").forEach((btn, i) => {
+    btn.classList.toggle("active", i === currentSlide);
+  });
+}
+
+function applySlide() {
+  document.getElementById("sliderTrack").style.transform = `translateX(-${currentSlide * 100}%)`;
+  buildDots();
+  updateTabs();
+}
+
+function slideTo(n) {
+  currentSlide = Math.max(0, Math.min(n, totalSlides - 1));
+  applySlide();
+}
+
+function slideMove(dir) {
+  slideTo(currentSlide + dir);
+}
+
+// Keyboard navigation
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft") slideMove(-1);
+  if (e.key === "ArrowRight") slideMove(1);
+});
+
+// Touch/swipe support
+let touchStartX = 0;
+const track = document.getElementById("sliderTrack");
+track.addEventListener("touchstart", e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+track.addEventListener("touchend", e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 40) slideMove(diff > 0 ? 1 : -1);
+});
+
+// Auto-advance every 5 seconds
+let autoPlay = setInterval(() => slideMove(1), 5000);
+track.addEventListener("touchstart", () => clearInterval(autoPlay), { passive: true });
+document.querySelectorAll(".slider-arrow, .slider-tabs button").forEach(el => {
+  el.addEventListener("click", () => { clearInterval(autoPlay); });
+});
+
+// Init
+buildDots();
+updateTabs();
 </script>
 </body>
 </html>
