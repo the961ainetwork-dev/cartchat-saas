@@ -167,10 +167,10 @@
   <div class="step-panel" data-step="3">
     <div class="step-eyebrow">Demo Request — Goals</div>
     <h1 class="step-title">What should<br/>CartChat solve first?</h1>
-    <p class="step-sub">Select your top priority. Your sandbox tour will lead with this capability.</p>
+    <p class="step-sub">Select all the goals that apply — we'll configure a dedicated agent for each one. The more you pick, the more your sandbox shows you.</p>
 
     <div class="field">
-      <label>Primary Goal</label>
+      <label>Your Goals <span style="font-family:var(--mono);font-size:10px;font-weight:400;color:var(--grey-3);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
       <div class="choice-group" id="goal-group" style="flex-direction:column;align-items:stretch">
         <div class="choice-pill" data-v="Reduce 'where is my order' tickets" style="text-align:left">📦 Reduce "where is my order" tickets</div>
         <div class="choice-pill" data-v="Recover abandoned carts" style="text-align:left">🔄 Recover abandoned carts</div>
@@ -178,6 +178,7 @@
         <div class="choice-pill" data-v="Grow social media presence" style="text-align:left">📣 Grow social media presence</div>
         <div class="choice-pill" data-v="Reduce support workload" style="text-align:left">👥 Reduce support workload</div>
       </div>
+      <div id="goal-count-badge" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-top:8px;min-height:16px"></div>
     </div>
 
     <div class="field">
@@ -190,7 +191,7 @@
       </div>
     </div>
 
-    <div class="error-msg" id="err-3">Please select your primary goal and team size.</div>
+    <div class="error-msg" id="err-3">Please select at least one goal and your team size.</div>
 
     <div class="step-actions">
       <button class="btn-back" onclick="goStep(2)">← Back</button>
@@ -253,9 +254,26 @@ function wirePillGroup(groupId, key) {
     });
   });
 }
+
+function wireMultiPillGroup(groupId, key) {
+  // Multi-select: clicking toggles, any number can be selected
+  answers[key] = [];
+  const group = document.getElementById(groupId);
+  group.querySelectorAll(".choice-pill").forEach(p => {
+    p.addEventListener("click", () => {
+      p.classList.toggle("sel");
+      const selected = [...group.querySelectorAll(".choice-pill.sel")].map(x => x.dataset.v);
+      answers[key] = selected;
+      // Show count badge
+      const badge = document.getElementById("goal-count-badge");
+      if (badge) badge.textContent = selected.length > 0 ? `${selected.length} selected` : "";
+    });
+  });
+}
 wirePillGroup("platform-group","platform");
 wirePillGroup("catalog-group","catalog");
-wirePillGroup("goal-group","goal");
+// Goal group uses multi-select
+wireMultiPillGroup("goal-group","goals");
 wirePillGroup("team-group","team");
 
 function updateVolume(v) {
@@ -295,7 +313,7 @@ function validateStep(step) {
     return ok;
   }
   if (step === 3) {
-    const ok = answers.goal && answers.team;
+    const ok = answers.goals && answers.goals.length > 0 && answers.team;
     document.getElementById("err-3").classList.toggle("show", !ok);
     return ok;
   }
@@ -318,6 +336,7 @@ async function submitDemo() {
 
   const sandboxData = {
     ...answers,
+    goal: (answers.goals||[answers.goal||""])[0], // primary goal for backward compat
     product: "cartchat",
     createdAt: Date.now(),
     expiresAt: Date.now() + (24 * 60 * 60 * 1000),
