@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WhatsApp Broadcast Service — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    #back-link{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    #back-link:hover{color:var(--ink)}
+
+    .hero{padding:80px 32px 60px;border-bottom:1px solid var(--ink);text-align:center}
+    .eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:18px}
+    .hero h1{font-size:clamp(32px,5vw,58px);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:1.05;margin-bottom:18px}
+    .hero p{font-size:15px;color:var(--grey-3);max-width:520px;margin:0 auto 36px;line-height:1.7}
+
+    #shell{max-width:1000px;margin:0 auto;padding:64px 32px}
+    .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--ink)}
+    @media(max-width:700px){.opt-grid{grid-template-columns:1fr}}
+    .opt-card{padding:40px 32px;cursor:pointer;transition:all .2s}
+    .opt-card:first-child{border-right:1px solid var(--ink)}
+    @media(max-width:700px){.opt-card:first-child{border-right:none;border-bottom:1px solid var(--ink)}}
+    .opt-card:hover{background:var(--grey-1)}
+    .opt-icon{font-size:36px;margin-bottom:18px}
+    .opt-title{font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:12px}
+    .opt-desc{font-size:13px;color:var(--grey-3);line-height:1.6;margin-bottom:20px}
+    .opt-btn{display:inline-block;padding:13px 28px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+    .opt-card:hover .opt-btn{background:var(--ink);color:var(--paper)}
+
+    .how-section{margin-top:60px}
+    .how-title{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-bottom:24px;text-align:center}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+    @media(max-width:700px){.steps{grid-template-columns:1fr}}
+    .step{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px 20px}
+    .step-n{font-family:var(--mono);font-size:11px;color:var(--blue);margin-bottom:10px}
+    .step h4{font-size:14px;font-weight:800;text-transform:uppercase;margin-bottom:6px}
+    .step p{font-size:12px;color:var(--grey-3);line-height:1.5}
+
+    .price-banner{background:var(--ink);color:var(--paper);text-align:center;padding:32px;margin-top:40px;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
+    .price-banner-item{text-align:center}
+    .price-banner-num{font-size:32px;font-weight:900;font-family:var(--mono)}
+    .price-banner-lbl{font-size:11px;color:var(--grey-2);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+    .price-banner-divider{width:1px;height:40px;background:#333}
+
+    .segments-link-banner{margin-top:40px;border:1px solid var(--ink);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    .segments-link-text h4{font-size:16px;font-weight:800;text-transform:uppercase;margin-bottom:6px}
+    .segments-link-text p{font-size:12.5px;color:var(--grey-3);max-width:420px;line-height:1.6}
+    .segments-link-btn{padding:13px 26px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;transition:all .15s}
+    .segments-link-btn:hover{background:var(--ink);color:var(--paper)}
+
+    .aup-notice{margin-top:24px;font-size:12px;color:var(--grey-3);text-align:center;line-height:1.6}
+    .aup-notice a{color:var(--blue)}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="nav-mark">Cart<span class="dot">·</span>Chat</div>
+  <a href="../index.html" id="back-link">← Back to Homepage</a>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">WhatsApp Broadcast Service</div>
+  <h1>Reach your whole list<br/>in one message.</h1>
+  <p>Send a single WhatsApp campaign to a precisely segmented B2B or B2C audience — choose from our house lists, or build your own. We review, you approve, you pay, we send.</p>
+</div>
+
+<div id="shell">
+  <div class="opt-grid">
+    <div class="opt-card" onclick="window.location.href='broadcast-order.html?type=B2C'">
+      <div class="opt-icon">🛍️</div>
+      <div class="opt-title">B2C Broadcast</div>
+      <div class="opt-desc">Send promotions, drops, or updates directly to your retail customer list. Perfect for sales, new arrivals, and loyalty messages.</div>
+      <span class="opt-btn">Start B2C Order →</span>
+    </div>
+    <div class="opt-card" onclick="window.location.href='broadcast-order.html?type=B2B'">
+      <div class="opt-icon">🏢</div>
+      <div class="opt-title">B2B Broadcast</div>
+      <div class="opt-desc">Reach wholesale partners, suppliers, or business contacts with catalog updates, pricing sheets, or partnership messages.</div>
+      <span class="opt-btn">Start B2B Order →</span>
+    </div>
+  </div>
+
+  <div class="price-banner">
+    <div class="price-banner-item"><div class="price-banner-num">$29</div><div class="price-banner-lbl">First Broadcast</div></div>
+    <div class="price-banner-divider"></div>
+    <div class="price-banner-item"><div class="price-banner-num">-10%</div><div class="price-banner-lbl">Every Broadcast After</div></div>
+    <div class="price-banner-divider"></div>
+    <div class="price-banner-item"><div class="price-banner-num">24h</div><div class="price-banner-lbl">Review Turnaround</div></div>
+  </div>
+
+  <div class="segments-link-banner">
+    <div class="segments-link-text">
+      <h4>Not sure which audience to target?</h4>
+      <p>Browse our full B2B and B2C segment categories — firmographic, behavioral, persona-based, and more — to find the right list for your message.</p>
+    </div>
+    <a href="segments.html" class="segments-link-btn">Explore Audience Segments →</a>
+  </div>
+
+  <div class="how-section">
+    <div class="how-title">How It Works</div>
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><h4>Choose Segment</h4><p>Pick a category from our house lists or upload/paste your own contacts.</p></div>
+      <div class="step"><div class="step-n">02</div><h4>Write Message</h4><p>Compose your commercial WhatsApp message — we can help refine it.</p></div>
+      <div class="step"><div class="step-n">03</div><h4>We Review</h4><p>Our team checks the message and list before anything is charged.</p></div>
+      <div class="step"><div class="step-n">04</div><h4>Pay &amp; We Send</h4><p>Once approved, pay via OMT/Bank/COD — we send your broadcast.</p></div>
+    </div>
+  </div>
+
+  <div class="aup-notice">All broadcasts must be strictly commercial. Political, advocacy, or rights-infringing content is prohibited. See our <a href="acceptable-use.html">Acceptable Use Policy</a>.</div>
+</div>
+
+</body>
+</html>

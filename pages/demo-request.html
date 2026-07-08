@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Request a Demo — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    #topbar{position:fixed;top:0;left:0;right:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--ink);height:64px;display:flex;align-items:center;padding:0 32px;gap:32px}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    #progress-track{flex:1;display:flex;align-items:center;gap:6px;max-width:480px}
+    .prog-step{flex:1;height:3px;background:var(--grey-1);position:relative;transition:background .3s}
+    .prog-step.done{background:var(--ink)}
+    .prog-step.active{background:var(--blue)}
+    #progress-label{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+    #exit-link{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    #exit-link:hover{color:var(--ink)}
+
+    #form-shell{max-width:680px;margin:0 auto;padding:140px 32px 80px}
+    .step-panel{display:none}
+    .step-panel.active{display:block;animation:fadeIn .35s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    .step-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+    .step-eyebrow::before{content:"";width:20px;height:1px;background:var(--blue)}
+    .step-title{font-size:clamp(26px,3.6vw,40px);font-weight:900;letter-spacing:-1.4px;text-transform:uppercase;line-height:1.08;margin-bottom:10px}
+    .step-sub{font-size:14px;color:var(--grey-3);margin-bottom:40px;max-width:480px;line-height:1.6}
+
+    .field{margin-bottom:24px}
+    .field label{display:block;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--grey-3);margin-bottom:9px;text-transform:uppercase;letter-spacing:1px}
+    .field input,.field select,.field textarea{width:100%;padding:14px 0;border:none;border-bottom:1px solid var(--ink);font-size:16px;font-family:var(--sans);color:var(--ink);background:transparent}
+    .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-bottom:2px solid var(--blue);padding-bottom:13px}
+    .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%230a0a0a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right center}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:600px){.row2{grid-template-columns:1fr}}
+
+    .choice-group{display:flex;flex-wrap:wrap;gap:10px}
+    .choice-pill{padding:12px 20px;border:1px solid var(--ink);font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.5px;transition:all .15s;cursor:pointer}
+    .choice-pill:hover{background:var(--grey-1)}
+    .choice-pill.sel{background:var(--ink);color:var(--paper)}
+
+    .range-field{margin-bottom:24px}
+    .range-value{font-family:var(--mono);font-size:28px;font-weight:900;margin-bottom:12px;color:var(--ink)}
+    .range-value span{font-size:13px;font-weight:400;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    input[type=range]{width:100%;height:1px;background:var(--ink);appearance:none;outline:none}
+    input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;border:2px solid var(--paper);box-shadow:0 0 0 1px var(--ink)}
+    .range-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--grey-3);margin-top:8px;text-transform:uppercase}
+
+    .plan-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink);margin-bottom:8px}
+    @media(max-width:680px){.plan-cards{grid-template-columns:1fr}}
+    .plan-card{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:24px 20px;cursor:pointer;transition:all .15s;position:relative}
+    .plan-card:hover{background:var(--grey-1)}
+    .plan-card.sel{background:var(--ink);color:var(--paper)}
+    .plan-card-tier{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin-bottom:10px}
+    .plan-card.sel .plan-card-tier{color:var(--grey-2)}
+    .plan-card-price{font-size:30px;font-weight:900;letter-spacing:-1.5px;margin-bottom:4px}
+    .plan-card-price span{font-size:11px;font-weight:400;color:var(--grey-3)}
+    .plan-card.sel .plan-card-price span{color:var(--grey-2)}
+    .plan-card-rec{position:absolute;top:-1px;right:-1px;background:var(--blue);color:var(--paper);font-family:var(--mono);font-size:9px;padding:3px 8px;text-transform:uppercase;letter-spacing:.5px}
+    .plan-check{position:absolute;bottom:14px;right:16px;font-size:14px;opacity:0}
+    .plan-card.sel .plan-check{opacity:1}
+
+    .step-actions{display:flex;justify-content:space-between;align-items:center;margin-top:48px;border-top:1px solid var(--grey-1);padding-top:28px}
+    .btn-back{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-3);display:flex;align-items:center;gap:8px}
+    .btn-back:hover{color:var(--ink)}
+    .btn-next{background:var(--ink);color:var(--paper);padding:16px 38px;font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--ink);transition:all .15s}
+    .btn-next:hover{background:var(--blue);border-color:var(--blue)}
+    .btn-next:disabled{opacity:.35;cursor:not-allowed}
+    .btn-next.final{background:var(--blue);border-color:var(--blue)}
+    .btn-next.final:hover{background:var(--ink);border-color:var(--ink)}
+
+    .error-msg{font-family:var(--mono);font-size:11px;color:var(--blue);margin-top:-14px;margin-bottom:18px;text-transform:uppercase;letter-spacing:.5px;display:none}
+    .error-msg.show{display:block}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="nav-mark">Cart<span class="dot">·</span>Chat</div>
+  <div id="progress-track">
+    <div class="prog-step active" data-s="1"></div>
+    <div class="prog-step" data-s="2"></div>
+    <div class="prog-step" data-s="3"></div>
+    <div class="prog-step" data-s="4"></div>
+  </div>
+  <div id="progress-label">Step 1 / 4</div>
+  <a href="../index.html" id="exit-link">Exit ✕</a>
+</div>
+
+<div id="form-shell">
+
+  <!-- STEP 1 -->
+  <div class="step-panel active" data-step="1">
+    <div class="step-eyebrow">Demo Request — Business Profile</div>
+    <h1 class="step-title">Tell us about<br/>your store.</h1>
+    <p class="step-sub">We configure your sandbox with this information so the demo reflects your actual store from the first message.</p>
+
+    <div class="field"><label>Store Name</label><input type="text" id="q-store" placeholder="Lumière Beauty Store"/></div>
+    <div class="row2">
+      <div class="field"><label>Your Name</label><input type="text" id="q-name" placeholder="Nadine Fares"/></div>
+      <div class="field"><label>Work Email</label><input type="email" id="q-email" placeholder="you@store.com"/></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>WhatsApp Number</label><input type="text" id="q-phone" placeholder="+961 1 234 567"/></div>
+      <div class="field"><label>Country</label>
+        <select id="q-country">
+          <option>Lebanon</option><option>UAE</option><option>Saudi Arabia</option><option>Jordan</option>
+          <option>Egypt</option><option>Kuwait</option><option>Qatar</option><option>Bahrain</option><option>Oman</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="error-msg" id="err-1">Please complete all fields to continue.</div>
+
+    <div class="step-actions"><span></span><button class="btn-next" onclick="goStep(2)">Continue →</button></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-panel" data-step="2">
+    <div class="step-eyebrow">Demo Request — Operations</div>
+    <h1 class="step-title">Help us size<br/>your sandbox.</h1>
+    <p class="step-sub">These answers shape your demo's conversation volume, catalog complexity, and recommended plan.</p>
+
+    <div class="field">
+      <label>Store Platform</label>
+      <div class="choice-group" id="platform-group">
+        <div class="choice-pill" data-v="Shopify">Shopify</div>
+        <div class="choice-pill" data-v="WooCommerce">WooCommerce</div>
+        <div class="choice-pill" data-v="Instagram Shop">Instagram Shop</div>
+        <div class="choice-pill" data-v="Custom">Custom / Other</div>
+        <div class="choice-pill" data-v="None yet">No store yet</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Product Catalog Size</label>
+      <div class="choice-group" id="catalog-group">
+        <div class="choice-pill" data-v="1-25">1–25 products</div>
+        <div class="choice-pill" data-v="26-100">26–100 products</div>
+        <div class="choice-pill" data-v="101-500">101–500 products</div>
+        <div class="choice-pill" data-v="500+">500+ products</div>
+      </div>
+    </div>
+
+    <div class="range-field">
+      <label style="display:block;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--grey-3);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px">Current WhatsApp Message Volume / Month</label>
+      <div class="range-value"><span id="vol-val">300</span> <span>messages / month</span></div>
+      <input type="range" id="q-volume" min="0" max="3000" step="50" value="300" oninput="updateVolume(this.value)"/>
+      <div class="range-labels"><span>0</span><span>1,500</span><span>3,000+</span></div>
+    </div>
+
+    <div class="error-msg" id="err-2">Please select a platform and catalog size.</div>
+
+    <div class="step-actions">
+      <button class="btn-back" onclick="goStep(1)">← Back</button>
+      <button class="btn-next" onclick="goStep(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-panel" data-step="3">
+    <div class="step-eyebrow">Demo Request — Goals</div>
+    <h1 class="step-title">What should<br/>CartChat solve first?</h1>
+    <p class="step-sub">Select all the goals that apply — we'll configure a dedicated agent for each one. The more you pick, the more your sandbox shows you.</p>
+
+    <div class="field">
+      <label>Your Goals <span style="font-family:var(--mono);font-size:10px;font-weight:400;color:var(--grey-3);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
+      <div class="choice-group" id="goal-group" style="flex-direction:column;align-items:stretch">
+        <div class="choice-pill" data-v="Reduce 'where is my order' tickets" style="text-align:left">📦 Reduce "where is my order" tickets</div>
+        <div class="choice-pill" data-v="Recover abandoned carts" style="text-align:left">🔄 Recover abandoned carts</div>
+        <div class="choice-pill" data-v="Help customers find products" style="text-align:left">🛍️ Help customers find products</div>
+        <div class="choice-pill" data-v="Grow social media presence" style="text-align:left">📣 Grow social media presence</div>
+        <div class="choice-pill" data-v="Reduce support workload" style="text-align:left">👥 Reduce support workload</div>
+      </div>
+      <div id="goal-count-badge" style="font-family:var(--mono);font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-top:8px;min-height:16px"></div>
+    </div>
+
+    <div class="field">
+      <label>Support Team Size</label>
+      <div class="choice-group" id="team-group">
+        <div class="choice-pill" data-v="1-2">1–2</div>
+        <div class="choice-pill" data-v="3-10">3–10</div>
+        <div class="choice-pill" data-v="11-25">11–25</div>
+        <div class="choice-pill" data-v="25+">25+</div>
+      </div>
+    </div>
+
+    <div class="error-msg" id="err-3">Please select at least one goal and your team size.</div>
+
+    <div class="step-actions">
+      <button class="btn-back" onclick="goStep(2)">← Back</button>
+      <button class="btn-next" onclick="goStep(4)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-panel" data-step="4">
+    <div class="step-eyebrow">Demo Request — Final Step</div>
+    <h1 class="step-title">Choose a plan<br/>to trial.</h1>
+    <p class="step-sub">You won't be charged. This selects which plan's full feature set is unlocked in your 24-hour sandbox.</p>
+
+    <div class="plan-cards" id="plan-cards">
+      <div class="plan-card" data-v="Starter" onclick="selectPlan(this)">
+        <div class="plan-card-tier">Starter</div>
+        <div class="plan-card-price">$59<span> /mo</span></div>
+        <div style="font-size:12px;color:inherit;opacity:.7;margin-top:8px">1 number · 500 msgs/mo</div>
+        <div class="plan-check">✓</div>
+      </div>
+      <div class="plan-card sel" data-v="Growth" onclick="selectPlan(this)">
+        <div class="plan-card-rec">Recommended</div>
+        <div class="plan-card-tier">Growth</div>
+        <div class="plan-card-price">$179<span> /mo</span></div>
+        <div style="font-size:12px;color:inherit;opacity:.7;margin-top:8px">3 numbers · Unlimited</div>
+        <div class="plan-check">✓</div>
+      </div>
+      <div class="plan-card" data-v="Agency" onclick="selectPlan(this)">
+        <div class="plan-card-tier">Agency</div>
+        <div class="plan-card-price">$449<span> /mo</span></div>
+        <div style="font-size:12px;color:inherit;opacity:.7;margin-top:8px">Unlimited stores</div>
+        <div class="plan-check">✓</div>
+      </div>
+    </div>
+
+    <div class="step-actions">
+      <button class="btn-back" onclick="goStep(3)">← Back</button>
+      <button class="btn-next final" id="submit-btn" onclick="submitDemo()">Launch My 24-Hour Sandbox →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+const answers = {
+  store:"", name:"", email:"", phone:"", country:"Lebanon",
+  platform:"", catalog:"", volume:300, goal:"", team:"",
+  plan:"Growth"
+};
+
+function wirePillGroup(groupId, key) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll(".choice-pill").forEach(p => {
+    p.addEventListener("click", () => {
+      group.querySelectorAll(".choice-pill").forEach(x=>x.classList.remove("sel"));
+      p.classList.add("sel");
+      answers[key] = p.dataset.v;
+    });
+  });
+}
+
+function wireMultiPillGroup(groupId, key) {
+  // Multi-select: clicking toggles, any number can be selected
+  answers[key] = [];
+  const group = document.getElementById(groupId);
+  group.querySelectorAll(".choice-pill").forEach(p => {
+    p.addEventListener("click", () => {
+      p.classList.toggle("sel");
+      const selected = [...group.querySelectorAll(".choice-pill.sel")].map(x => x.dataset.v);
+      answers[key] = selected;
+      // Show count badge
+      const badge = document.getElementById("goal-count-badge");
+      if (badge) badge.textContent = selected.length > 0 ? `${selected.length} selected` : "";
+    });
+  });
+}
+wirePillGroup("platform-group","platform");
+wirePillGroup("catalog-group","catalog");
+// Goal group uses multi-select
+wireMultiPillGroup("goal-group","goals");
+wirePillGroup("team-group","team");
+
+function updateVolume(v) {
+  answers.volume = v;
+  document.getElementById("vol-val").textContent = v >= 3000 ? "3,000+" : Number(v).toLocaleString();
+}
+
+function selectPlan(el) {
+  document.querySelectorAll(".plan-card").forEach(p=>p.classList.remove("sel"));
+  el.classList.add("sel");
+  answers.plan = el.dataset.v;
+}
+
+function updateProgress() {
+  document.querySelectorAll(".prog-step").forEach(s => {
+    const n = parseInt(s.dataset.s);
+    s.classList.toggle("done", n < currentStep);
+    s.classList.toggle("active", n === currentStep);
+  });
+  document.getElementById("progress-label").textContent = `Step ${currentStep} / ${totalSteps}`;
+}
+
+function validateStep(step) {
+  if (step === 1) {
+    answers.store   = document.getElementById("q-store").value.trim();
+    answers.name    = document.getElementById("q-name").value.trim();
+    answers.email   = document.getElementById("q-email").value.trim();
+    answers.phone   = document.getElementById("q-phone").value.trim();
+    answers.country = document.getElementById("q-country").value;
+    const ok = answers.store && answers.name && answers.email && answers.phone;
+    document.getElementById("err-1").classList.toggle("show", !ok);
+    return ok;
+  }
+  if (step === 2) {
+    const ok = answers.platform && answers.catalog;
+    document.getElementById("err-2").classList.toggle("show", !ok);
+    return ok;
+  }
+  if (step === 3) {
+    const ok = answers.goals && answers.goals.length > 0 && answers.team;
+    document.getElementById("err-3").classList.toggle("show", !ok);
+    return ok;
+  }
+  return true;
+}
+
+function goStep(target) {
+  if (target > currentStep && !validateStep(currentStep)) return;
+  document.querySelector(`.step-panel[data-step="${currentStep}"]`).classList.remove("active");
+  currentStep = target;
+  document.querySelector(`.step-panel[data-step="${currentStep}"]`).classList.add("active");
+  updateProgress();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+async function submitDemo() {
+  const btn = document.getElementById("submit-btn");
+  btn.disabled = true;
+  btn.textContent = "Setting Up Your Sandbox…";
+
+  const sandboxData = {
+    ...answers,
+    goal: (answers.goals||[answers.goal||""])[0], // primary goal for backward compat
+    product: "cartchat",
+    createdAt: Date.now(),
+    expiresAt: Date.now() + (24 * 60 * 60 * 1000),
+  };
+  localStorage.setItem("cc_demo_session", JSON.stringify(sandboxData));
+
+  try {
+    await fetch("/api/demo/create", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(sandboxData)
+    }).catch(()=>{});
+  } finally {
+    window.location.href = "sandbox.html";
+  }
+}
+
+updateVolume(300);
+</script>
+</body>
+</html>

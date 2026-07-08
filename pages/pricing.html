@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;background:var(--paper);z-index:40}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    .nav-top-links{display:flex;gap:28px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    .nav-top-links a{color:var(--grey-3);transition:color .15s}
+    .nav-top-links a:hover,.nav-top-links a.active{color:var(--ink)}
+    .nav-cta{background:var(--ink);color:var(--paper);padding:9px 20px;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+    .nav-cta:hover{background:var(--blue)}
+
+    .hero{padding:72px 32px 56px;border-bottom:1px solid var(--ink);text-align:center}
+    .eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:18px}
+    .hero h1{font-size:clamp(30px,4.6vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1.8px;line-height:1.06;margin-bottom:14px}
+    .hero p{font-size:14.5px;color:var(--grey-3);max-width:520px;margin:0 auto;line-height:1.7}
+
+    #shell{max-width:1080px;margin:0 auto;padding:56px 32px}
+
+    /* Plan cards */
+    .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink);margin-bottom:56px}
+    @media(max-width:800px){.plans-grid{grid-template-columns:1fr}}
+    .plan-card{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:32px 28px;display:flex;flex-direction:column;position:relative}
+    .plan-card.featured{background:var(--ink);color:var(--paper)}
+    .plan-badge{position:absolute;top:-1px;right:-1px;background:var(--blue);color:var(--paper);font-family:var(--mono);font-size:9px;padding:4px 10px;text-transform:uppercase;letter-spacing:1px}
+    .plan-tier{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin-bottom:16px}
+    .plan-card.featured .plan-tier{color:var(--grey-2)}
+    .plan-price{font-size:52px;font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:4px}
+    .plan-price span{font-size:13px;font-weight:400;letter-spacing:0;color:var(--grey-3)}
+    .plan-card.featured .plan-price span{color:var(--grey-2)}
+    .plan-desc{font-size:13px;color:var(--grey-3);margin-bottom:24px;line-height:1.6}
+    .plan-card.featured .plan-desc{color:var(--grey-2)}
+    .plan-divider{height:1px;background:var(--grey-2);margin-bottom:20px}
+    .plan-card.featured .plan-divider{background:#2a2a2a}
+    .plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;margin-bottom:28px}
+    .plan-features li{font-size:13px;display:flex;gap:10px;align-items:baseline;line-height:1.45}
+    .plan-features li::before{content:"—";color:var(--blue);font-weight:700;flex-shrink:0}
+    .plan-features li.highlight{font-weight:600}
+    .plan-btn{padding:14px;text-align:center;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--ink);transition:all .15s;background:var(--paper);color:var(--ink)}
+    .plan-card:not(.featured) .plan-btn:hover{background:var(--ink);color:var(--paper)}
+    .plan-card.featured .plan-btn{border-color:var(--paper);background:var(--paper);color:var(--ink)}
+    .plan-card.featured .plan-btn:hover{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+
+    /* Broadcast pricing */
+    .broadcast-section{border:1px solid var(--ink);margin-bottom:56px}
+    .broadcast-head{background:var(--ink);color:var(--paper);padding:24px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+    .broadcast-head-title{font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:-.5px}
+    .broadcast-head-sub{font-family:var(--mono);font-size:11px;color:var(--grey-2);text-transform:uppercase;letter-spacing:.5px}
+    .broadcast-body{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+    @media(max-width:600px){.broadcast-body{grid-template-columns:1fr}}
+    .bc-item{padding:24px 28px;border-right:1px solid var(--ink);border-top:1px solid var(--ink)}
+    .bc-item:last-child{border-right:none}
+    .bc-num{font-family:var(--mono);font-size:36px;font-weight:900;color:var(--blue);margin-bottom:6px}
+    .bc-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--grey-3);margin-bottom:8px}
+    .bc-desc{font-size:12.5px;color:var(--grey-3);line-height:1.55}
+
+    /* Comparison table */
+    .compare-title{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin-bottom:20px}
+    .compare-table{width:100%;border-collapse:collapse;border:1px solid var(--ink);margin-bottom:56px}
+    .compare-table th{text-align:left;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:12px 16px;background:var(--grey-1);color:var(--grey-3);border-bottom:1px solid var(--ink);border-right:1px solid var(--ink)}
+    .compare-table th:last-child{border-right:none}
+    .compare-table td{padding:13px 16px;border-bottom:1px solid var(--grey-1);border-right:1px solid var(--grey-1);font-size:13px;vertical-align:middle}
+    .compare-table td:last-child{border-right:none}
+    .compare-table td:first-child{font-weight:600}
+    .compare-table tr:last-child td{border-bottom:none}
+    .check{color:var(--blue);font-weight:700}
+    .dash{color:var(--grey-2)}
+
+    /* Payment methods */
+    .payment-section{border-top:1px solid var(--ink);padding-top:40px;margin-bottom:48px}
+    .payment-title{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--grey-3);margin-bottom:20px}
+    .payment-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+    @media(max-width:700px){.payment-grid{grid-template-columns:repeat(2,1fr)}}
+    .payment-item{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:20px 18px}
+    .payment-icon{font-size:22px;margin-bottom:10px}
+    .payment-name{font-weight:700;font-size:13px;text-transform:uppercase;margin-bottom:4px}
+    .payment-desc{font-size:11.5px;color:var(--grey-3);line-height:1.5}
+
+    .cta-strip{background:var(--ink);color:var(--paper);text-align:center;padding:48px 32px;margin-bottom:0}
+    .cta-strip h2{font-size:clamp(22px,3vw,36px);font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:14px}
+    .cta-strip p{font-size:13.5px;color:var(--grey-2);max-width:480px;margin:0 auto 28px;line-height:1.6}
+    .cta-btn{display:inline-block;padding:16px 36px;background:var(--blue);color:var(--paper);font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s}
+    .cta-btn:hover{background:var(--paper);color:var(--ink)}
+
+    footer{padding:32px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;border-top:1px solid var(--ink)}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="../index.html"><div class="nav-mark">Cart<span class="dot">·</span>Chat</div></a>
+  <div class="nav-top-links">
+    <a href="lists.html">Our Lists</a>
+    <a href="pricing.html" class="active">Pricing</a>
+    <a href="broadcast.html">Broadcast</a>
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQ</a>
+  </div>
+  <a href="demo-request.html" class="nav-cta">Request a Demo →</a>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Transparent Pricing — No Surprises</div>
+  <h1>Simple pricing.<br/>Real value.</h1>
+  <p>Two products, two pricing models. The AI Agent runs on a monthly subscription. The Broadcast Service is priced per send. Both start free with a 24-hour demo.</p>
+</div>
+
+<div id="shell">
+
+  <!-- AI AGENT PLANS -->
+  <div class="compare-title" style="margin-bottom:24px">AI WhatsApp Agent — Monthly Subscription Plans</div>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <div class="plan-tier">Starter</div>
+      <div class="plan-price">$59<span> /mo</span></div>
+      <div class="plan-desc">For small stores getting started with WhatsApp AI automation.</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="highlight">1 WhatsApp number</li>
+        <li>500 AI conversations / month</li>
+        <li>Order tracking &amp; status replies</li>
+        <li>Product Q&amp;A and catalog browsing</li>
+        <li>Social campaign generator</li>
+        <li>Arabic &amp; English support</li>
+        <li>Basic analytics dashboard</li>
+      </ul>
+      <a href="demo-request.html" class="plan-btn">Trial This Plan Free →</a>
+    </div>
+
+    <div class="plan-card featured">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-tier">Growth</div>
+      <div class="plan-price">$179<span> /mo</span></div>
+      <div class="plan-desc">For growing stores needing full automation, recovery, and analytics.</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="highlight">3 WhatsApp numbers</li>
+        <li class="highlight">Unlimited AI conversations</li>
+        <li>Everything in Starter, plus:</li>
+        <li>Shopify / WooCommerce sync</li>
+        <li>Abandoned cart recovery</li>
+        <li>Returns &amp; refunds automation</li>
+        <li>Advanced analytics &amp; sentiment</li>
+        <li>Broadcast campaign access</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="demo-request.html" class="plan-btn">Trial This Plan Free →</a>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-tier">Agency</div>
+      <div class="plan-price">$449<span> /mo</span></div>
+      <div class="plan-desc">Manage multiple store clients from one account — white-label ready.</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li class="highlight">Unlimited stores / clients</li>
+        <li class="highlight">White-label dashboard</li>
+        <li>Everything in Growth, plus:</li>
+        <li>API access for custom integrations</li>
+        <li>Dedicated account manager</li>
+        <li>Custom onboarding &amp; training</li>
+        <li>Client-level analytics per store</li>
+        <li>SLA-backed uptime guarantee</li>
+      </ul>
+      <a href="demo-request.html" class="plan-btn">Trial This Plan Free →</a>
+    </div>
+  </div>
+
+  <!-- BROADCAST PRICING -->
+  <div class="broadcast-section">
+    <div class="broadcast-head">
+      <div>
+        <div class="broadcast-head-title">WhatsApp Broadcast Service</div>
+        <div class="broadcast-head-sub">One-time pricing — not a subscription</div>
+      </div>
+      <a href="broadcast.html" style="padding:12px 24px;border:1px solid var(--paper);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--paper);transition:all .15s">Start a Broadcast →</a>
+    </div>
+    <div class="broadcast-body">
+      <div class="bc-item">
+        <div class="bc-num">$29</div>
+        <div class="bc-label">First Broadcast</div>
+        <div class="bc-desc">Flat rate for your first WhatsApp campaign to any B2B or B2C list. Reviewed and sent by our team within 24 hours of approval.</div>
+      </div>
+      <div class="bc-item">
+        <div class="bc-num">-10%</div>
+        <div class="bc-label">Every Subsequent Broadcast</div>
+        <div class="bc-desc">A 10% discount applies automatically to each additional broadcast you order. The more you send, the less you pay per send.</div>
+      </div>
+      <div class="bc-item" style="border-right:none">
+        <div class="bc-num">$0</div>
+        <div class="bc-label">Until Approved &amp; Confirmed</div>
+        <div class="bc-desc">Submit your order, our team reviews the message and list. You pay only once approved — no surprise charges for rejected orders.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-title">Feature Comparison</div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Starter — $59</th>
+        <th>Growth — $179</th>
+        <th>Agency — $449</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>WhatsApp Numbers</td><td>1</td><td>3</td><td>Unlimited</td></tr>
+      <tr><td>AI Conversations / Month</td><td>500</td><td>Unlimited</td><td>Unlimited</td></tr>
+      <tr><td>Order Tracking Replies</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Product Q&amp;A &amp; Catalog</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Arabic &amp; English</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Social Campaign Generator</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Abandoned Cart Recovery</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Returns &amp; Refund Automation</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Shopify / WooCommerce Sync</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Advanced Analytics</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Broadcast Service Access</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>White-Label Dashboard</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>API Access</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Dedicated Account Manager</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Unlimited Client Stores</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- PAYMENT METHODS -->
+  <div class="payment-section">
+    <div class="payment-title">Accepted Payment Methods</div>
+    <div class="payment-grid">
+      <div class="payment-item">
+        <div class="payment-icon">💳</div>
+        <div class="payment-name">Credit Card</div>
+        <div class="payment-desc">Instant activation. All major cards accepted.</div>
+      </div>
+      <div class="payment-item">
+        <div class="payment-icon">🏦</div>
+        <div class="payment-name">OMT Transfer</div>
+        <div class="payment-desc">Enter your reference number. Verified within a few hours.</div>
+      </div>
+      <div class="payment-item">
+        <div class="payment-icon">🏛️</div>
+        <div class="payment-name">Bank Transfer</div>
+        <div class="payment-desc">Upload your receipt. Admin verifies and activates your account.</div>
+      </div>
+      <div class="payment-item">
+        <div class="payment-icon">📦</div>
+        <div class="payment-name">Bill Me / COD</div>
+        <div class="payment-desc">No upfront payment. Our team contacts you to arrange billing.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-strip">
+    <h2>Try before you pay.</h2>
+    <p>Every plan starts with a free 24-hour sandbox — no credit card required. Configure your AI agent, test it live, then activate if you're happy.</p>
+    <a href="demo-request.html" class="cta-btn">Start My Free Demo →</a>
+  </div>
+
+</div>
+
+<footer>Cart·Chat — © 2026 — <a href="faq.html" style="color:inherit">FAQ</a> — <a href="terms.html" style="color:inherit">Terms of Service</a></footer>
+
+</body>
+</html>

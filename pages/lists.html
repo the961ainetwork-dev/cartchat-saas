@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Lists — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;background:var(--paper);z-index:40}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    .nav-top-links{display:flex;gap:28px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+    .nav-top-links a{color:var(--grey-3);transition:color .15s}
+    .nav-top-links a:hover,.nav-top-links a.active{color:var(--ink)}
+    .nav-cta{background:var(--ink);color:var(--paper);padding:9px 20px;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
+    .nav-cta:hover{background:var(--blue)}
+
+    .hero{padding:72px 32px 56px;border-bottom:1px solid var(--ink)}
+    .hero-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+    .hero-eyebrow::before{content:"";width:20px;height:1px;background:var(--blue)}
+    .hero h1{font-size:clamp(32px,5vw,64px);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:1.02;margin-bottom:18px}
+    .hero-tagline{font-size:clamp(15px,1.6vw,19px);color:var(--grey-3);max-width:640px;line-height:1.7;font-style:italic;margin-bottom:32px}
+    .hero-tagline strong{color:var(--ink);font-style:normal}
+
+    .type-nav{display:flex;gap:0;border:1px solid var(--ink);width:fit-content}
+    .type-tab{padding:12px 28px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .15s;background:none;border:none}
+    .type-tab.active{background:var(--ink);color:var(--paper)}
+
+    #shell{max-width:1080px;margin:0 auto;padding:56px 32px}
+
+    .type-panel{display:none}
+    .type-panel.active{display:block}
+
+    .cat-section{margin-bottom:56px}
+    .cat-header{display:grid;grid-template-columns:80px 1fr;gap:24px;align-items:start;border-bottom:1px solid var(--ink);padding-bottom:24px;margin-bottom:32px}
+    .cat-num{font-family:var(--mono);font-size:48px;font-weight:900;color:var(--grey-1);line-height:1}
+    .cat-title-block{}
+    .cat-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:8px}
+    .cat-title{font-size:clamp(20px,2.4vw,28px);font-weight:900;text-transform:uppercase;letter-spacing:-.8px;margin-bottom:6px}
+    .cat-sub{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    .cat-desc{font-size:14px;color:var(--grey-3);line-height:1.7;margin-bottom:24px;max-width:640px}
+
+    .examples-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+    .example-pill{border:1px solid var(--grey-2);padding:13px 16px;font-size:12.5px;line-height:1.5;color:var(--ink)}
+    .example-pill b{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);margin-bottom:4px}
+
+    .order-strip{background:var(--grey-1);border:1px solid var(--ink);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .order-strip p{font-size:13px;color:var(--grey-3);max-width:480px;line-height:1.5}
+    .order-strip-btns{display:flex;gap:10px}
+    .order-btn{padding:11px 22px;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:1px solid var(--ink);transition:all .15s;white-space:nowrap}
+    .order-btn:hover{background:var(--ink);color:var(--paper)}
+    .order-btn.primary{background:var(--ink);color:var(--paper)}
+    .order-btn.primary:hover{background:var(--blue);border-color:var(--blue)}
+
+    .type-intro{background:var(--ink);color:var(--paper);padding:28px 32px;margin-bottom:40px}
+    .type-intro-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:10px}
+    .type-intro-title{font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:-.5px;margin-bottom:10px}
+    .type-intro-desc{font-size:13.5px;color:var(--grey-2);line-height:1.65;max-width:680px}
+
+    .aup-note{border:1px solid var(--ink);border-left:4px solid var(--blue);padding:18px 22px;margin-top:48px;font-size:13px;color:var(--grey-3);line-height:1.7}
+    .aup-note b{color:var(--ink);display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+
+    footer{padding:32px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;border-top:1px solid var(--ink)}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="../index.html"><div class="nav-mark">Cart<span class="dot">·</span>Chat</div></a>
+  <div class="nav-top-links">
+    <a href="lists.html" class="active">Our Lists</a>
+    <a href="segments.html">Segments</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="broadcast.html">Broadcast</a>
+    <a href="about.html">About</a>
+  </div>
+  <a href="demo-request.html" class="nav-cta">Request a Demo →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Audience Intelligence — B2B &amp; B2C</div>
+  <h1>Our Lists.<br/>Your audience.<br/>Your message.</h1>
+  <p class="hero-tagline">"Navigating regional macroeconomics and volatile markets requires precision. <strong>You need the signal, not the noise.</strong>"</p>
+  <div class="type-nav">
+    <button class="type-tab active" data-v="b2b" onclick="selectType(this)">B2B — Business Lists</button>
+    <button class="type-tab" data-v="b2c" onclick="selectType(this)">B2C — Consumer Lists</button>
+  </div>
+</div>
+
+<div id="shell">
+
+  <!-- B2B PANEL -->
+  <div class="type-panel active" id="panel-b2b">
+    <div class="type-intro">
+      <div class="type-intro-label">The Strategic Ecosystem</div>
+      <div class="type-intro-title">B2B List Categories</div>
+      <div class="type-intro-desc">B2B segmentation focuses on logic, ROI, and organizational structures. These lists are typically used for partnership building, capital raising, and enterprise sales.</div>
+    </div>
+
+    <!-- 01 Firmographic -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">01</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2B Category</div>
+          <div class="cat-title">Firmographic</div>
+          <div class="cat-sub">Company Attributes — The Baseline Reality</div>
+        </div>
+      </div>
+      <div class="cat-desc">This is the baseline categorization based on the physical and financial reality of the business. Firmographic data answers the most fundamental questions: what does this company do, how big is it, where does it operate, and what economic model drives it?</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>Industry Vertical</b>FinTech, Media, Hospitality, Retail, Healthcare</div>
+        <div class="example-pill"><b>Employee Headcount</b>SME (1–50), Mid-market (51–500), Enterprise (500+)</div>
+        <div class="example-pill"><b>Annual Revenue</b>Pre-revenue, $1M–$10M, $10M–$100M, $100M+</div>
+        <div class="example-pill"><b>Geographic Focus</b>MENA region, GCC markets, Levant, diaspora-owned</div>
+        <div class="example-pill"><b>Operating Model</b>NGO vs. corporate, B2B vs. B2C business</div>
+      </div>
+      <div class="order-strip">
+        <p>Want to reach companies by industry or size? Our firmographic lists are the most requested starting point for enterprise sales and partnership outreach.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2B&cat=firmographic" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Technographic -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">02</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2B Category</div>
+          <div class="cat-title">Technographic</div>
+          <div class="cat-sub">Technology Stack — Tools &amp; Infrastructure</div>
+        </div>
+      </div>
+      <div class="cat-desc">Categorizing companies by the tools, infrastructure, and architectures they currently employ. In a region rapidly transitioning from legacy operations to cloud-native and AI-driven workflows, technographic segmentation lets you reach the right organizations at the right moment of their transformation.</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>Legacy Systems</b>Organizations still running on-premise infrastructure</div>
+        <div class="example-pill"><b>Cloud-Native</b>Companies fully operating on cloud infrastructure</div>
+        <div class="example-pill"><b>Agentic AI Adopters</b>Integrating AI workflows and multi-agent systems</div>
+        <div class="example-pill"><b>Digital Transformation</b>Active migration and modernization programs</div>
+      </div>
+      <div class="order-strip">
+        <p>Selling AI, SaaS, or infrastructure? Technographic lists let you target organizations at the exact stage of their technology evolution where your solution fits.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2B&cat=technographic" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Persona -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">03</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2B Category</div>
+          <div class="cat-title">Persona &amp; Role-Based</div>
+          <div class="cat-sub">The Decision Makers — Engage the Leader, Not the Company</div>
+        </div>
+      </div>
+      <div class="cat-desc">You are rarely selling to a "company" — you are engaging a specific leader within it. Persona-based segmentation targets the individual who holds budget authority, strategic vision, or gatekeeper power for the decision you need them to make.</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>HNW Diaspora Investors</b>High-net-worth investors with regional roots and global capital</div>
+        <div class="example-pill"><b>Policy Directors</b>Regional government and public sector decision-makers</div>
+        <div class="example-pill"><b>C-Suite Executives</b>CEOs, CFOs, CTOs across MENA corporates</div>
+        <div class="example-pill"><b>Innovation Scouts</b>University research leads and incubator directors</div>
+        <div class="example-pill"><b>Procurement Leads</b>Supply chain and vendor selection decision-makers</div>
+      </div>
+      <div class="order-strip">
+        <p>The right message to the wrong person gets ignored. Persona lists help you reach the decision-maker directly — not their assistant's inbox.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2B&cat=persona" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Intent -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">04</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2B Category</div>
+          <div class="cat-title">Intent &amp; Lifecycle Stage</div>
+          <div class="cat-sub">Active Behavior — What They're Doing Right Now</div>
+        </div>
+      </div>
+      <div class="cat-desc">Segmenting businesses by what they are actively doing or searching for at this exact moment. Intent data is the most time-sensitive signal in B2B — a company that just secured funding has a completely different buying posture than one in stable operation.</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>Seeking Sandboxes</b>Early-stage ventures actively looking for incubators or pilots</div>
+        <div class="example-pill"><b>Recently Funded</b>Companies that just closed a round and are ready to spend</div>
+        <div class="example-pill"><b>Scaling Internationally</b>Enterprises expanding operations across new MENA markets</div>
+        <div class="example-pill"><b>Hiring Aggressively</b>Companies in rapid growth mode, signaling expansion</div>
+      </div>
+      <div class="order-strip">
+        <p>Timing is everything in B2B. Intent lists help you reach companies in the exact lifecycle moment where your solution is most relevant — and most likely to convert.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2B&cat=intent" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B2C PANEL -->
+  <div class="type-panel" id="panel-b2c">
+    <div class="type-intro">
+      <div class="type-intro-label">The Consumer Audience</div>
+      <div class="type-intro-title">B2C List Categories</div>
+      <div class="type-intro-desc">B2C segmentation relies heavily on behavior, identity, and engagement rhythms. These lists drive direct sales, subscriptions, and brand loyalty at scale.</div>
+    </div>
+
+    <!-- 01 Demographic -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">01</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2C Category</div>
+          <div class="cat-title">Demographic &amp; Geographic</div>
+          <div class="cat-sub">Fundamental Descriptors — Who They Are</div>
+        </div>
+      </div>
+      <div class="cat-desc">The fundamental descriptors of your individual users. While demographic data alone rarely drives conversion in modern marketing, it provides the essential filter layer for every other segmentation that follows — ensuring your message reaches the right person before it reaches the right moment.</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>Age Brackets</b>Gen Z (18–26), Millennials (27–42), Gen X (43–58)</div>
+        <div class="example-pill"><b>Income Levels</b>Mass market, affluent, high-net-worth consumers</div>
+        <div class="example-pill"><b>Education</b>Undergraduate, postgraduate, professional certification</div>
+        <div class="example-pill"><b>Beirut Residents</b>Localized urban segments by neighborhood or district</div>
+        <div class="example-pill"><b>International Diaspora</b>Lebanese and MENA diaspora with home-market affinity</div>
+      </div>
+      <div class="order-strip">
+        <p>Start with who before you focus on why. Demographic lists are the foundation layer for any consumer campaign targeting specific regional audiences.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2C&cat=demographic" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Behavioral -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">02</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2C Category</div>
+          <div class="cat-title">Behavioral &amp; Engagement</div>
+          <div class="cat-sub">Platform Interaction — How They Engage</div>
+        </div>
+      </div>
+      <div class="cat-desc">Grouping users by how they interact with your digital platforms or content ecosystems. Behavioral data is the most predictive signal for conversion — it captures intent in action rather than just demographic potential.</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>Daily News Readers</b>Subscribers to automated news briefings and digests</div>
+        <div class="example-pill"><b>Cart Abandoners</b>Users who initiated checkout but did not complete</div>
+        <div class="example-pill"><b>Inactive Subscribers</b>Dormant users who haven't engaged in 60+ days</div>
+        <div class="example-pill"><b>Engaged Advocates</b>Highly active users who share content across social channels</div>
+      </div>
+      <div class="order-strip">
+        <p>Behavioral lists are where the money is. Reaching people based on what they've done — not just who they are — is the difference between marketing and targeting.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2C&cat=behavioral" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Psychographic -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">03</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2C Category</div>
+          <div class="cat-title">Psychographic</div>
+          <div class="cat-sub">Interests &amp; Lifestyles — Values &amp; Worldview</div>
+        </div>
+      </div>
+      <div class="cat-desc">Categorizing based on values, hobbies, and worldviews. Psychographic segmentation goes beyond what people do to understand why they do it — enabling messaging that resonates on a genuinely human level rather than just a transactional one.</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>Early Tech Adopters</b>First movers who trial new platforms and tools</div>
+        <div class="example-pill"><b>Smart-Citizenship Advocates</b>Engaged in civic tech, urban innovation, and policy</div>
+        <div class="example-pill"><b>Artisanal Buyers</b>Consumers prioritizing authentic local and fermented goods</div>
+        <div class="example-pill"><b>Sports Fans</b>Avid followers of football, basketball, and motorsport</div>
+      </div>
+      <div class="order-strip">
+        <p>Values-aligned messaging converts. Psychographic lists let you speak to what your audience actually cares about — not just what they've clicked before.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2C&cat=psychographic" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Transactional -->
+    <div class="cat-section">
+      <div class="cat-header">
+        <div class="cat-num">04</div>
+        <div class="cat-title-block">
+          <div class="cat-label">B2C Category</div>
+          <div class="cat-title">Transactional &amp; Geospatial</div>
+          <div class="cat-sub">Purchase &amp; Location — Buying History &amp; Place</div>
+        </div>
+      </div>
+      <div class="cat-desc">Based on purchasing history or physical location interactions. Transactional and geospatial data captures the most concrete signal of all: someone has already spent money, or they were physically present at a relevant location — making them measurably higher-intent than any other consumer segment.</div>
+      <div class="examples-grid">
+        <div class="example-pill"><b>High-Frequency Buyers</b>Customers who purchase 4+ times per month</div>
+        <div class="example-pill"><b>Seasonal Purchasers</b>Buyers who spike during Ramadan, summer, or back-to-school</div>
+        <div class="example-pill"><b>Foot-Traffic Segments</b>Consumers physically present at key retail or event zones</div>
+        <div class="example-pill"><b>Event Activations</b>Café fan-zones and localized pop-up presence during sporting events</div>
+      </div>
+      <div class="order-strip">
+        <p>Past behavior is the best predictor of future action. Transactional lists are your highest-intent audience — they've already voted with their wallet.</p>
+        <div class="order-strip-btns">
+          <a href="broadcast-order.html?type=B2C&cat=transactional" class="order-btn primary">Order This List →</a>
+          <a href="acceptable-use.html" class="order-btn">Usage Policy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aup-note">
+    <b>⚠ Acceptable Use — Strictly Commercial</b>
+    All CartChat lists are licensed for lawful, opt-in commercial communication only. Political campaigning, advocacy messaging, harassment, or any content infringing on third-party rights is strictly prohibited. By ordering a broadcast, you confirm your message is commercial in nature and accept full legal responsibility for its content. <a href="acceptable-use.html" style="color:var(--blue)">Read the full Acceptable Use Policy →</a>
+  </div>
+</div>
+
+<footer>Cart·Chat — © 2026 — <a href="acceptable-use.html" style="color:inherit">Acceptable Use Policy</a> — <a href="broadcast.html" style="color:inherit">Start a Broadcast</a></footer>
+
+<script>
+function selectType(btn) {
+  document.querySelectorAll(".type-tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".type-panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("panel-"+btn.dataset.v).classList.add("active");
+  window.scrollTo({top:document.getElementById("shell").offsetTop - 80, behavior:"smooth"});
+}
+</script>
+</body>
+</html>

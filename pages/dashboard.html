@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      /* Swiss system — paper ground, single blue accent */
+      --bg:#ffffff;--bg1:#ffffff;--bg2:#e7e9ee;--bg3:#dde0e8;--border:#0a0a0a;
+      --brand:#0047ab;--brand-glow:rgba(0,71,171,.08);--green:#0a0a0a;--green-dim:#0a0a0a;
+      --blue:#0047ab;--purple:#6b7280;--amber:#0047ab;--red:#0047ab;
+      --t1:#0a0a0a;--t2:#6b7280;--t3:#a4a9b3;
+      --sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace;
+    }
+    html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--sans)}
+    button{cursor:pointer;border:none;font-family:var(--sans)}
+    textarea,input,select{font-family:var(--sans)}
+    textarea:focus,input:focus,select:focus{outline:none}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--t3)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,71,171,.4)}70%{box-shadow:0 0 0 7px rgba(0,71,171,0)}100%{box-shadow:0 0 0 0 rgba(0,71,171,0)}}
+
+    #shell{display:flex;height:100vh;overflow:hidden}
+
+    /* SIDEBAR */
+    #sidenav{width:228px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+    #sidenav-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
+    #sidenav-logo .logo{font-weight:900;font-size:17px;letter-spacing:-.3px;text-transform:uppercase}
+    #sidenav-logo .logo span{color:var(--brand)}
+    #sidenav-logo .plan{font-size:10px;font-family:var(--mono);color:var(--t2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+    #nav-links{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:1px}
+    .nav-link{display:flex;align-items:center;gap:11px;padding:10px 12px;font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;background:none;border:none;width:100%;text-align:left;text-transform:uppercase;letter-spacing:.5px}
+    .nav-link:hover{background:var(--bg2);color:var(--t1)}
+    .nav-link.active{background:var(--t1);color:var(--bg);font-weight:700}
+    .nav-link .icon{font-size:14px;width:18px;flex-shrink:0;filter:grayscale(1)}
+    .nav-divider{height:1px;background:var(--border);margin:10px 4px}
+    #sidenav-user{padding:16px;border-top:1px solid var(--border)}
+    .user-row{display:flex;align-items:center;gap:10px}
+    .user-av{width:32px;height:32px;border-radius:0;background:var(--t1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--bg);flex-shrink:0;font-family:var(--mono)}
+    .user-name{font-size:12px;font-weight:700;color:var(--t1)}
+    .user-email{font-size:10px;color:var(--t2);font-family:var(--mono)}
+    .logout-btn{margin-top:10px;width:100%;padding:8px;background:none;border:1px solid var(--border);color:var(--t2);font-size:10px;transition:all .15s;font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+    .logout-btn:hover{color:var(--bg);background:var(--brand);border-color:var(--brand)}
+
+    #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #topbar{padding:16px 24px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    #topbar-title{font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:-.3px}
+    .status-pill{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);padding:6px 13px;font-size:10.5px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--brand);animation:pulse 2s infinite}
+
+    .panel{display:none;flex:1;overflow:hidden}
+    .panel.active{display:flex;flex-direction:column}
+    .panel-scroll{flex:1;overflow-y:auto;padding:28px}
+
+    /* OVERVIEW */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;margin-bottom:28px;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .stat-card{background:var(--bg1);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px}
+    .stat-val{font-size:30px;font-weight:900;font-family:var(--mono);margin-bottom:6px;letter-spacing:-1px;color:var(--t1)!important}
+    .stat-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;font-family:var(--mono)}
+    .stat-delta{font-size:10.5px;color:var(--brand);margin-top:8px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px}
+    .cards-row{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:28px;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .card{background:var(--bg1);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:22px}
+    .card h3{font-size:11px;font-weight:700;color:var(--t1);margin-bottom:16px;text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono);border-bottom:1px solid var(--border);padding-bottom:10px}
+    .activity-item{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--bg2)}
+    .activity-item:last-child{border-bottom:none}
+    .act-icon{font-size:14px;flex-shrink:0;margin-top:1px;filter:grayscale(1)}
+    .act-text{font-size:13px;color:var(--t1);line-height:1.4}
+    .act-time{font-size:10px;color:var(--t2);font-family:var(--mono);margin-top:3px;text-transform:uppercase}
+    .top-q{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:13px}
+    .top-q:last-child{border-bottom:none}
+    .top-q-count{font-family:var(--mono);font-size:11px;color:var(--brand);font-weight:700}
+
+    /* CONVERSATIONS */
+    #conv-layout{display:flex;flex:1;overflow:hidden}
+    #conv-sidebar{width:288px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+    #conv-search{padding:14px;border-bottom:1px solid var(--border)}
+    #conv-search input{width:100%;background:var(--bg);border:1px solid var(--border);padding:9px 12px;color:var(--t1);font-size:13px;border-radius:0}
+    #conv-list{flex:1;overflow-y:auto}
+    .conv-item{padding:13px 14px;border-bottom:1px solid var(--bg2);cursor:pointer;transition:background .15s}
+    .conv-item:hover{background:var(--bg2)}
+    .conv-item.active{background:var(--t1);color:var(--bg)}
+    .conv-item.active .conv-time,.conv-item.active .conv-preview{color:var(--bg2)!important}
+    .conv-item-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+    .conv-name{font-weight:700;font-size:13px}
+    .conv-time{font-size:10px;color:var(--t2);font-family:var(--mono)}
+    .conv-preview{font-size:12px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #chat-pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #chat-top{padding:14px 20px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:13px;flex-shrink:0}
+    #chat-av{width:36px;height:36px;border-radius:0;background:var(--t1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;color:var(--bg);font-family:var(--mono)}
+    #chat-msgs{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:11px;background:var(--bg)}
+    .cmsg{display:flex;animation:fadeUp .2s ease}
+    .cmsg.in{justify-content:flex-start}
+    .cmsg.out{justify-content:flex-end}
+    .cbubble{max-width:68%;padding:11px 15px;font-size:13.5px;line-height:1.55;border-radius:0}
+    .cmsg.in .cbubble{background:var(--bg2);border:1px solid var(--border)}
+    .cmsg.out .cbubble{background:var(--t1);color:var(--bg);border:1px solid var(--t1)}
+    .cmsg-label{font-size:9.5px;font-family:var(--mono);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;color:var(--brand)!important}
+    .cmsg.out .cmsg-label{color:var(--bg)!important;opacity:.6}
+    .cmsg-time{font-size:10px;color:var(--t2);margin-top:6px;text-align:right;font-family:var(--mono)}
+    .cmsg.out .cmsg-time{color:var(--bg2)}
+    #chat-input-bar{padding:14px 18px;background:var(--bg1);border-top:1px solid var(--border);display:flex;gap:11px;align-items:flex-end;flex-shrink:0}
+    #chat-input-wrap{flex:1;background:var(--bg);border:1px solid var(--border);padding:11px 15px}
+    #chat-input-wrap:focus-within{border-color:var(--brand)}
+    #chat-textarea{width:100%;background:none;border:none;resize:none;color:var(--t1);font-size:13.5px;line-height:1.5;max-height:100px;overflow-y:auto}
+    #chat-send{width:46px;height:46px;border-radius:0;background:var(--t1);color:var(--bg);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+    #chat-send:hover:not(:disabled){background:var(--brand)}
+    #chat-send:disabled{background:var(--bg2);color:var(--t3);cursor:not-allowed}
+
+    /* ORDERS */
+    .orders-table{width:100%;border-collapse:collapse;background:var(--bg1);border:1px solid var(--border)}
+    .orders-table th{text-align:left;font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;padding:13px 16px;background:var(--bg2);border-bottom:1px solid var(--border);font-family:var(--mono)}
+    .orders-table td{padding:13px 16px;font-size:13px;border-bottom:1px solid var(--bg2)}
+    .orders-table tr:last-child td{border-bottom:none}
+    .order-status{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;font-size:10px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:0}
+    .status-shipped{background:var(--bg2);color:var(--t1);border:1px solid var(--t1)}
+    .status-delivered{background:var(--t1);color:var(--bg)}
+    .status-processing{background:var(--bg);color:var(--brand);border:1px solid var(--brand)}
+    .status-cancelled{background:var(--bg);color:var(--t2);border:1px solid var(--bg3);text-decoration:line-through}
+    .track-btn{padding:5px 12px;background:var(--bg);border:1px solid var(--border);color:var(--t1);font-size:10.5px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:0}
+    .track-btn:hover{background:var(--t1);color:var(--bg)}
+
+    /* PRODUCTS */
+    .products-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:16px}
+    .products-toolbar > div{font-size:11px;color:var(--t2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px}
+    .add-product-btn{padding:10px 20px;background:var(--t1);color:var(--bg);font-size:11px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;border-radius:0}
+    .add-product-btn:hover{background:var(--brand)}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .product-card{background:var(--bg1);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .product-img{height:120px;background:var(--t1);display:flex;align-items:center;justify-content:center;font-size:32px;filter:grayscale(1) contrast(1.3)}
+    .product-info{padding:16px}
+    .product-name{font-weight:700;font-size:13px;margin-bottom:6px;text-transform:uppercase;letter-spacing:-.1px}
+    .product-price{color:var(--brand);font-weight:700;font-size:15px;margin-bottom:8px;font-family:var(--mono)}
+    .product-stock{font-size:10.5px;color:var(--t2);display:flex;align-items:center;gap:6px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px}
+    .stock-dot{width:6px;height:6px;border-radius:50%}
+    .stock-in{background:var(--t1)}
+    .stock-low{background:var(--brand)}
+    .stock-out{background:var(--bg3);border:1px solid var(--t2)}
+
+    /* CART RECOVERY */
+    .cart-item{background:var(--bg1);border:1px solid var(--border);padding:18px;margin-bottom:0;border-top:none;display:flex;align-items:center;gap:16px}
+    .cart-item:first-child{border-top:1px solid var(--border)}
+    .cart-cust{flex:1}
+    .cart-cust-name{font-weight:700;font-size:13.5px;margin-bottom:4px}
+    .cart-cust-items{font-size:11.5px;color:var(--t2);font-family:var(--mono)}
+    .cart-value{font-family:var(--mono);font-weight:700;color:var(--t1);font-size:14px}
+    .cart-time{font-size:10.5px;color:var(--t2);font-family:var(--mono);min-width:80px;text-align:right;text-transform:uppercase}
+    .cart-status{padding:4px 11px;font-size:10px;font-weight:700;min-width:96px;text-align:center;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:0}
+    .cart-sent{background:var(--bg2);color:var(--t1);border:1px solid var(--t1)}
+    .cart-pending{background:var(--bg);color:var(--brand);border:1px solid var(--brand)}
+    .cart-recovered{background:var(--t1);color:var(--bg)}
+    .send-recovery-btn{padding:7px 16px;background:var(--brand);color:var(--bg);font-size:11px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:0}
+    .send-recovery-btn:hover{background:var(--t1)}
+
+    /* CONFIG / WHATSAPP / INTEGRATIONS */
+    .config-inner{max-width:720px}
+    .cfg-card{background:var(--bg1);border:1px solid var(--border);padding:26px;margin-bottom:20px}
+    .cfg-card h3{font-weight:900;font-size:14px;margin-bottom:5px;text-transform:uppercase;letter-spacing:-.2px}
+    .cfg-card p{font-size:12px;color:var(--t2);margin-bottom:18px;font-family:var(--mono)}
+    .cfg-field{margin-bottom:16px}
+    .cfg-field label{display:block;font-family:var(--mono);font-size:10px;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+    .cfg-field input,.cfg-field textarea,.cfg-field select{width:100%;background:var(--bg);border:1px solid var(--border);padding:11px 13px;color:var(--t1);font-size:13px;transition:border-color .2s;border-radius:0}
+    .cfg-field input:focus,.cfg-field textarea:focus,.cfg-field select:focus{border-color:var(--brand)}
+    .cfg-field select{appearance:none}
+    .save-btn{background:var(--t1);color:var(--bg);font-weight:700;font-size:11px;padding:12px 26px;transition:all .2s;font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;border-radius:0}
+    .save-btn:hover{background:var(--brand)}
+    .row-end{display:flex;justify-content:flex-end;margin-top:12px}
+    .connect-status{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--border);padding:14px 18px;margin-bottom:16px}
+    .connect-icon{font-size:20px;filter:grayscale(1)}
+    .connect-label{font-size:13px;font-weight:700}
+    .connect-sub{font-size:11px;color:var(--t2);font-family:var(--mono)}
+    .connect-badge{margin-left:auto;padding:5px 13px;font-size:10px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:0}
+    .badge-connected{background:var(--t1);color:var(--bg)}
+    .badge-disconnected{background:var(--bg);border:1px solid var(--brand);color:var(--brand)}
+    .connect-btn{margin-left:10px;padding:6px 16px;font-size:11px;font-weight:700;background:var(--brand);color:var(--bg);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:0}
+    .int-row{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--border);padding:14px 18px;margin-bottom:0;border-top:none}
+    .int-row:first-of-type{border-top:1px solid var(--border)}
+    .int-row-icon{font-size:18px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--bg2);flex-shrink:0;filter:grayscale(1)}
+
+    /* SOCIAL CAMPAIGNS */
+    .social-top{display:flex;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+    .camp-form{flex:1;min-width:280px;background:var(--bg1);border:1px solid var(--border);padding:22px}
+    .camp-form h3{font-weight:900;font-size:14px;margin-bottom:18px;text-transform:uppercase}
+    .sf{margin-bottom:13px}
+    .sf label{display:block;font-family:var(--mono);font-size:10px;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px}
+    .sf input,.sf select,.sf textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:9px 12px;color:var(--t1);font-size:13px;appearance:none;border-radius:0}
+    .sf input:focus,.sf select:focus,.sf textarea:focus{border-color:var(--brand);outline:none}
+    .plats{display:flex;gap:7px;flex-wrap:wrap}
+    .pb{padding:6px 12px;border:1px solid var(--border);background:var(--bg);color:var(--t2);font-size:10.5px;cursor:pointer;transition:all .2s;font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px;border-radius:0}
+    .pb.on{color:var(--bg);background:var(--t1);border-color:var(--t1)}
+    .gen-btn{width:100%;padding:12px;background:var(--t1);color:var(--bg);font-weight:700;font-size:12px;margin-top:10px;transition:all .2s;font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;border-radius:0}
+    .gen-btn:hover{background:var(--brand)}
+    .gen-btn:disabled{opacity:.5;cursor:not-allowed}
+    .camp-stats-col{display:flex;flex-direction:column;gap:0;min-width:150px;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .cs-card{background:var(--bg1);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 18px;text-align:center}
+    .cs-val{font-family:var(--mono);font-size:22px;font-weight:900;margin-bottom:3px;color:var(--t1)!important}
+    .cs-lbl{font-size:10px;color:var(--t2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px}
+    .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .post-card{background:var(--bg1);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px;animation:fadeUp .3s ease;display:flex;flex-direction:column;gap:9px}
+    .post-header{display:flex;align-items:center;gap:9px}
+    .plat-ic{width:30px;height:30px;border-radius:0;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:var(--t1)!important;filter:grayscale(1) contrast(1.4)}
+    .post-body{font-size:12.5px;line-height:1.6;color:var(--t1);white-space:pre-wrap;word-break:break-word;flex:1}
+    .post-tags{font-size:11px;color:var(--brand);word-break:break-word;font-family:var(--mono)}
+    .post-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bg2);padding-top:9px}
+    .post-chars{font-family:var(--mono);font-size:10px;color:var(--t2)}
+    .copy-post-btn{padding:5px 12px;background:var(--bg);border:1px solid var(--border);color:var(--t2);font-size:10.5px;transition:all .15s;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;border-radius:0}
+    .copy-post-btn:hover{background:var(--t1);color:var(--bg)}
+    .copy-post-btn.copied{background:var(--brand);color:var(--bg);border-color:var(--brand)}
+    .visual-hint{font-size:10.5px;color:var(--t2);background:var(--bg);border:1px solid var(--bg2);padding:7px 10px;font-family:var(--mono)}
+    #posts-empty{text-align:center;padding:48px 0;color:var(--t2);font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.5px;border:1px dashed var(--bg3)}
+
+    /* ANALYTICS */
+    .analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-bottom:28px;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+    .an-card{background:var(--bg1);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px}
+    .an-val{font-size:34px;font-weight:900;font-family:var(--mono);margin-bottom:5px;letter-spacing:-1px;color:var(--t1)!important}
+    .an-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:1px;font-family:var(--mono)}
+    .bar-chart{background:var(--bg1);border:1px solid var(--border);padding:22px;margin-bottom:20px}
+    .bar-chart h3{font-size:11px;font-weight:700;color:var(--t1);margin-bottom:18px;text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono)}
+    .bars{display:flex;align-items:flex-end;gap:8px;height:110px}
+    .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .bar-fill{width:100%;border-radius:0;background:var(--t1);transition:height .5s ease;min-height:4px}
+    .bar-lbl{font-size:10px;color:var(--t2);font-family:var(--mono);text-transform:uppercase}
+    .bar-val{font-size:10px;color:var(--t1);font-family:var(--mono);font-weight:700}
+
+    #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--t1);border:none;padding:12px 24px;font-size:12px;color:var(--bg);opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px}
+    #toast.show{opacity:1}
+
+    @media(max-width:768px){#sidenav{width:60px}#sidenav-logo .logo-text,#nav-links .nav-text,#sidenav-user .user-info,#sidenav-logo .plan{display:none}#conv-sidebar{width:200px}.cards-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div id="shell">
+
+  <div id="sidenav">
+    <div id="sidenav-logo">
+      <div class="logo"><span class="logo-text">Cart<span style="color:var(--brand)">Chat</span></span></div>
+      <div class="plan" id="plan-badge">Growth Plan</div>
+    </div>
+    <div id="nav-links">
+      <button class="nav-link active" onclick="switchPanel('overview',this)"><span class="icon">📊</span><span class="nav-text">Overview</span></button>
+      <button class="nav-link" onclick="switchPanel('conversations',this)"><span class="icon">💬</span><span class="nav-text">Conversations</span></button>
+      <button class="nav-link" onclick="switchPanel('orders',this)"><span class="icon">📦</span><span class="nav-text">Orders</span></button>
+      <button class="nav-link" onclick="switchPanel('products',this)"><span class="icon">🛍️</span><span class="nav-text">Product Catalog</span></button>
+      <button class="nav-link" onclick="switchPanel('carts',this)"><span class="icon">🔄</span><span class="nav-text">Cart Recovery</span></button>
+      <button class="nav-link" onclick="switchPanel('social',this)"><span class="icon">📣</span><span class="nav-text">Social Campaigns</span></button>
+      <button class="nav-link" onclick="switchPanel('analytics',this)"><span class="icon">📈</span><span class="nav-text">Analytics</span></button>
+      <div class="nav-divider"></div>
+      <button class="nav-link" onclick="switchPanel('config',this)"><span class="icon">⚙️</span><span class="nav-text">AI Agent Config</span></button>
+      <button class="nav-link" onclick="switchPanel('integrations',this)"><span class="icon">🔌</span><span class="nav-text">Integrations</span></button>
+      <button class="nav-link" onclick="switchPanel('whatsapp',this)"><span class="icon">📱</span><span class="nav-text">WhatsApp Setup</span></button>
+    </div>
+    <div id="sidenav-user">
+      <div class="user-row">
+        <div class="user-av" id="user-av">NF</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Loading…</div>
+          <div class="user-email" id="user-email">…</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="topbar">
+      <div id="topbar-title">Overview</div>
+      <div class="status-pill"><div class="live-dot"></div><span id="store-name">Store</span> • AI Live</div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="panel active" id="panel-overview">
+      <div class="panel-scroll">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-val" style="color:var(--green)">312</div><div class="stat-lbl">Conversations this month</div><div class="stat-delta">↑ 22% vs last month</div></div>
+          <div class="stat-card"><div class="stat-val" style="color:var(--blue)">91%</div><div class="stat-lbl">AI handled</div><div class="stat-delta">↑ 4% vs last month</div></div>
+          <div class="stat-card"><div class="stat-val" style="color:var(--amber)">$4,280</div><div class="stat-lbl">Carts recovered</div><div class="stat-delta">↑ 18% recovery rate</div></div>
+          <div class="stat-card"><div class="stat-val" style="color:var(--brand)">1.1s</div><div class="stat-lbl">Avg. response time</div><div class="stat-delta">↓ 0.2s faster</div></div>
+        </div>
+        <div class="cards-row">
+          <div class="card">
+            <h3>Recent Activity</h3>
+            <div class="activity-item"><div class="act-icon">📦</div><div><div class="act-text">Order #4471 tracking shared — Dana F.</div><div class="act-time">3 min ago</div></div></div>
+            <div class="activity-item"><div class="act-icon">🔄</div><div><div class="act-text">Abandoned cart recovered — $89.00 — Joe S.</div><div class="act-time">14 min ago</div></div></div>
+            <div class="activity-item"><div class="act-icon">🛍️</div><div><div class="act-text">Product recommendation sent — Rose Serum</div><div class="act-time">26 min ago</div></div></div>
+            <div class="activity-item"><div class="act-icon">↩️</div><div><div class="act-text">Return request processed — Order #4455</div><div class="act-time">1 hr ago</div></div></div>
+            <div class="activity-item"><div class="act-icon">📣</div><div><div class="act-text">Social campaign generated — Summer Sale</div><div class="act-time">2 hr ago</div></div></div>
+          </div>
+          <div class="card">
+            <h3>Top Customer Questions</h3>
+            <div class="top-q"><span>Where's my order?</span><span class="top-q-count">87×</span></div>
+            <div class="top-q"><span>Is this back in stock?</span><span class="top-q-count">52×</span></div>
+            <div class="top-q"><span>What's your return policy?</span><span class="top-q-count">34×</span></div>
+            <div class="top-q"><span>Do you ship internationally?</span><span class="top-q-count">21×</span></div>
+            <div class="top-q"><span>Can I change my order?</span><span class="top-q-count">17×</span></div>
+            <div class="top-q"><span>Do you have a discount code?</span><span class="top-q-count">15×</span></div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <h3>Quick Actions</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+            <button onclick="switchPanel('orders',document.querySelectorAll('.nav-link')[2])" style="padding:9px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;color:var(--t1);font-size:13px">📦 View Orders</button>
+            <button onclick="switchPanel('carts',document.querySelectorAll('.nav-link')[4])" style="padding:9px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;color:var(--t1);font-size:13px">🔄 Cart Recovery</button>
+            <button onclick="switchPanel('config',document.querySelectorAll('.nav-link')[7])" style="padding:9px 16px;background:var(--brand);border:none;border-radius:9px;color:#fff;font-size:13px;font-weight:600">⚙️ Configure AI Agent</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVERSATIONS -->
+    <div class="panel" id="panel-conversations">
+      <div id="conv-layout">
+        <div id="conv-sidebar">
+          <div id="conv-search"><input placeholder="Search conversations…" /></div>
+          <div id="conv-list"></div>
+        </div>
+        <div id="chat-pane">
+          <div id="chat-top">
+            <div id="chat-av">DF</div>
+            <div><div style="font-weight:600;font-size:14px" id="chat-name">Dana F.</div><div style="font-size:11px;color:var(--t3)" id="chat-phone">+961 70 123 456 • online</div></div>
+            <div style="margin-left:auto;background:rgba(124,108,255,.12);border:1px solid #4636e0;border-radius:99px;padding:3px 11px;font-size:11px;color:var(--brand);font-family:var(--mono)">🤖 AI active</div>
+          </div>
+          <div id="chat-msgs"></div>
+          <div id="typing-wrap" style="display:none;justify-content:flex-end;padding:6px 20px">
+            <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px 14px 3px 14px;padding:9px 14px;display:flex;align-items:center;gap:8px">
+              <div style="width:13px;height:13px;border:2px solid var(--brand);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite"></div>
+              <span style="font-size:12px;color:var(--t3);font-family:var(--mono)">Claude thinking…</span>
+            </div>
+          </div>
+          <div id="chat-input-bar">
+            <div id="chat-input-wrap"><textarea id="chat-textarea" rows="1" placeholder="Type a reply… (Enter to send)"></textarea></div>
+            <button id="chat-send" onclick="sendChatMsg()" disabled>➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="panel" id="panel-orders">
+      <div class="panel-scroll">
+        <table class="orders-table">
+          <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Carrier</th><th></th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="panel" id="panel-products">
+      <div class="panel-scroll">
+        <div class="products-toolbar">
+          <div style="font-size:13px;color:var(--t3)">12 products synced</div>
+          <button class="add-product-btn" onclick="toast('Connect Shopify/WooCommerce to auto-sync, or add manually')">+ Add Product</button>
+        </div>
+        <div class="products-grid" id="products-grid"></div>
+      </div>
+    </div>
+
+    <!-- CART RECOVERY -->
+    <div class="panel" id="panel-carts">
+      <div class="panel-scroll">
+        <div class="stats-grid" style="margin-bottom:20px">
+          <div class="stat-card"><div class="stat-val" style="color:var(--amber)">23</div><div class="stat-lbl">Abandoned carts (30d)</div></div>
+          <div class="stat-card"><div class="stat-val" style="color:var(--green)">8</div><div class="stat-lbl">Recovered</div></div>
+          <div class="stat-card"><div class="stat-val" style="color:var(--brand)">$4,280</div><div class="stat-lbl">Revenue recovered</div></div>
+          <div class="stat-card"><div class="stat-val" style="color:var(--blue)">35%</div><div class="stat-lbl">Recovery rate</div></div>
+        </div>
+        <div id="carts-list"></div>
+      </div>
+    </div>
+
+    <!-- SOCIAL CAMPAIGNS -->
+    <div class="panel" id="panel-social">
+      <div class="panel-scroll">
+        <div class="social-top">
+          <div class="camp-form">
+            <h3>✨ Generate Campaign Content</h3>
+            <div class="sf"><label>Store / Product Drop</label><input id="sf-brand" placeholder="e.g. Lumière Beauty — Summer Glow Collection" /></div>
+            <div class="sf"><label>Goal</label>
+              <select id="sf-goal">
+                <option>New Product Launch</option><option>Flash Sale</option>
+                <option>Brand Awareness</option><option>Restock Announcement</option>
+                <option>Seasonal Campaign</option><option>Customer Loyalty</option>
+              </select>
+            </div>
+            <div class="sf"><label>Audience</label><input id="sf-audience" placeholder="e.g. women 22-40 interested in skincare" /></div>
+            <div class="sf"><label>Tone</label>
+              <select id="sf-tone">
+                <option>Trendy & Fun</option><option>Luxurious & Premium</option>
+                <option>Minimal & Clean</option><option>Bold & Edgy</option>
+              </select>
+            </div>
+            <div class="sf"><label>Key Message</label><textarea id="sf-usp" rows="2" placeholder="e.g. Clean beauty, cruelty-free, 20% off this week"></textarea></div>
+            <div class="sf"><label>Platforms</label>
+              <div class="plats">
+                <button class="pb on" data-p="instagram" onclick="this.classList.toggle('on')">📸 Instagram</button>
+                <button class="pb on" data-p="tiktok"    onclick="this.classList.toggle('on')">🎵 TikTok</button>
+                <button class="pb"    data-p="facebook"  onclick="this.classList.toggle('on')">👥 Facebook</button>
+                <button class="pb"    data-p="twitter"   onclick="this.classList.toggle('on')">🐦 Twitter</button>
+              </div>
+            </div>
+            <button class="gen-btn" id="gen-btn" onclick="generateCampaign()">🚀 Generate Campaign</button>
+          </div>
+          <div class="camp-stats-col">
+            <div class="cs-card"><div class="cs-val" id="cs-camps" style="color:var(--brand)">0</div><div class="cs-lbl">Campaigns</div></div>
+            <div class="cs-card"><div class="cs-val" id="cs-posts" style="color:var(--blue)">0</div><div class="cs-lbl">Posts</div></div>
+            <div class="cs-card"><div class="cs-val" id="cs-plats" style="color:var(--teal)">0</div><div class="cs-lbl">Platforms</div></div>
+          </div>
+        </div>
+        <div id="posts-empty">
+          <div style="font-size:36px;margin-bottom:10px">📣</div>
+          Fill in the form above and click Generate to create platform-ready posts.
+        </div>
+        <div id="posts-grid" class="posts-grid"></div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="panel" id="panel-analytics">
+      <div class="panel-scroll">
+        <div class="analytics-grid">
+          <div class="an-card"><div class="an-val" style="color:var(--green)">312</div><div class="an-lbl">Total Conversations</div></div>
+          <div class="an-card"><div class="an-val" style="color:var(--blue)">284</div><div class="an-lbl">AI Resolved</div></div>
+          <div class="an-card"><div class="an-val" style="color:var(--amber)">28</div><div class="an-lbl">Human Escalations</div></div>
+          <div class="an-card"><div class="an-val" style="color:var(--brand)">$4,280</div><div class="an-lbl">Cart Revenue Recovered</div></div>
+          <div class="an-card"><div class="an-val" style="color:var(--teal)">1.1s</div><div class="an-lbl">Avg Response Time</div></div>
+          <div class="an-card"><div class="an-val" style="color:var(--green)">91%</div><div class="an-lbl">Satisfaction Rate</div></div>
+        </div>
+        <div class="bar-chart">
+          <h3>Conversations This Week</h3>
+          <div class="bars" id="week-bars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI CONFIG -->
+    <div class="panel" id="panel-config">
+      <div class="panel-scroll">
+        <div class="config-inner">
+          <div class="cfg-card">
+            <h3>🤖 AI Agent Personality</h3>
+            <p>Customize how your AI responds to customers. The more detail, the better it performs.</p>
+            <div class="cfg-field"><label>Store Name</label><input id="cfg-name" placeholder="Lumière Beauty Store" /></div>
+            <div class="cfg-field"><label>Industry / Niche</label><input id="cfg-niche" placeholder="Skincare & Beauty" /></div>
+            <div class="cfg-field"><label>Shipping Policy</label><input id="cfg-shipping" placeholder="Free shipping over $50, 2-5 business days" /></div>
+            <div class="cfg-field"><label>Return Policy</label><input id="cfg-returns" placeholder="14-day returns, unopened items only" /></div>
+            <div class="cfg-field"><label>Languages</label>
+              <select id="cfg-lang"><option>Arabic & English</option><option>English only</option><option>Arabic only</option><option>French & Arabic</option></select>
+            </div>
+            <div class="cfg-field"><label>Agent Personality</label><textarea id="cfg-persona" rows="4" placeholder="Friendly, helpful, like a personal shopper. Always offers product recommendations. Empathetic with complaints."></textarea></div>
+            <div class="cfg-field"><label>Product Catalog (paste here)</label><textarea id="cfg-catalog" rows="6" placeholder="Rose Glow Face Serum — $28 — In stock&#10;Vitamin C Brightening Cream — $34 — In stock&#10;Hydrating Lip Mask — $14 — Low stock"></textarea></div>
+            <div class="cfg-field"><label>Special Instructions for AI</label><textarea id="cfg-special" rows="3" placeholder="Always mention free shipping over $50. Escalate refund disputes to support@store.com. Offer 10% code WELCOME10 to first-time buyers."></textarea></div>
+            <div class="row-end"><button class="save-btn" onclick="saveAgentConfig()">Save Configuration</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRATIONS -->
+    <div class="panel" id="panel-integrations">
+      <div class="panel-scroll">
+        <div class="config-inner">
+          <div class="cfg-card">
+            <h3>🔌 Store Integrations</h3>
+            <p>Connect your store platform to auto-sync orders, products, and inventory.</p>
+            <div class="int-row">
+              <div class="int-row-icon">🛒</div>
+              <div style="flex:1"><div style="font-weight:600;font-size:13px">Shopify</div><div style="font-size:11px;color:var(--t3)">Auto-sync orders, products & customers</div></div>
+              <span class="connect-badge badge-disconnected">Not Connected</span>
+              <button class="connect-btn" onclick="toast('Redirecting to Shopify OAuth…')">Connect</button>
+            </div>
+            <div class="int-row">
+              <div class="int-row-icon">🧩</div>
+              <div style="flex:1"><div style="font-weight:600;font-size:13px">WooCommerce</div><div style="font-size:11px;color:var(--t3)">Install plugin on your WordPress site</div></div>
+              <span class="connect-badge badge-disconnected">Not Connected</span>
+              <button class="connect-btn" onclick="toast('Download the CartChat WooCommerce plugin')">Connect</button>
+            </div>
+            <div class="int-row">
+              <div class="int-row-icon">📊</div>
+              <div style="flex:1"><div style="font-weight:600;font-size:13px">Google Sheets (CSV)</div><div style="font-size:11px;color:var(--t3)">Import product catalog manually</div></div>
+              <span class="connect-badge badge-connected">Connected</span>
+              <button class="connect-btn" onclick="toast('Opening file picker…')">Upload</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHATSAPP SETUP -->
+    <div class="panel" id="panel-whatsapp">
+      <div class="panel-scroll">
+        <div class="config-inner">
+          <div class="cfg-card">
+            <h3>📱 WhatsApp Business Connection</h3>
+            <p>Connect your WhatsApp Business number to start receiving and sending messages automatically.</p>
+            <div class="connect-status">
+              <div class="connect-icon">📱</div>
+              <div><div class="connect-label">WhatsApp Business API</div><div class="connect-sub">Not connected</div></div>
+              <span class="connect-badge badge-disconnected">Disconnected</span>
+              <button class="connect-btn" onclick="toast('Connect via Meta Business Manager — see guide below')">Connect</button>
+            </div>
+            <div class="cfg-field"><label>Phone Number ID</label><input id="wa-phone-id" placeholder="From Meta Developer Dashboard" /></div>
+            <div class="cfg-field"><label>WhatsApp Access Token</label><input type="password" id="wa-token" placeholder="EAAxxxxxxxx…" /></div>
+            <div class="cfg-field"><label>Verify Token (you choose this)</label><input id="wa-verify" placeholder="e.g. cartchat_verify_2026" /></div>
+            <div class="cfg-field"><label>Webhook URL (copy this to Meta)</label><input id="wa-webhook" readonly style="font-family:var(--mono);font-size:11px" /></div>
+            <div class="row-end"><button class="save-btn" onclick="saveWAConfig()">Save & Activate</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── Auth guard ────────────────────────────────────────────────────────────────
+const token = localStorage.getItem("cc_token");
+const user  = JSON.parse(localStorage.getItem("cc_user") || "null");
+if (!token || !user) { window.location.href = "login.html"; }
+
+function logout() { localStorage.clear(); window.location.href = "../index.html"; }
+
+if (user) {
+  document.getElementById("user-name").textContent  = user.name || user.store || "User";
+  document.getElementById("user-email").textContent = user.email || "";
+  document.getElementById("user-av").textContent    = (user.name||"U").split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  document.getElementById("store-name").textContent = user.store || user.name || "Store";
+  document.getElementById("plan-badge").textContent = (user.plan||"starter").charAt(0).toUpperCase()+(user.plan||"starter").slice(1)+" Plan";
+  const wh = document.getElementById("wa-webhook");
+  if (wh) wh.value = `${location.origin}/api/whatsapp`;
+}
+
+// ── Utils ─────────────────────────────────────────────────────────────────────
+function ts()  { return new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"}); }
+function escH(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove("show"),2400);
+}
+
+// ── Panel switching ───────────────────────────────────────────────────────────
+const panelTitles = {overview:"Overview",conversations:"Conversations",orders:"Orders",products:"Product Catalog",carts:"Cart Recovery",social:"Social Campaigns",analytics:"Analytics",config:"AI Agent Config",integrations:"Integrations",whatsapp:"WhatsApp Setup"};
+function switchPanel(name, btn) {
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-link").forEach(b=>b.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  if (btn) btn.classList.add("active");
+  document.getElementById("topbar-title").textContent = panelTitles[name]||name;
+  if (name==="analytics") renderWeekBars();
+}
+
+// ── Conversations ─────────────────────────────────────────────────────────────
+const CONVS = [
+  { id:"c1", name:"Dana F.", phone:"+961 70 123 456", avatar:"DF", status:"online",
+    msgs:[
+      {role:"in",text:"Hey, where's my order #4471? It's been 3 days 😬",time:"10:14"},
+      {role:"out",text:"Hi Dana! 📦 Order #4471 shipped yesterday via Aramex and is currently in Beirut, expected tomorrow by 6 PM. Tracking: aramex.com/track/4471. Anything else I can help with?",time:"10:14",ai:true},
+      {role:"in",text:"Perfect! Also do you have the rose serum in stock?",time:"10:16"},
+      {role:"out",text:"Yes! ✨ Rose Glow Face Serum — $28.00, 30ml, in stock. Free shipping over $50. Want me to add it to a new order?",time:"10:16",ai:true},
+    ]},
+  { id:"c2", name:"Joe S.",  phone:"+961 71 234 567", avatar:"JS", status:"offline",
+    msgs:[
+      {role:"in",text:"I left some items in my cart but the site glitched, can you help?",time:"09:02"},
+      {role:"out",text:"Of course Joe! I can see your cart has 2 items totaling $89.00 — the Hydrating Lip Mask and Vitamin C Cream. Want me to send you a direct checkout link?",time:"09:02",ai:true},
+    ]},
+  { id:"c3", name:"Maya R.", phone:"+961 76 345 678", avatar:"MR", status:"away",
+    msgs:[
+      {role:"in",text:"My order arrived damaged 😡 the bottle was broken inside the box",time:"15:30"},
+      {role:"out",text:"Maya, I'm so sorry to hear that — that's completely unacceptable. I've flagged this for an immediate replacement at no cost. Could you send a photo of the damage? We'll have a new one shipped today.",time:"15:30",ai:true},
+    ]},
+  { id:"c4", name:"Karl B.", phone:"+961 78 456 789", avatar:"KB", status:"online",
+    msgs:[
+      {role:"in",text:"Do you ship to Dubai?",time:"11:30"},
+      {role:"out",text:"Yes! 🌍 We ship to the UAE — delivery takes 4-6 business days, $12 flat rate, free over $80. Want help placing an order?",time:"11:30",ai:true},
+    ]},
+];
+let activeConvId = "c1";
+let isLoading = false;
+
+function renderConvList() {
+  const list = document.getElementById("conv-list");
+  list.innerHTML = "";
+  CONVS.forEach(c => {
+    const last = c.msgs[c.msgs.length-1];
+    const div = document.createElement("div");
+    div.className = "conv-item" + (c.id===activeConvId?" active":"");
+    div.onclick = () => { activeConvId=c.id; renderConvList(); renderMessages(); updateChatHeader(); };
+    div.innerHTML = `<div class="conv-item-top"><span class="conv-name">${escH(c.name)}</span><span class="conv-time">${last.time}</span></div><div class="conv-preview">${last.role==="out"?"🤖 ":""}${escH(last.text)}</div>`;
+    list.appendChild(div);
+  });
+}
+function updateChatHeader() {
+  const c = CONVS.find(x=>x.id===activeConvId);
+  document.getElementById("chat-av").textContent = c.avatar;
+  document.getElementById("chat-name").textContent = c.name;
+  document.getElementById("chat-phone").textContent = c.phone+" • "+c.status;
+}
+function renderMessages() {
+  const c = CONVS.find(x=>x.id===activeConvId);
+  const container = document.getElementById("chat-msgs");
+  container.innerHTML = "";
+  c.msgs.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "cmsg "+(m.role==="in"?"in":"out");
+    const b = document.createElement("div");
+    b.className = "cbubble";
+    const label = m.role==="in" ? `<div class="cmsg-label" style="color:var(--brand)">${escH(c.name)}</div>` : (m.ai ? `<div class="cmsg-label" style="color:var(--teal)">🤖 CartChat AI</div>` : "");
+    b.innerHTML = `${label}<div style="font-size:13.5px;line-height:1.55;color:var(--t1)">${escH(m.text)}</div><div class="cmsg-time">${m.time}${m.role==="out"?" ✓✓":""}</div>`;
+    div.appendChild(b);
+    container.appendChild(div);
+  });
+  container.scrollTop = 99999;
+}
+async function sendChatMsg() {
+  const ta = document.getElementById("chat-textarea");
+  const text = ta.value.trim();
+  if (!text || isLoading) return;
+  ta.value = "";
+  document.getElementById("chat-send").disabled = true;
+  const c = CONVS.find(x=>x.id===activeConvId);
+  // Operator-typed messages render on the right ("out") but are semantically the
+  // CUSTOMER speaking to the AI, so they must map to role "user" for the API.
+  c.msgs.push({role:"out", text, time:ts(), ai:false, apiRole:"user"});
+  renderMessages(); renderConvList();
+  isLoading = true;
+  document.getElementById("typing-wrap").style.display = "flex";
+
+  const cfgName     = document.getElementById("cfg-name")?.value     || user?.store || "our store";
+  const cfgNiche     = document.getElementById("cfg-niche")?.value    || "online store";
+  const cfgShipping  = document.getElementById("cfg-shipping")?.value || "standard shipping applies";
+  const cfgReturns   = document.getElementById("cfg-returns")?.value  || "contact us for returns";
+  const cfgCatalog   = document.getElementById("cfg-catalog")?.value  || "";
+  const cfgPersona   = document.getElementById("cfg-persona")?.value  || "";
+  const cfgSpecial   = document.getElementById("cfg-special")?.value  || "";
+
+  const systemPrompt = `You are CartChat, the AI WhatsApp assistant for ${cfgName} (${cfgNiche}).
+Shipping policy: ${cfgShipping}. Return policy: ${cfgReturns}.
+${cfgCatalog ? "Product catalog:\n"+cfgCatalog : ""}
+${cfgPersona ? "Personality: "+cfgPersona : ""}
+${cfgSpecial ? "Special instructions: "+cfgSpecial : ""}
+Guidelines: Be warm and helpful like a personal shopper, concise (2-3 sentences), use emojis naturally, proactively suggest products or help with order tracking, respond in the customer's language.`;
+
+  // Build history using explicit apiRole when present, otherwise infer from display role.
+  // Collapse consecutive same-role turns (API requires strict alternation).
+  const rawHistory = c.msgs
+    .filter(m => !m.error)
+    .map(m => ({
+      role: m.apiRole || (m.role === "in" ? "user" : "assistant"),
+      content: m.role === "in" ? `[${c.name}]: ${m.text}` : m.text,
+    }));
+  const history = [];
+  for (const msg of rawHistory) {
+    if (history.length && history[history.length - 1].role === msg.role) {
+      history[history.length - 1].content += "\n" + msg.content;
+    } else {
+      history.push({ ...msg });
+    }
+  }
+  if (history.length && history[history.length - 1].role !== "user") {
+    history.push({ role: "user", content: text });
+  }
+
+  try {
+    const apiToken = token === "demo_token_cartchat" ? null : token;
+    const res = await fetch("/api/chat", {
+      method:"POST", headers:{"Content-Type":"application/json", ...(apiToken?{Authorization:`Bearer ${apiToken}`}:{})},
+      body: JSON.stringify({ model:"claude-sonnet-4-6", max_tokens:1000, system:systemPrompt, messages:history })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    c.msgs.push({role:"out", text:data.content[0].text, time:ts(), ai:true, apiRole:"assistant"});
+  } catch(e) {
+    c.msgs.push({role:"out", text:"⚠️ AI error — "+e.message, time:ts(), error:true});
+  } finally {
+    isLoading = false;
+    document.getElementById("typing-wrap").style.display = "none";
+    renderMessages(); renderConvList();
+    document.getElementById("chat-send").disabled = false;
+  }
+}
+const chatTA = document.getElementById("chat-textarea");
+const chatSend = document.getElementById("chat-send");
+chatTA.addEventListener("input", () => {
+  chatSend.disabled = !chatTA.value.trim();
+  chatTA.style.height="auto"; chatTA.style.height = Math.min(chatTA.scrollHeight,100)+"px";
+});
+chatTA.addEventListener("keydown", e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChatMsg();} });
+
+// ── Orders ─────────────────────────────────────────────────────────────────────
+const ORDERS = [
+  {id:"#4471",cust:"Dana F.",items:"2 items",total:"$56.00",status:"shipped",carrier:"Aramex"},
+  {id:"#4470",cust:"Karl B.",items:"1 item", total:"$28.00",status:"delivered",carrier:"DHL"},
+  {id:"#4469",cust:"Maya R.",items:"3 items",total:"$94.00",status:"processing",carrier:"—"},
+  {id:"#4468",cust:"Joe S.", items:"1 item", total:"$34.00",status:"delivered",carrier:"Aramex"},
+  {id:"#4467",cust:"Lina H.",items:"4 items",total:"$142.00",status:"shipped",carrier:"DHL"},
+  {id:"#4466",cust:"Tarek M.",items:"1 item",total:"$28.00",status:"cancelled",carrier:"—"},
+];
+function renderOrders() {
+  const body = document.getElementById("orders-body");
+  body.innerHTML = "";
+  ORDERS.forEach(o => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td style="font-family:var(--mono)">${o.id}</td><td>${escH(o.cust)}</td><td>${o.items}</td><td style="font-family:var(--mono)">${o.total}</td>
+      <td><span class="order-status status-${o.status}">${o.status}</span></td><td>${o.carrier}</td>
+      <td><button class="track-btn" onclick="toast('Tracking link copied for ${o.id}')">Track</button></td>`;
+    body.appendChild(tr);
+  });
+}
+
+// ── Products ───────────────────────────────────────────────────────────────────
+const PRODUCTS = [
+  {name:"Rose Glow Face Serum", price:"$28.00", stock:"in", icon:"🌹"},
+  {name:"Vitamin C Brightening Cream", price:"$34.00", stock:"in", icon:"✨"},
+  {name:"Hydrating Lip Mask", price:"$14.00", stock:"low", icon:"💋"},
+  {name:"Charcoal Detox Cleanser", price:"$22.00", stock:"in", icon:"🧴"},
+  {name:"SPF 50 Daily Sunscreen", price:"$26.00", stock:"out", icon:"☀️"},
+  {name:"Retinol Night Repair", price:"$42.00", stock:"in", icon:"🌙"},
+];
+function renderProducts() {
+  const grid = document.getElementById("products-grid");
+  grid.innerHTML = "";
+  const stockLabel = {in:"In Stock", low:"Low Stock", out:"Out of Stock"};
+  PRODUCTS.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `<div class="product-img">${p.icon}</div><div class="product-info">
+      <div class="product-name">${escH(p.name)}</div><div class="product-price">${p.price}</div>
+      <div class="product-stock"><span class="stock-dot stock-${p.stock}"></span>${stockLabel[p.stock]}</div></div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ── Cart Recovery ──────────────────────────────────────────────────────────────
+const CARTS = [
+  {name:"Joe S.", items:"Lip Mask, Vitamin C Cream", value:"$48.00", time:"2h ago", status:"pending"},
+  {name:"Lina H.", items:"Retinol Night Repair", value:"$42.00", time:"5h ago", status:"sent"},
+  {name:"Tarek M.", items:"Rose Serum, Cleanser", value:"$50.00", time:"1d ago", status:"recovered"},
+  {name:"Yara K.", items:"SPF Sunscreen ×2", value:"$52.00", time:"1d ago", status:"sent"},
+  {name:"Hadi N.", items:"Vitamin C Cream", value:"$34.00", time:"2d ago", status:"pending"},
+];
+function renderCarts() {
+  const list = document.getElementById("carts-list");
+  list.innerHTML = "";
+  const statusLabel = {pending:"Not Sent",sent:"Reminder Sent",recovered:"Recovered ✓"};
+  CARTS.forEach(c => {
+    const row = document.createElement("div");
+    row.className = "cart-item";
+    row.innerHTML = `
+      <div class="cart-cust"><div class="cart-cust-name">${escH(c.name)}</div><div class="cart-cust-items">${escH(c.items)}</div></div>
+      <div class="cart-value">${c.value}</div>
+      <div class="cart-time">${c.time}</div>
+      <div class="cart-status cart-${c.status}">${statusLabel[c.status]}</div>
+      ${c.status==="pending" ? `<button class="send-recovery-btn">Send Reminder</button>` : `<div style="width:110px"></div>`}
+    `;
+    if (c.status==="pending") {
+      row.querySelector(".send-recovery-btn").addEventListener("click", function(){
+        c.status="sent";
+        toast(`Recovery message sent to ${c.name}`);
+        renderCarts();
+      });
+    }
+    list.appendChild(row);
+  });
+}
+
+// ── Social Campaigns ──────────────────────────────────────────────────────────
+const PMETA = {
+  instagram:{label:"Instagram",icon:"📸",cls:"pi-instagram",limit:2200},
+  twitter:  {label:"Twitter/X",icon:"🐦",cls:"pi-twitter",  limit:280},
+  facebook: {label:"Facebook", icon:"👥",cls:"pi-facebook",  limit:63206},
+  tiktok:   {label:"TikTok",   icon:"🎵",cls:"pi-tiktok",   limit:2200},
+};
+let campStats = {camps:0, posts:0, plats:new Set()};
+
+async function generateCampaign() {
+  const brand    = document.getElementById("sf-brand").value.trim();
+  const goal     = document.getElementById("sf-goal").value;
+  const audience = document.getElementById("sf-audience").value.trim();
+  const tone     = document.getElementById("sf-tone").value;
+  const usp      = document.getElementById("sf-usp").value.trim();
+  const plats    = [...document.querySelectorAll(".pb.on")].map(b=>b.dataset.p);
+
+  if (!brand) { toast("⚠️ Enter a store or campaign name"); return; }
+  if (!plats.length) { toast("⚠️ Select at least one platform"); return; }
+
+  const btn = document.getElementById("gen-btn");
+  btn.disabled = true; btn.textContent = "Generating…";
+
+  const specs = plats.map(p=>{
+    const tips={instagram:"Emojis, hook, CTA, 5-8 hashtags at end.",twitter:"Under 280 chars total. Punchy. 2 hashtags max.",facebook:"Conversational, end with question.",tiktok:"Hook in first 3 words, Gen-Z friendly, suggest audio."};
+    return `- ${PMETA[p].label}: ${tips[p]||""}`;
+  }).join("\n");
+
+  const prompt = `You are a social media expert for e-commerce/retail brands. Generate 2 posts for EACH platform for:
+STORE/CAMPAIGN: ${brand}
+GOAL: ${goal}
+AUDIENCE: ${audience||"online shoppers"}
+TONE: ${tone}
+USP: ${usp||"quality products, great service"}
+
+PLATFORMS:
+${specs}
+
+Respond ONLY with a JSON array, no markdown. Each item:
+{"platform":"instagram","postNumber":1,"type":"Post type","body":"copy with \\n for line breaks","hashtags":["tag1"],"visualSuggestion":"brief image idea"}`;
+
+  try {
+    const res = await fetch("/api/chat", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    let raw = data.content[0].text.trim().replace(/^```json\s*/i,"").replace(/^```/,"").replace(/```$/,"").trim();
+    const posts = JSON.parse(raw);
+    renderPosts(posts);
+    campStats.camps++; campStats.posts += posts.length;
+    plats.forEach(p=>campStats.plats.add(p));
+    document.getElementById("cs-camps").textContent = campStats.camps;
+    document.getElementById("cs-posts").textContent = campStats.posts;
+    document.getElementById("cs-plats").textContent = campStats.plats.size;
+  } catch(e) {
+    toast("⚠️ Generation failed: "+e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = "🚀 Generate Campaign";
+  }
+}
+
+function renderPosts(posts) {
+  const grid = document.getElementById("posts-grid");
+  document.getElementById("posts-empty").style.display = "none";
+  grid.innerHTML = "";
+  posts.forEach((p,i) => {
+    const meta = PMETA[p.platform]||PMETA.instagram;
+    const body = p.body||"";
+    const tags = (p.hashtags||[]).map(t=>t.startsWith("#")?t:"#"+t).join(" ");
+    const chars = body.length+(tags?" "+tags:"").length;
+    const over  = chars > meta.limit;
+    const card  = document.createElement("div");
+    card.className = "post-card";
+    card.style.animationDelay = (i*50)+"ms";
+    card.innerHTML = `
+      <div class="post-header"><div class="plat-ic ${meta.cls}">${meta.icon}</div>
+        <div><div style="font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">${meta.label}</div>
+             <div style="font-size:10px;color:var(--t3);font-family:var(--mono)">${escH(p.type||"Post")}</div></div></div>
+      <div class="post-body">${escH(body)}</div>
+      ${tags?`<div class="post-tags">${escH(tags)}</div>`:""}
+      ${p.visualSuggestion?`<div class="visual-hint">🎨 ${escH(p.visualSuggestion)}</div>`:""}
+      <div class="post-foot"><span class="post-chars" style="color:${over?"var(--red)":"var(--t3)"}">${chars}/${meta.limit}${over?" ⚠️":""}</span>
+        <button class="copy-post-btn">Copy</button></div>`;
+    card._copyText = body+(tags?"\n"+tags:"");
+    card.querySelector(".copy-post-btn").addEventListener("click",function(){
+      navigator.clipboard.writeText(card._copyText).then(()=>{
+        this.textContent="Copied!"; this.classList.add("copied");
+        setTimeout(()=>{this.textContent="Copy";this.classList.remove("copied");},1800);
+      });
+    });
+    grid.appendChild(card);
+  });
+}
+
+// ── Analytics bar chart ───────────────────────────────────────────────────────
+function renderWeekBars() {
+  const data = [{d:"Mon",v:38},{d:"Tue",v:45},{d:"Wed",v:31},{d:"Thu",v:52},{d:"Fri",v:67},{d:"Sat",v:81},{d:"Sun",v:58}];
+  const max  = Math.max(...data.map(x=>x.v));
+  const bars = document.getElementById("week-bars");
+  bars.innerHTML = "";
+  data.forEach(({d,v}) => {
+    const col = document.createElement("div");
+    col.className = "bar-col";
+    col.innerHTML = `<div class="bar-val">${v}</div><div class="bar-fill" style="height:${Math.round((v/max)*100)}%"></div><div class="bar-lbl">${d}</div>`;
+    bars.appendChild(col);
+  });
+}
+
+// ── Config save ───────────────────────────────────────────────────────────────
+function saveAgentConfig() { toast("✅ Agent configuration saved"); }
+function saveWAConfig()    { toast("✅ WhatsApp config saved — redeploy Vercel to activate"); }
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+renderConvList(); updateChatHeader(); renderMessages();
+renderOrders(); renderProducts(); renderCarts(); renderWeekBars();
+</script>
+</body>
+</html>

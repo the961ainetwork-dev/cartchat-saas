@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>You're Activated — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    .success-badge{font-family:var(--mono);font-size:11px;color:var(--ink);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:8px;background:var(--grey-1);padding:6px 14px}
+    .success-badge::before{content:"✓";color:var(--blue);font-weight:700}
+
+    #hero{text-align:center;padding:90px 32px 60px;border-bottom:1px solid var(--ink)}
+    .hero-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:18px}
+    #hero h1{font-size:clamp(32px,5vw,60px);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:1.05;margin-bottom:18px}
+    #hero p{font-size:15px;color:var(--grey-3);max-width:480px;margin:0 auto}
+
+    #fork-shell{max-width:1000px;margin:0 auto;padding:64px 32px}
+    .fork-label{text-align:center;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-bottom:40px}
+    .fork-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--ink)}
+    @media(max-width:760px){.fork-grid{grid-template-columns:1fr}}
+    .fork-card{padding:44px 36px;display:flex;flex-direction:column;position:relative}
+    .fork-card:first-child{border-right:1px solid var(--ink)}
+    @media(max-width:760px){.fork-card:first-child{border-right:none;border-bottom:1px solid var(--ink)}}
+    .fork-card.highlight{background:var(--ink);color:var(--paper)}
+    .fork-tag{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .fork-tag::before{content:"";width:16px;height:1px;background:var(--blue)}
+    .fork-icon{font-size:32px;margin-bottom:20px}
+    .fork-title{font-size:26px;font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:14px;line-height:1.1}
+    .fork-desc{font-size:13.5px;color:var(--grey-3);line-height:1.65;margin-bottom:28px;flex:1}
+    .fork-card.highlight .fork-desc{color:var(--grey-2)}
+    .fork-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+    .fork-list li{font-size:13px;display:flex;gap:10px}
+    .fork-list li::before{content:"—";color:var(--blue);flex-shrink:0;font-weight:700}
+    .fork-btn{padding:16px;text-align:center;font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--ink);transition:all .15s;background:var(--paper);color:var(--ink)}
+    .fork-btn:hover{background:var(--ink);color:var(--paper)}
+    .fork-card.highlight .fork-btn{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+    .fork-card.highlight .fork-btn:hover{background:var(--paper);color:var(--ink)}
+
+    footer{padding:32px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="nav-mark">Cart<span class="dot">·</span>Chat</div>
+  <div class="success-badge">Payment Confirmed</div>
+</div>
+
+<div id="hero">
+  <div class="hero-eyebrow">Welcome to CartChat — <span id="hero-plan">Growth</span> Plan</div>
+  <h1>You're live, <span id="hero-name">there</span>.</h1>
+  <p id="hero-sub">Your <span id="hero-store">store</span>'s AI agent is now permanently active. Choose how you'd like to run it.</p>
+</div>
+
+<div id="fork-shell">
+  <div class="fork-label">Choose Your Path</div>
+  <div class="fork-grid">
+
+    <div class="fork-card">
+      <div class="fork-tag">Option A</div>
+      <div class="fork-icon">🛠️</div>
+      <div class="fork-title">Self-Serve<br/>Dashboard</div>
+      <p class="fork-desc">Take full control. Build, launch, and manage every conversation, campaign, and configuration yourself — your sandbox setup carries over automatically.</p>
+      <ul class="fork-list">
+        <li>Full dashboard access, immediately</li>
+        <li>Edit your AI agent anytime</li>
+        <li>Launch campaigns on your schedule</li>
+        <li>Best for hands-on merchants</li>
+      </ul>
+      <a href="dashboard.html" class="fork-btn" onclick="bridgeToSelfServe(event)">Go to My Dashboard →</a>
+    </div>
+
+    <div class="fork-card highlight">
+      <div class="fork-tag">Option B</div>
+      <div class="fork-icon">🤝</div>
+      <div class="fork-title">Done-For-You<br/>Service</div>
+      <p class="fork-desc">Outsource it entirely. Our team configures your agent, writes your campaigns, and manages everything — you approve, we execute.</p>
+      <ul class="fork-list">
+        <li>Dedicated account manager assigned</li>
+        <li>We configure your full AI agent</li>
+        <li>Monthly campaign execution included</li>
+        <li>Best for busy owners &amp; multi-store groups</li>
+      </ul>
+      <a href="handover.html" class="fork-btn">Request Handover →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>You can switch between these at any time from your account settings.</footer>
+
+<script>
+const purchase = JSON.parse(localStorage.getItem("cc_purchase") || "null");
+if (purchase) {
+  document.getElementById("hero-plan").textContent = purchase.plan || "Growth";
+  document.getElementById("hero-name").textContent = (purchase.name||"there").split(" ")[0];
+  document.getElementById("hero-store").textContent = purchase.store || "your store";
+}
+
+function bridgeToSelfServe(e) {
+  if (!purchase) return;
+  e.preventDefault();
+  const token = "cc_" + btoa(JSON.stringify({ userId: "converted_" + Date.now(), exp: Date.now() + 86400000 * 30 }));
+  const user = {
+    id: "converted_" + Date.now(),
+    name: purchase.name || "Customer",
+    email: purchase.email || "",
+    store: purchase.store || "Your Store",
+    plan: (purchase.plan || "growth").toLowerCase(),
+  };
+  localStorage.setItem("cc_token", token);
+  localStorage.setItem("cc_user", JSON.stringify(user));
+  window.location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

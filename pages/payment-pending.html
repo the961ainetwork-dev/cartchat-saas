@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Submitted — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;padding:0 32px}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    #content{max-width:560px;margin:0 auto;padding:100px 32px;text-align:center}
+    .icon{font-size:48px;margin-bottom:28px}
+    h1{font-size:clamp(26px,3.6vw,38px);font-weight:900;text-transform:uppercase;letter-spacing:-1.3px;line-height:1.1;margin-bottom:18px}
+    p{font-size:14.5px;color:var(--grey-3);line-height:1.7;margin-bottom:32px}
+    .detail-box{background:var(--grey-1);border-radius:10px;padding:20px 24px;text-align:left;margin-bottom:32px}
+    .detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--grey-2);font-size:13px}
+    .detail-row:last-child{border-bottom:none}
+    .detail-row b{font-family:var(--mono)}
+    .status-badge{display:inline-flex;align-items:center;gap:7px;background:#fff8e6;border:1px solid #f0d896;color:#7a5c00;padding:6px 14px;border-radius:99px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:28px}
+    .btn{padding:16px 32px;border:1px solid var(--ink);font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;background:var(--ink);color:var(--paper);transition:all .15s}
+    .btn:hover{background:var(--blue);border-color:var(--blue)}
+  </style>
+</head>
+<body>
+<div id="topbar"><div class="nav-mark">Cart<span class="dot">·</span>Chat</div></div>
+<div id="content">
+  <div class="icon">📨</div>
+  <div class="status-badge">⏱ Awaiting Confirmation</div>
+  <h1>Payment submitted.</h1>
+  <p id="sub-text">We've received your payment details and they're being reviewed. You'll get an email confirmation once it's verified — usually within a few hours.</p>
+
+  <div class="detail-box">
+    <div class="detail-row"><span>Plan</span><b id="d-plan">—</b></div>
+    <div class="detail-row"><span>Amount</span><b id="d-amount">—</b></div>
+    <div class="detail-row"><span>Payment Method</span><b id="d-method">—</b></div>
+    <div class="detail-row"><span>Store</span><b id="d-store">—</b></div>
+  </div>
+
+  <p style="font-size:12.5px">Once confirmed, your account activates automatically with the configuration from your sandbox.</p>
+  <a href="../index.html" class="btn">Back to Homepage</a>
+</div>
+
+<script>
+const purchase = JSON.parse(localStorage.getItem("cc_purchase") || "null");
+if (purchase) {
+  document.getElementById("d-plan").textContent = purchase.plan || "—";
+  document.getElementById("d-amount").textContent = "$" + (purchase.price || 0).toFixed(2);
+  document.getElementById("d-method").textContent = purchase.paymentMethod || "—";
+  document.getElementById("d-store").textContent = purchase.store || "—";
+  if (purchase.paymentMethod === "Cash on Delivery") {
+    document.getElementById("sub-text").textContent = "A team member will contact you within 24 hours to confirm your billing details and arrange payment.";
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Audience Segments — CartChat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    button{font-family:var(--sans);cursor:pointer}
+
+    #topbar{height:64px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+    .nav-mark{font-weight:900;font-size:17px;letter-spacing:-.4px;text-transform:uppercase}
+    .nav-mark .dot{color:var(--blue)}
+    #back-link{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    #back-link:hover{color:var(--ink)}
+
+    .hero{padding:80px 32px 56px;border-bottom:1px solid var(--ink);text-align:center}
+    .eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:18px}
+    .hero h1{font-size:clamp(30px,4.6vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1.8px;line-height:1.06;margin-bottom:18px}
+    .hero p{font-size:14.5px;color:var(--grey-3);max-width:600px;margin:0 auto;line-height:1.7}
+
+    #shell{max-width:1040px;margin:0 auto;padding:60px 32px}
+
+    .type-toggle{display:flex;justify-content:center;gap:0;border:1px solid var(--ink);width:fit-content;margin:0 auto 48px}
+    .type-tab{padding:13px 32px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .15s}
+    .type-tab.active{background:var(--ink);color:var(--paper)}
+
+    .type-panel{display:none}
+    .type-panel.active{display:block}
+
+    .type-intro{text-align:center;max-width:600px;margin:0 auto 40px}
+    .type-intro h2{font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:12px}
+    .type-intro p{font-size:13.5px;color:var(--grey-3);line-height:1.7}
+
+    .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+    @media(max-width:700px){.cat-grid{grid-template-columns:1fr}}
+    .cat-card{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:30px 26px}
+    .cat-num{font-family:var(--mono);font-size:11px;color:var(--blue);margin-bottom:14px;letter-spacing:1px}
+    .cat-title{font-size:19px;font-weight:800;text-transform:uppercase;letter-spacing:-.3px;margin-bottom:4px}
+    .cat-sub{font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+    .cat-desc{font-size:13px;color:var(--grey-3);line-height:1.65;margin-bottom:16px}
+    .cat-examples{display:flex;flex-wrap:wrap;gap:7px}
+    .cat-example{font-family:var(--mono);font-size:10.5px;background:var(--grey-1);padding:5px 12px;border-radius:99px;color:var(--ink)}
+
+    .cta-strip{margin-top:56px;background:var(--ink);color:var(--paper);text-align:center;padding:48px 32px}
+    .cta-strip h3{font-size:24px;font-weight:900;text-transform:uppercase;letter-spacing:-1px;margin-bottom:14px}
+    .cta-strip p{font-size:13.5px;color:var(--grey-2);max-width:480px;margin:0 auto 28px;line-height:1.6}
+    .cta-btn{display:inline-block;padding:16px 36px;background:var(--blue);color:var(--paper);font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s}
+    .cta-btn:hover{background:var(--paper);color:var(--ink)}
+
+    .usage-note{margin-top:40px;background:#fff8e6;border:1px solid #f0d896;border-radius:10px;padding:22px 26px;font-size:13px;line-height:1.7;color:#5c4500}
+    .usage-note b{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;color:#5c4500}
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="nav-mark">Cart<span class="dot">·</span>Chat</div>
+  <a href="../index.html" id="back-link">← Back to Homepage</a>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Audience Segments</div>
+  <h1>How we organize<br/>your broadcast lists.</h1>
+  <p>Every mailing list on CartChat is categorized by strategy, not just contact count. Browse the segment types below to understand what's available, or request a custom list built around your exact audience.</p>
+</div>
+
+<div id="shell">
+
+  <div class="type-toggle">
+    <div class="type-tab active" data-v="b2b" onclick="selectType(this)">B2B — Business</div>
+    <div class="type-tab" data-v="b2c" onclick="selectType(this)">B2C — Consumer</div>
+  </div>
+
+  <!-- B2B -->
+  <div class="type-panel active" id="panel-b2b">
+    <div class="type-intro">
+      <h2>The Strategic Ecosystem</h2>
+      <p>B2B segmentation focuses on logic, ROI, and organizational structure. These lists are typically used for partnership building, capital raising, and enterprise sales.</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card">
+        <div class="cat-num">01 / Firmographic</div>
+        <div class="cat-title">Company Attributes</div>
+        <div class="cat-sub">The Baseline Reality</div>
+        <div class="cat-desc">Categorization based on the physical and financial reality of the business.</div>
+        <div class="cat-examples">
+          <span class="cat-example">Industry vertical</span>
+          <span class="cat-example">Employee headcount</span>
+          <span class="cat-example">Annual revenue</span>
+          <span class="cat-example">MENA / GCC focus</span>
+          <span class="cat-example">NGO vs. corporate</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-num">02 / Technographic</div>
+        <div class="cat-title">Technology Stack</div>
+        <div class="cat-sub">Tools & Infrastructure</div>
+        <div class="cat-desc">Companies categorized by the tools, infrastructure, and architectures they currently employ.</div>
+        <div class="cat-examples">
+          <span class="cat-example">Legacy vs. cloud-native</span>
+          <span class="cat-example">Agentic AI adopters</span>
+          <span class="cat-example">Multi-agent systems</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-num">03 / Persona &amp; Role-Based</div>
+        <div class="cat-title">The Decision Makers</div>
+        <div class="cat-sub">Not the Company — The Leader</div>
+        <div class="cat-desc">You rarely sell to a "company" — you engage a specific leader within it.</div>
+        <div class="cat-examples">
+          <span class="cat-example">Diaspora investors</span>
+          <span class="cat-example">Policy directors</span>
+          <span class="cat-example">C-suite executives</span>
+          <span class="cat-example">Innovation scouts</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-num">04 / Intent &amp; Lifecycle</div>
+        <div class="cat-title">Active Behavior</div>
+        <div class="cat-sub">What They're Doing Right Now</div>
+        <div class="cat-desc">Businesses segmented by what they are actively doing or searching for at this exact moment.</div>
+        <div class="cat-examples">
+          <span class="cat-example">Seeking sandboxes</span>
+          <span class="cat-example">Recently funded</span>
+          <span class="cat-example">Scaling internationally</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B2C -->
+  <div class="type-panel" id="panel-b2c">
+    <div class="type-intro">
+      <h2>The Consumer Audience</h2>
+      <p>B2C segmentation relies heavily on behavior, identity, and engagement rhythms. These lists drive direct sales, subscriptions, and brand loyalty.</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card">
+        <div class="cat-num">01 / Demographic &amp; Geographic</div>
+        <div class="cat-title">Fundamental Descriptors</div>
+        <div class="cat-sub">Who They Are</div>
+        <div class="cat-desc">The fundamental descriptors of your individual users.</div>
+        <div class="cat-examples">
+          <span class="cat-example">Age brackets</span>
+          <span class="cat-example">Income levels</span>
+          <span class="cat-example">Education</span>
+          <span class="cat-example">Beirut vs. diaspora</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-num">02 / Behavioral &amp; Engagement</div>
+        <div class="cat-title">Platform Interaction</div>
+        <div class="cat-sub">How They Engage</div>
+        <div class="cat-desc">Grouping users by how they interact with your digital platforms or content ecosystems.</div>
+        <div class="cat-examples">
+          <span class="cat-example">Daily news readers</span>
+          <span class="cat-example">Cart abandoners</span>
+          <span class="cat-example">Inactive subscribers</span>
+          <span class="cat-example">Engaged advocates</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-num">03 / Psychographic</div>
+        <div class="cat-title">Interests &amp; Lifestyles</div>
+        <div class="cat-sub">Values & Worldview</div>
+        <div class="cat-desc">Categorization based on values, hobbies, and worldviews.</div>
+        <div class="cat-examples">
+          <span class="cat-example">Early tech adopters</span>
+          <span class="cat-example">Smart-citizenship advocates</span>
+          <span class="cat-example">Artisanal product buyers</span>
+          <span class="cat-example">Sports fans</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-num">04 / Transactional &amp; Geospatial</div>
+        <div class="cat-title">Purchase &amp; Location</div>
+        <div class="cat-sub">Buying History & Place</div>
+        <div class="cat-desc">Based on purchasing history or physical location interactions.</div>
+        <div class="cat-examples">
+          <span class="cat-example">High-frequency buyers</span>
+          <span class="cat-example">Seasonal purchasers</span>
+          <span class="cat-example">Foot-traffic segments</span>
+          <span class="cat-example">Event-based activations</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-note">
+    <b>⚠ Acceptable Use Requirement</b>
+    All mailing lists are licensed strictly for commercial, opt-in marketing communication. Lists may not be used for political campaigning, advocacy messaging, harassment, or any communication that infringes on third-party rights or violates applicable data protection and anti-spam law. By submitting a broadcast order, you confirm your message is commercial in nature and that you accept full responsibility for its content. See our <a href="acceptable-use.html" style="color:#5c4500;text-decoration:underline">full Acceptable Use Policy</a> for details.
+  </div>
+
+  <div class="cta-strip">
+    <h3>Ready to reach the right audience?</h3>
+    <p>Browse a segment above, then start your broadcast order — our team will help you pick or build the exact list you need.</p>
+    <a href="broadcast.html" class="cta-btn">Start a Broadcast Order →</a>
+  </div>
+
+</div>
+
+<script>
+function selectType(el) {
+  document.querySelectorAll(".type-tab").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+  document.querySelectorAll(".type-panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("panel-"+el.dataset.v).classList.add("active");
+}
+</script>
+</body>
+</html>
