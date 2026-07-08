@@ -385,12 +385,12 @@
 
 <div id="toast"></div>
 
-<script src="data.js"></script>
+<script src="/admin/data.js"></script>
 <script>
 // ── Auth guard ──────────────────────────────────────────────────────────────
 const adminToken = localStorage.getItem("cc_admin_token");
 const adminUser  = JSON.parse(localStorage.getItem("cc_admin_user") || "null");
-if (!adminToken || !adminUser) { window.location.href = "login.html"; }
+if (!adminToken || !adminUser) { window.location.href = "/admin/login.html"; }
 
 if (adminUser) {
   document.getElementById("admin-name").textContent = adminUser.name || "Admin";
@@ -398,7 +398,7 @@ if (adminUser) {
   document.getElementById("admin-av").textContent = (adminUser.name||"A").charAt(0).toUpperCase();
 }
 
-function adminLogout() { localStorage.removeItem("cc_admin_token"); localStorage.removeItem("cc_admin_user"); window.location.href = "login.html"; }
+function adminLogout() { localStorage.removeItem("cc_admin_token"); localStorage.removeItem("cc_admin_user"); window.location.href = "/admin/login.html"; }
 
 // ── Live data layer (Supabase via /api/admin/*) ────────────────────────────────
 // LIVE holds customers/leads/payments/broadcasts/orders fetched from the server.
