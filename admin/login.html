@@ -1,7 +1,6 @@
 // api/admin/login.js — Admin authentication.
-// Primary mode: a single master password set in the ADMIN_PASSWORD env var
-// (Vercel → Settings → Environment Variables). The email field is ignored
-// in this mode — only the password matters.
+// Primary mode: a single master password set in the ADMIN_PASSWORD env var.
+// The email field is ignored in this mode — only the password matters.
 // Fallback: Supabase accounts whose profiles.role is admin/super_admin.
 
 export const config = { runtime: "edge" };
@@ -16,19 +15,14 @@ export default async function handler(req) {
     const { email, password } = await req.json();
     if (!password) return json({ error: "Password required" }, 400);
 
-    // ── Master password mode ──────────────────────────────────────────────
     const master = process.env.ADMIN_PASSWORD;
-    if (master) {
-      if (password === master) {
-        return json({
-          token: master,
-          user: { id: "master-admin", email: email || "admin@cartchat", name: "CartChat Admin", role: "super_admin" },
-        });
-      }
-      // Master password is configured but didn't match — try Supabase below.
+    if (master && password === master) {
+      return json({
+        token: master,
+        user: { id: "master-admin", email: email || "admin@cartchat", name: "CartChat Admin", role: "super_admin" },
+      });
     }
 
-    // ── Supabase admin-account mode ───────────────────────────────────────
     if (!envReady() || !email) return json({ error: "Invalid admin credentials" }, 401);
 
     const { ok, data } = await authSignIn(email, password);
