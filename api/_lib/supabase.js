@@ -128,8 +128,21 @@ export async function requireUser(req) {
   return { user, profile };
 }
 
-/** Like requireUser, but only passes for admin/super_admin roles. */
+/** Like requireUser, but only passes for admin/super_admin roles.
+    Also accepts the shared ADMIN_PASSWORD (env var) as a bearer token,
+    so a single master password can run the whole admin panel. */
 export async function requireAdmin(req) {
+  const auth  = req.headers.get("Authorization") || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
+
+  const master = process.env.ADMIN_PASSWORD;
+  if (master && token === master) {
+    return {
+      user:    { id: "master-admin", email: "admin@cartchat" },
+      profile: { name: "CartChat Admin", role: "super_admin", plan: "scale" },
+    };
+  }
+
   const me = await requireUser(req);
   if (!me?.profile || !["admin", "super_admin"].includes(me.profile.role)) return null;
   return me;
