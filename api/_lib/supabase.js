@@ -137,4 +137,22 @@ export async function requireAdmin(req) {
 
 /** Update rows: dbUpdate('payments', 'id=eq.<uuid>', { status: 'verified' }) */
 export async function dbUpdate(table, query, patch) {
-  const res = await fetch(
+  const res = await fetch(`${URL_()}/rest/v1/${table}?${query}`, {
+    method: "PATCH",
+    headers: srvHeaders({ "Content-Type": "application/json", Prefer: "return=representation" }),
+    body: JSON.stringify(patch),
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.message || `Update ${table} failed (${res.status})`);
+  return Array.isArray(data) ? data : [data];
+}
+
+/** Create a user via the GoTrue Admin API (service role). Email is pre-confirmed. */
+export async function adminCreateUser(email, password, metadata = {}) {
+  const res = await fetch(`${URL_()}/auth/v1/admin/users`, {
+    method: "POST",
+    headers: srvHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ email, password, email_confirm: true, user_metadata: metadata }),
+  });
+  return { ok: res.ok, status: res.status, data: await res.json() };
+}
