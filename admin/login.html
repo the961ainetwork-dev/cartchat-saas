@@ -62,7 +62,7 @@ async function doLogin() {
     if (!res.ok) throw new Error(data.error || "Login failed");
     localStorage.setItem("cc_admin_token", data.token);
     localStorage.setItem("cc_admin_user", JSON.stringify(data.user));
-    window.location.href = "index.html";
+    window.location.href = "/admin/";
   } catch(e) {
     err.textContent = e.message;
     err.classList.add("show");
