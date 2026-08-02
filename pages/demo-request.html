@@ -78,6 +78,34 @@
 
     .error-msg{font-family:var(--mono);font-size:11px;color:var(--blue);margin-top:-14px;margin-bottom:18px;text-transform:uppercase;letter-spacing:.5px;display:none}
     .error-msg.show{display:block}
+
+    /* ── Scheduling ── */
+    .sched-wrap{display:grid;grid-template-columns:1.25fr 1fr;gap:32px;margin-bottom:8px}
+    @media(max-width:680px){.sched-wrap{grid-template-columns:1fr}}
+    .cal{border:1px solid var(--ink);padding:16px}
+    .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .cal-month{font-family:var(--mono);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+    .cal-nav{background:none;border:1px solid var(--grey-1);width:30px;height:30px;font-size:16px;color:var(--ink);line-height:1}
+    .cal-nav:hover:not(:disabled){border-color:var(--ink)}
+    .cal-nav:disabled{opacity:.3;cursor:not-allowed}
+    .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-family:var(--mono);font-size:10px;color:var(--grey-3);text-align:center;margin-bottom:6px}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+    .cal-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;font-family:var(--mono);border:1px solid transparent}
+    .cal-cell.avail{cursor:pointer}
+    .cal-cell.avail:hover{border-color:var(--ink)}
+    .cal-cell.disabled{color:var(--grey-2);cursor:not-allowed}
+    .cal-cell.sel{background:var(--ink);color:var(--paper)}
+    .cal-cell.empty{cursor:default}
+    .slots-empty{font-family:var(--mono);font-size:12px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;padding-top:6px;line-height:1.6}
+    .slots-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .slot{padding:12px;border:1px solid var(--ink);font-family:var(--mono);font-size:13px;text-align:center;cursor:pointer;transition:all .15s}
+    .slot:hover{background:var(--grey-1)}
+    .slot.sel{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+    .confirm-card{border:1px solid var(--ink);padding:8px 24px;margin-bottom:8px}
+    .cc-row{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--grey-1);padding:14px 0;font-size:15px}
+    .cc-row:last-child{border-bottom:none}
+    .cc-k{font-family:var(--mono);color:var(--grey-3);text-transform:uppercase;font-size:11px;letter-spacing:.5px}
+    .cc-v{font-weight:600;text-align:right}
   </style>
 </head>
 <body>
@@ -199,38 +227,43 @@
     </div>
   </div>
 
-  <!-- STEP 4 -->
+  <!-- STEP 4 — SCHEDULE -->
   <div class="step-panel" data-step="4">
-    <div class="step-eyebrow">Demo Request — Final Step</div>
-    <h1 class="step-title">Choose a plan<br/>to trial.</h1>
-    <p class="step-sub">You won't be charged. This selects which plan's full feature set is unlocked in your 24-hour sandbox.</p>
+    <div class="step-eyebrow">Demo Request — Schedule</div>
+    <h1 class="step-title">Pick a time<br/>that works.</h1>
+    <p class="step-sub">Book a live 30-minute walkthrough with our team. Available every day for the next month, 2:00–5:00 PM (Beirut time).</p>
 
-    <div class="plan-cards" id="plan-cards">
-      <div class="plan-card" data-v="Starter" onclick="selectPlan(this)">
-        <div class="plan-card-tier">Starter</div>
-        <div class="plan-card-price">$59<span> /mo</span></div>
-        <div style="font-size:12px;color:inherit;opacity:.7;margin-top:8px">1 number · 500 msgs/mo</div>
-        <div class="plan-check">✓</div>
+    <div class="sched-wrap">
+      <div class="cal">
+        <div class="cal-head">
+          <button type="button" class="cal-nav" id="cal-prev" onclick="calMove(-1)">‹</button>
+          <div class="cal-month" id="cal-month"></div>
+          <button type="button" class="cal-nav" id="cal-next" onclick="calMove(1)">›</button>
+        </div>
+        <div class="cal-dow"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+        <div class="cal-grid" id="cal-grid"></div>
       </div>
-      <div class="plan-card sel" data-v="Growth" onclick="selectPlan(this)">
-        <div class="plan-card-rec">Recommended</div>
-        <div class="plan-card-tier">Growth</div>
-        <div class="plan-card-price">$179<span> /mo</span></div>
-        <div style="font-size:12px;color:inherit;opacity:.7;margin-top:8px">3 numbers · Unlimited</div>
-        <div class="plan-check">✓</div>
-      </div>
-      <div class="plan-card" data-v="Agency" onclick="selectPlan(this)">
-        <div class="plan-card-tier">Agency</div>
-        <div class="plan-card-price">$449<span> /mo</span></div>
-        <div style="font-size:12px;color:inherit;opacity:.7;margin-top:8px">Unlimited stores</div>
-        <div class="plan-check">✓</div>
+      <div class="slots">
+        <div class="slots-empty" id="slots-empty">Select a date to see available times.</div>
+        <div class="slots-list" id="slots-list"></div>
       </div>
     </div>
+
+    <div class="error-msg" id="err-4">Please pick a date and a time slot.</div>
 
     <div class="step-actions">
       <button class="btn-back" onclick="goStep(3)">← Back</button>
-      <button class="btn-next final" id="submit-btn" onclick="submitDemo()">Launch My 24-Hour Sandbox →</button>
+      <button class="btn-next final" id="submit-btn" onclick="bookDemo()">Confirm Booking →</button>
     </div>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div class="step-panel" data-step="done">
+    <div class="step-eyebrow">Demo Request — Confirmed</div>
+    <h1 class="step-title">You're booked.</h1>
+    <p class="step-sub">Your live demo is scheduled. A confirmation is on its way to your email — our team will meet you then.</p>
+    <div class="confirm-card" id="confirm-card"></div>
+    <div class="step-actions"><span></span><a href="../index.html" class="btn-next">Back to Home →</a></div>
   </div>
 
 </div>
@@ -329,30 +362,91 @@ function goStep(target) {
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
-async function submitDemo() {
-  const btn = document.getElementById("submit-btn");
-  btn.disabled = true;
-  btn.textContent = "Setting Up Your Sandbox…";
+// ── Scheduling ──────────────────────────────────────────────────────────────
+const SLOTS = ["14:00","14:30","15:00","15:30","16:00","16:30"]; // 2:00–5:00 PM, 30-min
+let calCursor = new Date(); calCursor.setDate(1);
+let selDate = null, selSlot = null;
+const today0 = new Date(); today0.setHours(0,0,0,0);
+const maxDate = new Date(today0); maxDate.setDate(maxDate.getDate() + 30); // one month window
 
-  const sandboxData = {
+function fmtSlot(s){ const [h,m]=s.split(":").map(Number); const ap=h>=12?"PM":"AM"; const hh=((h+11)%12)+1; return `${hh}:${String(m).padStart(2,"0")} ${ap}`; }
+function sameDay(a,b){ return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
+
+function renderCal(){
+  const y=calCursor.getFullYear(), mo=calCursor.getMonth();
+  document.getElementById("cal-month").textContent = calCursor.toLocaleString("en-US",{month:"long",year:"numeric"});
+  let first = new Date(y,mo,1).getDay(); first=(first+6)%7; // Monday-first
+  const days = new Date(y,mo+1,0).getDate();
+  const grid = document.getElementById("cal-grid"); grid.innerHTML="";
+  for(let i=0;i<first;i++){ const c=document.createElement("div"); c.className="cal-cell empty"; grid.appendChild(c); }
+  for(let d=1;d<=days;d++){
+    const date=new Date(y,mo,d); date.setHours(0,0,0,0);
+    const c=document.createElement("div"); c.textContent=d;
+    if(date>=today0 && date<=maxDate){
+      c.className="cal-cell avail";
+      if(selDate && sameDay(date,selDate)) c.classList.add("sel");
+      c.onclick=()=>{ selDate=date; selSlot=null; renderCal(); renderSlots(); };
+    } else { c.className="cal-cell disabled"; }
+    grid.appendChild(c);
+  }
+  document.getElementById("cal-prev").disabled = (y===today0.getFullYear() && mo<=today0.getMonth());
+  document.getElementById("cal-next").disabled = (new Date(y,mo,1) >= new Date(maxDate.getFullYear(),maxDate.getMonth(),1));
+}
+function calMove(dir){ calCursor.setMonth(calCursor.getMonth()+dir); renderCal(); }
+function renderSlots(){
+  const empty=document.getElementById("slots-empty"), list=document.getElementById("slots-list");
+  if(!selDate){ empty.style.display="block"; list.innerHTML=""; return; }
+  empty.style.display="none"; list.innerHTML="";
+  SLOTS.forEach(s=>{
+    const b=document.createElement("div"); b.className="slot"+(selSlot===s?" sel":""); b.textContent=fmtSlot(s);
+    b.onclick=()=>{ selSlot=s; renderSlots(); };
+    list.appendChild(b);
+  });
+}
+
+async function bookDemo() {
+  if(!selDate || !selSlot){ document.getElementById("err-4").classList.add("show"); return; }
+  document.getElementById("err-4").classList.remove("show");
+  const btn = document.getElementById("submit-btn");
+  btn.disabled = true; btn.textContent = "Booking…";
+
+  const dateStr   = selDate.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  const whenLabel = `${dateStr} at ${fmtSlot(selSlot)} (Beirut time)`;
+  const isoDate   = `${selDate.getFullYear()}-${String(selDate.getMonth()+1).padStart(2,"0")}-${String(selDate.getDate()).padStart(2,"0")}`;
+
+  const lead = {
     ...answers,
-    goal: (answers.goals||[answers.goal||""])[0], // primary goal for backward compat
-    product: "cartchat",
-    createdAt: Date.now(),
-    expiresAt: Date.now() + (24 * 60 * 60 * 1000),
+    business:       answers.store,
+    scheduledDate:  isoDate,
+    scheduledSlot:  selSlot,
+    scheduledLabel: whenLabel,
+    notes:          `Live demo requested: ${whenLabel}`,
+    product:        "cartchat",
+    createdAt:      Date.now(),
   };
-  localStorage.setItem("cc_demo_session", JSON.stringify(sandboxData));
 
   try {
     await fetch("/api/demo/create", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sandboxData)
-    }).catch(()=>{});
-  } finally {
-    window.location.href = "sandbox.html";
-  }
-}
+      body: JSON.stringify(lead),
+    });
+  } catch (e) { /* best-effort: still confirm to the user */ }
 
+  document.getElementById("confirm-card").innerHTML =
+    `<div class="cc-row"><span class="cc-k">Store</span><span class="cc-v">${escapeHtml(answers.store)}</span></div>` +
+    `<div class="cc-row"><span class="cc-k">Name</span><span class="cc-v">${escapeHtml(answers.name)}</span></div>` +
+    `<div class="cc-row"><span class="cc-k">Date &amp; Time</span><span class="cc-v">${escapeHtml(whenLabel)}</span></div>` +
+    `<div class="cc-row"><span class="cc-k">Duration</span><span class="cc-v">30 minutes</span></div>`;
+
+  document.querySelector('.step-panel[data-step="4"]').classList.remove("active");
+  document.querySelector('.step-panel[data-step="done"]').classList.add("active");
+  document.querySelectorAll(".prog-step").forEach(s=>{ s.classList.remove("active"); s.classList.add("done"); });
+  document.getElementById("progress-label").textContent = "Booked ✓";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function escapeHtml(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+renderCal();
 updateVolume(300);
 </script>
 </body>
