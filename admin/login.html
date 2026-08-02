@@ -1,43 +1,110 @@
-// api/admin/login.js — Admin authentication.
-// Primary mode: a single master password set in the ADMIN_PASSWORD env var.
-// The email field is ignored in this mode — only the password matters.
-// Fallback: Supabase accounts whose profiles.role is admin/super_admin.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <title>Admin Access — CartChat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--paper:#fff;--ink:#0a0a0a;--grey-1:#e8e6e1;--grey-2:#c9c6bd;--grey-3:#76746c;--blue:#0047ab;--sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+    a{color:inherit;text-decoration:none}
+    @media(max-width:860px){body{grid-template-columns:1fr}}
+    /* LEFT — identity panel */
+    .id-panel{background:var(--ink);color:var(--paper);padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    @media(max-width:860px){.id-panel{display:none}}
+    .id-panel::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg, transparent 0px, transparent 2px, rgba(255,0,0,.05) 2px, rgba(255,0,0,.05) 3px)}
+    .id-mark{font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:-.5px;position:relative;z-index:1}
+    .id-mark .dot{color:var(--blue)}
+    .id-quote{font-size:clamp(28px,3vw,42px);font-weight:900;line-height:1.08;letter-spacing:-1.5px;text-transform:uppercase;max-width:420px;position:relative;z-index:1}
+    .id-quote span{color:var(--blue)}
+    .id-specs{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-2);display:flex;flex-direction:column;gap:6px;position:relative;z-index:1}
+    .id-specs div{display:flex;justify-content:space-between;border-top:1px solid #2a2a2a;padding-top:6px;width:280px}
+    /* RIGHT — form panel */
+    .form-panel{display:flex;align-items:center;justify-content:center;padding:48px}
+    .form-box{width:100%;max-width:380px}
+    .form-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+    .form-eyebrow::before{content:"";width:20px;height:1px;background:var(--blue)}
+    h2{font-size:32px;font-weight:900;letter-spacing:-1.2px;text-transform:uppercase;margin-bottom:32px}
+    .field{margin-bottom:20px}
+    label{display:block;font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--grey-3);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px}
+    input{width:100%;padding:13px 0;border:none;border-bottom:1px solid var(--ink);font-size:15px;font-family:var(--sans);color:var(--ink);background:transparent;border-radius:0}
+    input:focus{outline:none;border-bottom:2px solid var(--blue);padding-bottom:12px}
+    .btn{width:100%;padding:16px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:8px;transition:all .15s;cursor:pointer}
+    .btn:hover{background:var(--blue);border-color:var(--blue)}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .hint{font-family:var(--mono);font-size:10px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;margin-top:22px;line-height:1.6}
+    .error{border:1px solid var(--blue);color:var(--blue);padding:12px 14px;font-size:12px;font-family:var(--mono);margin-bottom:20px;display:none;text-transform:uppercase;letter-spacing:.5px}
+    .error.show{display:block}
+    .spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
 
-export const config = { runtime: "edge" };
+<div class="id-panel">
+  <div class="id-mark">Cart<span class="dot">·</span>Chat</div>
+  <div class="id-quote">Control<br/>room<span>.</span></div>
+  <div class="id-specs">
+    <div><span>Access</span><span>Restricted</span></div>
+    <div><span>Scope</span><span>Super Admin</span></div>
+    <div><span>Session</span><span>Encrypted</span></div>
+  </div>
+</div>
 
-import { preflight, json, envReady, authSignIn, getProfile } from "../_lib/supabase.js";
+<div class="form-panel">
+  <div class="form-box">
+    <div class="form-eyebrow">Administrator Access</div>
+    <h2>Admin Sign In</h2>
+    <div class="error" id="err"></div>
+    <div class="field"><label>Email <span style="text-transform:none">(optional)</span></label><input type="email" id="email" placeholder="admin@cartchat" autocomplete="username"/></div>
+    <div class="field"><label>Password</label><input type="password" id="password" placeholder="••••••••" autocomplete="current-password"/></div>
+    <button class="btn" id="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="hint">Authorized personnel only. This area is monitored.</div>
+  </div>
+</div>
 
-export default async function handler(req) {
-  if (req.method === "OPTIONS") return preflight();
-  if (req.method !== "POST")    return json({ error: "Method not allowed" }, 405);
-
-  try {
-    const { email, password } = await req.json();
-    if (!password) return json({ error: "Password required" }, 400);
-
-    const master = process.env.ADMIN_PASSWORD;
-    if (master && password === master) {
-      return json({
-        token: master,
-        user: { id: "master-admin", email: email || "admin@cartchat", name: "CartChat Admin", role: "super_admin" },
-      });
-    }
-
-    if (!envReady() || !email) return json({ error: "Invalid admin credentials" }, 401);
-
-    const { ok, data } = await authSignIn(email, password);
-    if (!ok || !data.access_token) return json({ error: "Invalid admin credentials" }, 401);
-
-    const profile = await getProfile(data.user.id).catch(() => null);
-    if (!profile || !["admin", "super_admin"].includes(profile.role)) {
-      return json({ error: "Invalid admin credentials" }, 401);
-    }
-
-    return json({
-      token: data.access_token,
-      user: { id: data.user.id, email: data.user.email, name: profile.name, role: profile.role },
-    });
-  } catch (err) {
-    return json({ error: err.message }, 500);
+<script>
+  // If already authenticated, skip straight to the dashboard.
+  if (localStorage.getItem("cc_admin_token") && localStorage.getItem("cc_admin_user")) {
+    window.location.href = "/admin/index.html";
   }
-}
+
+  async function doLogin() {
+    const email = document.getElementById("email").value.trim();
+    const pw    = document.getElementById("password").value;
+    const err   = document.getElementById("err");
+    const btn   = document.getElementById("login-btn");
+    err.classList.remove("show");
+
+    if (!pw) { err.textContent = "Password is required."; err.classList.add("show"); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Signing In…';
+    try {
+      const res  = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: pw })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed");
+
+      localStorage.setItem("cc_admin_token", data.token);
+      localStorage.setItem("cc_admin_user", JSON.stringify(data.user));
+      window.location.href = "/admin/index.html";
+    } catch (e) {
+      err.textContent = e.message;
+      err.classList.add("show");
+      btn.disabled = false;
+      btn.innerHTML = "Sign In";
+    }
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+</script>
+</body>
+</html>
