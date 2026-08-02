@@ -43,6 +43,60 @@ export function envReady() {
   return Boolean(URL_() && ANON() && SRV());
 }
 
+// ── Admin session tokens (HS256 JWT, edge-safe via Web Crypto) ──────────────
+// The master password is used only as a server-side signing secret; it never
+// travels to or from the browser. Set ADMIN_JWT_SECRET for a dedicated signing
+// key, otherwise the ADMIN_PASSWORD value is used as the secret.
+const ADMIN_SECRET = () => process.env.ADMIN_JWT_SECRET || process.env.ADMIN_PASSWORD || "";
+
+function _b64urlBytes(bytes) {
+  let bin = "";
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function _b64urlStr(str) { return _b64urlBytes(new TextEncoder().encode(str)); }
+function _b64urlToBytes(b64url) {
+  const pad = "===".slice((b64url.length + 3) % 4);
+  const b64 = b64url.replace(/-/g, "+").replace(/_/g, "/") + pad;
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+async function _hmacKey() {
+  return crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(ADMIN_SECRET()),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign", "verify"],
+  );
+}
+
+/** Mint a signed admin session token (default lifetime 12h). */
+export async function signAdminToken(payload, ttlSeconds = 60 * 60 * 12) {
+  const now  = Math.floor(Date.now() / 1000);
+  const head = _b64urlStr(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const body = _b64urlStr(JSON.stringify({ ...payload, iat: now, exp: now + ttlSeconds }));
+  const data = `${head}.${body}`;
+  const sig  = await crypto.subtle.sign("HMAC", await _hmacKey(), new TextEncoder().encode(data));
+  return `${data}.${_b64urlBytes(new Uint8Array(sig))}`;
+}
+
+/** Verify a signed admin token. Returns its claims if valid & unexpired, else null. */
+export async function verifyAdminToken(token) {
+  if (!token || !ADMIN_SECRET()) return null;
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+  const data = `${parts[0]}.${parts[1]}`;
+  try {
+    const ok = await crypto.subtle.verify(
+      "HMAC", await _hmacKey(), _b64urlToBytes(parts[2]), new TextEncoder().encode(data),
+    );
+    if (!ok) return null;
+    const claims = JSON.parse(new TextDecoder().decode(_b64urlToBytes(parts[1])));
+    if (claims.exp && Math.floor(Date.now() / 1000) > claims.exp) return null;
+    return claims;
+  } catch { return null; }
+}
+
 // ── Auth (GoTrue REST) ──────────────────────────────────────────────────────
 
 /** Sign up a new user. `metadata` lands in raw_user_meta_data → profiles trigger. */
@@ -129,21 +183,22 @@ export async function requireUser(req) {
 }
 
 /** Like requireUser, but only passes for admin/super_admin roles.
-    Also accepts the shared ADMIN_PASSWORD (env var) as a bearer token,
-    so a single master password can run the whole admin panel. */
+    Accepts a signed master-admin session token (minted at login from the
+    ADMIN_PASSWORD secret) — the signature is verified, the password itself
+    is never sent as, or compared against, the token. */
 export async function requireAdmin(req) {
   const auth  = req.headers.get("Authorization") || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
 
-  const master = process.env.ADMIN_PASSWORD;
-  if (master && token === master) {
+  const claims = await verifyAdminToken(token);
+  if (claims && ["admin", "super_admin"].includes(claims.role)) {
     return {
-      user:    { id: "master-admin", email: "admin@cartchat" },
-      profile: { name: "CartChat Admin", role: "super_admin", plan: "scale" },
+      user:    { id: claims.sub || "master-admin", email: claims.email || "admin@cartchat" },
+      profile: { name: "CartChat Admin", role: claims.role, plan: "scale" },
     };
   }
 
-  const me = await requireUser(req);
+  const me = envReady() ? await requireUser(req) : null;
   if (!me?.profile || !["admin", "super_admin"].includes(me.profile.role)) return null;
   return me;
 }
