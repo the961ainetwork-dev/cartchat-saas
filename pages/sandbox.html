@@ -259,8 +259,10 @@
 <div id="toast"></div>
 
 <script>
+const adminToken = localStorage.getItem("cc_admin_token");
+if (!adminToken) { window.location.href = "/index.html"; }
 let session = JSON.parse(localStorage.getItem("cc_demo_session") || "null");
-if (!session) { window.location.href = "demo-request.html"; }
+if (!session) { session = { name: "Demo User", email: "demo@cartchat", store: "Lumière Beauty (Demo)" }; }
 
 function ts(){ return new Date().toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"}); }
 function escH(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
