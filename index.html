@@ -3,923 +3,981 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CartChat — WhatsApp Commerce Assistant for MENA Stores</title>
-  <meta name="description" content="Everything you need. One place. Turn your WhatsApp and SMS/Voice messages into an Autonomous Operational Terminal."/>
-  <link rel="canonical" href="https://www.cartchat.tel/"/>
-  <meta name="theme-color" content="#0a0a0a"/>
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website"/>
-  <meta property="og:site_name" content="CartChat"/>
-  <meta property="og:title" content="CartChat — WhatsApp Commerce Assistant for MENA Stores"/>
-  <meta property="og:description" content="Everything you need. One place. Turn your WhatsApp and SMS/Voice messages into an Autonomous Operational Terminal."/>
-  <meta property="og:url" content="https://www.cartchat.tel/"/>
-  <meta property="og:image" content="https://www.cartchat.tel/og-image.png"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="CartChat — WhatsApp Commerce Assistant for MENA Stores"/>
-  <meta name="twitter:description" content="Everything you need. One place. Turn your WhatsApp and SMS/Voice messages into an Autonomous Operational Terminal."/>
-  <meta name="twitter:image" content="https://www.cartchat.tel/og-image.png"/>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <title>Admin — CartChat</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --paper:#ffffff;--ink:#0a0a0a;--grey-1:#e7e9ee;--grey-2:#c5cad4;--grey-3:#6b7280;--blue:#0047ab;
+      --bg:#0a0a0a;--bg1:#111111;--bg2:#1a1a1a;--bg3:#222222;--border:#2a2a2a;
+      --blue:#0047ab;--blue-glow:rgba(0,71,171,.15);
+      --green:#16a34a;--amber:#d97706;--red:#dc2626;
+      --t1:#f5f5f5;--t2:#9ca3af;--t3:#525252;
       --sans:'Inter',Arial,sans-serif;--mono:'JetBrains Mono',monospace;
     }
-    html{scroll-behavior:smooth}
-    body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
-    a{color:inherit;text-decoration:none}
-    button{font-family:var(--sans);cursor:pointer}
+    html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--sans)}
+    button{cursor:pointer;border:none;font-family:var(--sans)}
+    input,select,textarea{font-family:var(--sans)}
+    input:focus,select:focus,textarea:focus{outline:none}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-    #ruler{position:fixed;left:0;top:0;bottom:0;width:28px;border-right:1px solid var(--grey-2);display:flex;flex-direction:column;justify-content:space-between;padding:24px 0;z-index:50;background:var(--paper)}
-    #ruler span{writing-mode:vertical-rl;text-orientation:mixed;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--grey-3);text-align:center;transform:rotate(180deg)}
-    @media(max-width:900px){#ruler{display:none}}
+    #shell{display:flex;height:100vh;overflow:hidden}
 
-    nav{position:fixed;top:0;left:28px;right:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--ink);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
-    @media(max-width:900px){nav{left:0}}
-    .nav-mark{font-weight:900;font-size:18px;letter-spacing:-0.5px;text-transform:uppercase}
-    .nav-mark .dot{color:var(--blue)}
-    .nav-links{display:flex;align-items:center;gap:32px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1px}
-    .nav-links span{color:var(--grey-2);cursor:not-allowed;display:flex;align-items:center;gap:6px}
-    .nav-links span::after{content:"🔒";font-size:9px}
-    .nav-links a{color:var(--ink);transition:color .15s}
-    .nav-links a:hover{color:var(--blue)}
-    .nav-cta{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:9px 22px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;transition:all .15s}
-    .nav-cta:hover{background:var(--blue);border-color:var(--blue)}
-    @media(max-width:900px){.nav-links{display:none}}
+    #sidenav{width:230px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+    #sidenav-logo{padding:20px 18px 16px;border-bottom:1px solid var(--border)}
+    #sidenav-logo .logo{font-weight:900;font-size:16px;letter-spacing:-.3px;text-transform:uppercase}
+    #sidenav-logo .logo span{color:var(--blue)}
+    #sidenav-logo .tag{font-size:10px;font-family:var(--mono);color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+    #nav-links{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+    .nav-link{display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;background:none;border:none;width:100%;text-align:left;position:relative}
+    .nav-link:hover{background:var(--bg2);color:var(--t1)}
+    .nav-link.active{background:var(--bg3);color:var(--t1);font-weight:600;border-left:2px solid var(--blue)}
+    .nav-link .icon{font-size:15px;width:18px;flex-shrink:0}
+    .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;font-family:var(--mono)}
+    .nav-divider{height:1px;background:var(--border);margin:10px 6px}
+    .nav-section-lbl{font-family:var(--mono);font-size:9.5px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;padding:10px 12px 4px}
+    #sidenav-user{padding:14px;border-top:1px solid var(--border)}
+    .user-row{display:flex;align-items:center;gap:9px}
+    .user-av{width:30px;height:30px;border-radius:6px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+    .user-name{font-size:12px;font-weight:600}
+    .user-role{font-size:10px;color:var(--t3);font-family:var(--mono);text-transform:uppercase}
+    .logout-btn{margin-top:9px;width:100%;padding:7px;background:none;border:1px solid var(--border);color:var(--t3);font-size:10.5px;transition:all .15s}
+    .logout-btn:hover{color:#fca5a5;border-color:var(--red)}
 
-    /* ── HERO ── */
-    .hero{padding:140px 32px 0;margin-left:28px}
-    @media(max-width:900px){.hero{margin-left:0;padding-top:120px}}
+    #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+    #topbar{padding:16px 28px;background:var(--bg1);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+    #topbar-title{font-weight:800;font-size:17px;letter-spacing:-.2px}
+    #topbar-sub{font-size:11px;color:var(--t3);font-family:var(--mono);margin-top:2px}
+    .live-pill{display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--border);padding:6px 13px;font-size:11px;font-family:var(--mono);border-radius:99px}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
 
-    /* Intelligence Dashboard banner — big bold statement above headline */
-    .hero-intelligence-banner{
-      background:var(--ink);color:var(--paper);
-      padding:18px 32px;margin-bottom:0;
-      display:flex;align-items:center;justify-content:space-between;
-      border-bottom:3px solid var(--blue);
-      margin-left:-32px;margin-right:-32px;
-      flex-wrap:wrap;gap:12px;
-    }
-    .hero-intelligence-banner .banner-headline{
-      font-size:clamp(16px,2vw,22px);font-weight:900;
-      letter-spacing:-0.5px;text-transform:uppercase;
-    }
-    .hero-intelligence-banner .banner-headline span{color:#ffffff}
-    .hero-intelligence-banner .banner-sub{
-      font-family:var(--mono);font-size:11px;color:var(--grey-2);
-      text-transform:uppercase;letter-spacing:1.5px;max-width:420px;line-height:1.5;
-    }
-    @media(max-width:900px){.hero-intelligence-banner{margin-left:0;margin-right:0}}
+    .panel{display:none;flex:1;overflow-y:auto;padding:28px}
+    .panel.active{display:block}
 
-    .hero-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey-3);margin-top:36px;margin-bottom:28px}
-    .hero-eyebrow::before{content:"";width:24px;height:1px;background:var(--blue)}
-    .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:48px}
-    .hero-headline{grid-column:1/9}
-    .hero-headline h1{font-size:clamp(38px,6.4vw,92px);font-weight:900;line-height:0.96;letter-spacing:-2.5px;text-transform:uppercase}
-    .hero-headline h1 .accent{color:var(--blue)}
-    .hero-meta{grid-column:9/13;display:flex;flex-direction:column;gap:18px;padding-bottom:6px}
-    .hero-meta p{font-size:15px;line-height:1.6;color:var(--grey-3);max-width:280px}
-    .hero-specs{font-family:var(--mono);font-size:11px;color:var(--ink);display:flex;flex-direction:column;gap:4px;text-transform:uppercase;letter-spacing:.5px}
-    .hero-specs div{display:flex;justify-content:space-between;border-top:1px solid var(--grey-1);padding-top:4px}
-    @media(max-width:900px){.hero-headline{grid-column:1/13}.hero-meta{grid-column:1/13;padding-top:24px}}
+    /* STAT CARDS */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+    .stat-card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:20px}
+    .stat-val{font-size:28px;font-weight:800;font-family:var(--mono);margin-bottom:4px}
+    .stat-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+    .stat-delta{font-size:10.5px;margin-top:6px;font-family:var(--mono)}
+    .stat-delta.up{color:var(--green)}
 
-    .hero-actions{display:flex;align-items:center;gap:0;margin-top:32px}
-    .btn-primary{background:var(--blue);color:var(--paper);padding:20px 44px;font-family:var(--mono);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;transition:all .15s;border:1px solid var(--blue)}
-    .btn-primary:hover{background:var(--ink);border-color:var(--ink)}
-    .btn-locked{padding:20px 36px;font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--grey-2);border-left:none;color:var(--grey-2);cursor:not-allowed;display:flex;align-items:center;gap:8px}
+    /* TABLE */
+    .table-card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+    .table-card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .table-card-head h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .table-search{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px;color:var(--t1);width:220px}
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:11px 20px;background:var(--bg2);font-family:var(--mono);font-weight:600}
+    td{padding:13px 20px;font-size:12.5px;border-top:1px solid var(--border);vertical-align:middle}
+    tr:hover td{background:var(--bg2)}
+    .cell-mono{font-family:var(--mono);font-size:11.5px;color:var(--t2)}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:10.5px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px}
+    .badge-pending{background:rgba(217,119,6,.15);color:#fbbf24}
+    .badge-approved{background:rgba(0,71,171,.15);color:#60a5fa}
+    .badge-paid{background:rgba(22,163,74,.15);color:#4ade80}
+    .badge-sent{background:rgba(22,163,74,.2);color:#4ade80}
+    .badge-rejected{background:rgba(220,38,38,.15);color:#f87171}
+    .badge-trial{background:rgba(156,163,175,.15);color:#9ca3af}
+    .badge-active{background:rgba(22,163,74,.15);color:#4ade80}
+    .row-btn{padding:5px 13px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid var(--border);background:var(--bg2);color:var(--t1);transition:all .15s;margin-right:6px}
+    .row-btn:hover{background:var(--bg3)}
+    .row-btn.approve{border-color:var(--green);color:#4ade80}
+    .row-btn.approve:hover{background:var(--green);color:#fff}
+    .row-btn.reject{border-color:var(--red);color:#f87171}
+    .row-btn.reject:hover{background:var(--red);color:#fff}
+    .row-btn.view{border-color:var(--blue);color:#60a5fa}
+    .row-btn.view:hover{background:var(--blue);color:#fff}
 
-    /* ── CTA — moved directly after hero ── */
-    .cta-section{background:var(--ink);color:var(--paper);border-bottom:1px solid var(--blue);text-align:center;padding:72px 32px;margin-left:28px}
-    @media(max-width:900px){.cta-section{margin-left:0}}
-    .cta-inner{max-width:640px;margin:0 auto}
-    .cta-inner h2{font-size:clamp(30px,4vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1.8px;line-height:1.08;margin-bottom:18px}
-    .cta-inner h2 .accent{color:var(--blue)}
-    .cta-inner p{color:var(--grey-2);font-size:15px;margin-bottom:36px}
-    .cta-big-btn{background:var(--blue);color:var(--paper);padding:22px 52px;font-family:var(--mono);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s;display:inline-block}
-    .cta-big-btn:hover{background:var(--paper);color:var(--ink)}
-    .cta-sub{margin-top:18px;font-family:var(--mono);font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px}
+    .empty-state{padding:48px 20px;text-align:center;color:var(--t3);font-size:13px}
 
-    .visual-block{margin-top:0;height:380px;position:relative;overflow:hidden;background:var(--ink)}
-    .visual-block .duotone{position:absolute;inset:0;background:repeating-linear-gradient(115deg, transparent 0px, transparent 2px, rgba(0,71,171,.08) 2px, rgba(0,71,171,.08) 3px),radial-gradient(ellipse at 30% 40%, #2a2a2a 0%, #0a0a0a 70%)}
-    .visual-block .box{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:220px;height:220px;border:1px solid rgba(255,255,255,.15)}
-    .visual-block .box::before{content:"";position:absolute;inset:22px;background:linear-gradient(135deg,#0047ab 0%,#001f4d 60%,transparent 100%);opacity:.6}
-    .visual-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:rgba(10,10,10,.55);backdrop-filter:blur(1px)}
-    .visual-lock-icon{font-size:28px}
-    .visual-lock-text{font-family:var(--mono);font-size:12px;color:var(--paper);text-transform:uppercase;letter-spacing:2px}
-    .visual-caption{position:absolute;bottom:20px;left:32px;font-family:var(--mono);font-size:11px;color:var(--paper);text-transform:uppercase;letter-spacing:1px;z-index:2}
+    /* MODAL */
+    #modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+    #modal-overlay.show{display:flex}
+    #modal-card{background:var(--bg1);border:1px solid var(--border);border-radius:14px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto}
+    #modal-head{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    #modal-title{font-size:15px;font-weight:700}
+    #modal-close{background:none;color:var(--t3);font-size:18px;padding:4px}
+    #modal-close:hover{color:var(--t1)}
+    #modal-body{padding:24px}
+    .modal-field{margin-bottom:16px}
+    .modal-field label{display:block;font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+    .modal-field .val{font-size:13.5px;color:var(--t1);background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:10px 13px;word-break:break-word}
+    .modal-actions{display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
 
-    section{margin-left:28px;padding:72px 32px;border-bottom:1px solid var(--ink);position:relative}
-    @media(max-width:900px){section{margin-left:0}}
-    .section-head{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-bottom:48px}
-    .section-num{grid-column:1/2;font-family:var(--mono);font-size:12px;color:var(--blue);font-weight:700}
-    .section-title{grid-column:2/8}
-    .section-title h2{font-size:clamp(26px,3.2vw,44px);font-weight:900;letter-spacing:-1.4px;text-transform:uppercase;line-height:1.05}
-    .section-desc{grid-column:8/13}
-    .section-desc p{font-size:14px;color:var(--grey-3);line-height:1.7}
-    @media(max-width:900px){.section-num{grid-column:1/13;margin-bottom:8px}.section-title{grid-column:1/13}.section-desc{grid-column:1/13;margin-top:16px}}
+    /* LIST MANAGER */
+    .list-card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:12px;display:flex;align-items:center;gap:16px}
+    .list-icon{width:38px;height:38px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+    .list-info{flex:1}
+    .list-name{font-weight:700;font-size:13.5px;margin-bottom:3px}
+    .list-meta{font-size:11px;color:var(--t3);font-family:var(--mono)}
 
-    .usecases-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:0;border-top:1px solid var(--ink)}
-    .usecase{grid-column:span 4;padding:32px 26px;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);min-height:240px;display:flex;flex-direction:column;position:relative;cursor:not-allowed;transition:background .2s}
-    .usecase:hover{background:var(--grey-1)}
-    .usecase:hover .usecase-locktag{opacity:1}
-    .usecase:nth-child(3n){border-right:none}
-    @media(max-width:900px){.usecase{grid-column:span 12;border-right:none}}
-    .usecase-num{font-family:var(--mono);font-size:42px;font-weight:700;color:var(--grey-1);line-height:1;margin-bottom:20px}
-    .usecase h3{font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:-.3px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-    .usecase h3 .lock{font-size:13px}
-    .usecase p{font-size:13px;color:var(--grey-3);line-height:1.6;flex:1}
-    .usecase-locktag{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-3);background:var(--paper);border:1px solid var(--grey-2);padding:3px 9px;opacity:0;transition:opacity .2s}
+    /* MAILING LIST MANAGER — new add-list form */
+    .mlm-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px}
+    .mlm-field label{display:block;font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+    .mlm-field input,.mlm-field select,.mlm-field textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:10px 12px;color:var(--t1);font-size:13px;font-family:var(--sans)}
+    .mlm-field input:focus,.mlm-field select:focus,.mlm-field textarea:focus{outline:none;border-color:var(--blue)}
+    .mlm-field select{appearance:none}
+    .mlm-source-toggle{display:flex;gap:8px;margin-top:6px}
+    .mlm-tab{padding:8px 16px;border-radius:7px;border:1px solid var(--border);background:var(--bg2);color:var(--t2);font-size:12px;transition:all .15s}
+    .mlm-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .upload-zone{border:1.5px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg)}
+    .upload-zone:hover{border-color:var(--blue)}
+    .upload-zone.has-file{border-color:var(--blue);border-style:solid;background:var(--blue-glow)}
+    .upload-zone-text{font-size:12px;color:var(--t2)}
+    .upload-zone-text strong{color:var(--t1)}
+    .cat-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.3px;background:var(--bg2);color:var(--t2);border:1px solid var(--border)}
 
-    .ledger{border-top:1px solid var(--ink)}
-    .ledger-row{display:grid;grid-template-columns:40px 1fr 2fr 110px;gap:24px;padding:16px 0;border-bottom:1px solid var(--grey-1);align-items:center;cursor:not-allowed;transition:background .15s}
-    .ledger-row:hover{background:var(--grey-1)}
-    .ledger-row.head{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-3);padding-bottom:10px;border-bottom:1px solid var(--ink);cursor:default}
-    .ledger-row.head:hover{background:none}
-    @media(max-width:900px){.ledger-row{grid-template-columns:32px 1fr;row-gap:6px}.ledger-row .ledger-desc,.ledger-row .ledger-tag{grid-column:2/3}.ledger-row.head{display:none}}
-    .ledger-icon{font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:700}
-    .ledger-name{font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:-.2px}
-    .ledger-desc{font-size:12.5px;color:var(--grey-3);line-height:1.5}
-    .ledger-tag{font-family:var(--mono);font-size:9.5px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;justify-self:end;border:1px solid var(--grey-2);padding:3px 9px}
+    /* CHANNEL SETUP */
+    .chan-status-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:13px;font-weight:600}
+    .chan-dot{width:9px;height:9px;border-radius:50%;background:var(--t3);flex-shrink:0}
+    .chan-dot.live{background:var(--green)}
+    .chan-dot.off{background:var(--red)}
+    .chan-detail{font-size:12px;color:var(--t2);margin-bottom:8px}
+    .chan-code{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:11px 14px;font-family:var(--mono);font-size:12px;color:var(--blue);word-break:break-all;user-select:all}
+    .chan-env-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+    .chan-env-item{display:flex;justify-content:space-between;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:11.5px}
+    .chan-env-status{color:var(--t3)}
 
-    /* ── LISTS SECTION (Our Lists) ── */
-    .lists-intro{font-family:var(--mono);font-size:12px;color:var(--blue);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
-    .lists-intro::before{content:"";width:20px;height:1px;background:var(--blue)}
-    .lists-tagline{font-size:clamp(18px,2.2vw,26px);font-weight:700;letter-spacing:-.5px;color:var(--ink);max-width:680px;line-height:1.35;margin-bottom:40px;font-style:italic}
-    .lists-two-col{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
-    @media(max-width:760px){.lists-two-col{grid-template-columns:1fr}}
-    .lists-col{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:32px}
-    .lists-col-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:14px}
-    .lists-col-title{font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:-.5px;margin-bottom:8px}
-    .lists-col-desc{font-size:13px;color:var(--grey-3);line-height:1.65;margin-bottom:24px}
-    .lists-cats{display:flex;flex-direction:column;gap:10px}
-    .lists-cat{padding:14px 16px;border:1px solid var(--grey-2);display:flex;align-items:flex-start;gap:12px}
-    .lists-cat-name{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:-.2px;margin-bottom:3px}
-    .lists-cat-sub{font-family:var(--mono);font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
-    .lists-cat-desc{font-size:12px;color:var(--grey-3);line-height:1.5}
-    .lists-cat-num{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--grey-2);flex-shrink:0;width:24px}
-    .lists-cta{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap}
-    .lists-cta a{padding:12px 24px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
-    .lists-cta a:hover{background:var(--ink);color:var(--paper)}
-    .lists-cta a.primary{background:var(--ink);color:var(--paper)}
-    .lists-cta a.primary:hover{background:var(--blue);border-color:var(--blue)}
+    #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);padding:12px 22px;font-size:12.5px;color:var(--t1);opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;border-radius:8px}
+    #toast.show{opacity:1}
 
-    /* ── BROADCAST BANNER ── */
-    .broadcast-banner{background:var(--grey-1);border-bottom:1px solid var(--ink);margin-left:28px;padding:72px 32px}
-    @media(max-width:900px){.broadcast-banner{margin-left:0}}
-    .bb-head{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-bottom:0}
-    .bb-title{grid-column:1/8}
-    .bb-title h2{font-size:clamp(26px,3.2vw,44px);font-weight:900;letter-spacing:-1.4px;text-transform:uppercase;line-height:1.05;margin-bottom:14px}
-    .bb-title .bb-tagline{font-size:14px;color:var(--grey-3);line-height:1.7;font-style:italic;max-width:480px}
-    .bb-stats{grid-column:8/13;display:flex;flex-direction:column;gap:0;border-left:1px solid var(--ink);padding-left:32px}
-    @media(max-width:900px){.bb-title{grid-column:1/13}.bb-stats{grid-column:1/13;border-left:none;padding-left:0;margin-top:32px;border-top:1px solid var(--ink);padding-top:24px}}
-    .bb-stat{padding:18px 0;border-bottom:1px solid var(--grey-2);display:flex;justify-content:space-between;align-items:center}
-    .bb-stat:last-child{border-bottom:none}
-    .bb-stat-num{font-family:var(--mono);font-size:28px;font-weight:900;color:var(--ink)}
-    .bb-stat-lbl{font-family:var(--mono);font-size:10px;color:var(--grey-3);text-transform:uppercase;letter-spacing:.5px;text-align:right}
-    .bb-actions{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap}
-    .bb-actions a{padding:15px 28px;border:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:all .15s}
-    .bb-actions a:hover{background:var(--ink);color:var(--paper)}
-    .bb-actions a.primary{background:var(--ink);color:var(--paper)}
-    .bb-actions a.primary:hover{background:var(--blue);border-color:var(--blue)}
-
-    footer{margin-left:28px;padding:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--grey-3)}
-    @media(max-width:900px){footer{margin-left:0}}
-    .footer-links{display:flex;gap:24px;flex-wrap:wrap}
-    .footer-links a{color:var(--grey-3);transition:color .15s}
-    .footer-links a:hover{color:var(--ink)}
-
-    .fade-in{opacity:0;transform:translateY(16px);animation:fadeIn .7s ease forwards}
-    @keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
-    .d1{animation-delay:.08s}.d2{animation-delay:.16s}
-
-    #lock-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:14px 24px;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.5px;opacity:0;transition:all .25s;pointer-events:none;z-index:200;display:flex;align-items:center;gap:10px;border:1px solid var(--blue)}
-    #lock-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    #lock-toast .lt-icon{color:var(--blue)}
-    /* ── DASHBOARD SLIDER ── */
-    .slider-section{background:var(--paper);color:var(--ink);padding:72px 0 56px;border-bottom:1px solid var(--ink);border-top:1px solid var(--ink);margin-left:28px}
-    @media(max-width:900px){.slider-section{margin-left:0}}
-    .slider-header{text-align:center;padding:0 32px;margin-bottom:40px}
-    .slider-eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:14px}
-    .slider-title{font-size:clamp(26px,3.6vw,42px);font-weight:900;text-transform:uppercase;letter-spacing:-1.5px;line-height:1.08;margin-bottom:12px;color:var(--ink)}
-    .slider-sub{font-size:14px;color:var(--grey-3);max-width:480px;margin:0 auto;line-height:1.6}
-
-    .slider-wrap{position:relative;overflow:hidden;width:100%}
-    .slider-track{display:flex;transition:transform .9s cubic-bezier(.4,0,.2,1);will-change:transform}
-
-    .slide{flex:0 0 100%;padding:0 40px;box-sizing:border-box}
-    .slide-screen{background:#f8f9fb;border:1px solid #d1d5db;border-radius:14px;overflow:hidden;height:460px;display:flex;margin:0 auto;max-width:980px;box-shadow:0 20px 60px rgba(0,0,0,.10)}
-    .ss-sidebar{width:180px;background:#fff;border-right:1px solid #e5e7eb;padding:16px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:2px}
-    .ss-logo{font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:-.3px;color:#0a0a0a;padding:0 6px 14px;border-bottom:1px solid #e5e7eb;margin-bottom:8px}
-    .ss-nav-item{padding:8px 12px;font-size:11px;color:#6b7280;border-radius:7px;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .15s;font-weight:500}
-    .ss-nav-item.active{background:#eef3fb;color:#0047ab;font-weight:700}
-    .ss-main{flex:1;padding:16px;overflow:hidden;display:flex;flex-direction:column;gap:12px}
-    .ss-topbar{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid #e5e7eb;flex-shrink:0}
-    .ss-page-title{font-weight:800;font-size:15px;color:#0a0a0a}
-    .ss-live{font-family:monospace;font-size:10px;color:#16a34a;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
-    .ss-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex-shrink:0}
-    .ss-stat{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 10px}
-    .ss-stat-val{font-size:18px;font-weight:900;font-family:monospace;margin-bottom:4px}
-    .ss-stat-lbl{font-size:9px;color:#6b7280;text-transform:uppercase;letter-spacing:.3px}
-    .ss-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;flex:1;overflow:hidden}
-    .ss-card-title{font-size:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:10px;font-weight:600}
-    .ss-activity-row{display:flex;align-items:center;gap:8px;font-size:11px;color:#374151;padding:5px 0;border-bottom:1px solid #f3f4f6}
-    .ss-activity-row:last-child{border-bottom:none}
-    .ss-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-    .ss-dot.green{background:#16a34a}.ss-dot.blue{background:#0047ab}.ss-dot.yellow{background:#d97706}
-    .ss-conv-item{padding:11px 14px;border-bottom:1px solid #f3f4f6;cursor:default}
-    .ss-conv-item.active{background:#eef3fb}
-    .ss-bubble{max-width:85%;padding:8px 12px;border-radius:10px;font-size:11px;line-height:1.45;color:#0a0a0a}
-    .ss-bubble.in{background:#f3f4f6;align-self:flex-start}
-    .ss-bubble.out{background:#0047ab;color:#fff;align-self:flex-end}
-    .ss-table{display:flex;flex-direction:column;gap:2px}
-    .ss-table-head{display:grid;grid-template-columns:60px 1fr 60px 80px;gap:8px;font-size:9px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;padding:7px 10px;background:#f3f4f6;border-radius:7px}
-    .ss-table-row{display:grid;grid-template-columns:60px 1fr 60px 80px;gap:8px;font-size:11px;color:#374151;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;border-radius:7px;align-items:center}
-    .ss-badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:9px;font-weight:700;font-family:monospace;text-transform:uppercase}
-    .ss-badge.green{background:#dcfce7;color:#16a34a}
-    .ss-badge.blue{background:#dbeafe;color:#1d4ed8}
-    .ss-badge.yellow{background:#fef3c7;color:#d97706}
-    .ss-badge.grey{background:#f3f4f6;color:#6b7280}
-    .ss-product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .ss-product{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden}
-    .ss-product-img{height:56px}
-    .ss-product-name{font-size:10px;font-weight:700;color:#0a0a0a;padding:6px 8px 2px}
-    .ss-product-price{font-size:10px;color:#0047ab;padding:0 8px 6px;font-family:monospace;font-weight:700}
-    .ss-cfg-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:10px;color:#6b7280}
-    .ss-cfg-row:last-child{border-bottom:none}
-    .ss-cfg-row span:last-child{color:#0a0a0a;font-weight:600}
-    .ss-integration-row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:9px 14px}
-    .ss-int-icon{font-size:16px}
-    .ss-int-name{flex:1;font-size:12px;font-weight:600;color:#0a0a0a}
-    .ss-bar-row{display:flex;align-items:center;gap:8px;padding:5px 0}
-    .ss-bar{height:7px;border-radius:4px;transition:width .3s}
-
-    .slide-label{display:flex;align-items:center;gap:12px;padding:22px 8px 0;max-width:980px;margin:0 auto}
-    .slide-icon{font-size:24px}
-    .slide-name{font-weight:800;font-size:17px;text-transform:uppercase;letter-spacing:-.3px;color:var(--ink)}
-    .slide-desc{font-size:12.5px;color:var(--grey-3);margin-left:4px}
-
-    .slider-arrow{position:absolute;top:50%;transform:translateY(-60%);background:var(--paper);border:1px solid var(--ink);color:var(--ink);width:46px;height:46px;border-radius:50%;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;z-index:10;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-    .slider-arrow:hover{background:var(--blue);border-color:var(--blue);color:#fff}
-    .slider-arrow.left{left:10px}
-    .slider-arrow.right{right:10px}
-
-    .slider-dots{display:flex;justify-content:center;gap:6px;padding:20px 0 4px}
-    .slider-dot{width:6px;height:6px;border-radius:50%;background:var(--grey-2);cursor:pointer;transition:all .2s}
-    .slider-dot.active{background:var(--blue);width:22px;border-radius:3px}
-
-    .slider-tabs{display:flex;justify-content:center;gap:0;flex-wrap:wrap;padding:0 32px;margin-top:8px}
-    .slider-tabs button{background:none;border:none;color:var(--grey-3);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;cursor:pointer;transition:all .15s;white-space:nowrap}
-    .slider-tabs button:hover{color:var(--ink)}
-    .slider-tabs button.active{color:var(--blue);border-bottom:2px solid var(--blue)}
+    .proto-banner{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#fbbf24;font-family:var(--mono);display:flex;align-items:center;gap:10px}
   </style>
 </head>
-</head>
 <body>
+<div id="shell">
 
-<div id="ruler">
-  <span>CARTCHAT — GATED ACCESS</span>
-  <span>EST. 2026</span>
-</div>
-
-<nav>
-  <div class="nav-mark">Cart<span class="dot">·</span>Chat</div>
-  <div class="nav-links">
-    <span class="locked-nav">Use Cases</span>
-    <a href="pages/whats-in-it.html">Why CartChat</a>
-    <a href="pages/lists.html">Our Lists</a>
-    <a href="pages/pricing.html">Pricing</a>
-    <a href="pages/broadcast.html" style="color:var(--blue)">Broadcast →</a>
-  </div>
-  <div style="display:flex;align-items:center;gap:12px">
-    <a href="pages/login.html" style="font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--grey-3);transition:color .15s" onmouseover="this.style.color='var(--ink)'" onmouseout="this.style.color='var(--grey-3)'">Sign In</a>
-    <a href="pages/demo-request.html" class="nav-cta">Request a Demo →</a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-
-  <!-- Intelligence Dashboard Banner -->
-  <div class="hero-intelligence-banner">
-    <div class="banner-headline">Signal Through the Noise: <span>Your New Intelligence Dashboard</span></div>
-    <div class="banner-sub">Navigating regional macroeconomics and volatile markets requires precision. You need the signal, not the noise.</div>
-  </div>
-
-  <div class="hero-eyebrow">Built for Online Stores — MENA Region</div>
-  <div class="hero-grid">
-    <div class="hero-headline fade-in">
-      <h1>Not all whatsapps<br/>are born<span class="accent"> equal.</span></h1>
+  <div id="sidenav">
+    <div id="sidenav-logo">
+      <div class="logo">Cart<span>·</span>Chat</div>
+      <div class="tag">Admin Console</div>
     </div>
-    <div class="hero-meta fade-in d1">
-      <p>CartChat answers order questions, shows your catalog, and recovers abandoned carts automatically. See it running on your own store before you commit to anything.</p>
-      <div class="hero-specs">
-        <div><span>Response time</span><span>1.1 sec</span></div>
-        <div><span>Cart recovery</span><span>~18%</span></div>
-        <div><span>Demo access</span><span>24 hrs</span></div>
+    <div id="nav-links">
+      <button class="nav-link active" onclick="switchPanel('overview',this)"><span class="icon">📊</span>Overview</button>
+      <button class="nav-link" onclick="switchPanel('customers',this)"><span class="icon">👥</span>Customers &amp; Leads</button>
+      <button class="nav-link" onclick="switchPanel('payments',this)"><span class="icon">💳</span>Payments<span class="nav-badge" id="badge-payments">0</span></button>
+      <div class="nav-section-lbl">Broadcast Service</div>
+      <button class="nav-link" onclick="switchPanel('orders',this)"><span class="icon">📋</span>Broadcast Orders<span class="nav-badge" id="badge-orders">0</span></button>
+      <button class="nav-link" onclick="switchPanel('lists',this)"><span class="icon">📇</span>Contact Lists</button>
+      <div class="nav-section-lbl">Configuration</div>
+      <button class="nav-link" onclick="switchPanel('channels',this)"><span class="icon">📡</span>Channel Setup</button>
+      <button class="nav-link" onclick="window.open('/pages/sandbox.html','_blank')"><span class="icon">🖥️</span>Live Demo</button>
+    </div>
+    <div id="sidenav-user">
+      <div class="user-row">
+        <div class="user-av" id="admin-av">A</div>
+        <div><div class="user-name" id="admin-name">Admin</div><div class="user-role" id="admin-role">—</div></div>
       </div>
+      <button class="logout-btn" onclick="adminLogout()">Sign Out</button>
     </div>
   </div>
-  <div class="hero-valueprop fade-in d2" style="margin-top:36px;font-size:clamp(20px,2.6vw,32px);font-weight:900;letter-spacing:-1px;line-height:1.12;max-width:860px">Everything you need. One place. <span style="color:var(--blue)">Turn your WhatsApp and SMS/Voice messages into an Autonomous Operational Terminal.</span></div>
-  <div class="hero-actions fade-in d2">
-    <a href="pages/demo-request.html" class="btn-primary">Request a Demo</a>
-    <button class="btn-locked" onclick="showLockToast()">See the Process 🔒</button>
-  </div>
-</div>
 
-<!-- DASHBOARD SLIDER -->
-<div class="slider-section">
-  <div class="slider-header">
-    <div class="slider-eyebrow">Inside the Dashboard</div>
-    <div class="slider-title">Everything you need.<br/>One place.</div>
-    <div style="font-size:clamp(15px,1.8vw,20px);font-weight:600;color:var(--blue);max-width:620px;margin:0 auto 16px;line-height:1.4;letter-spacing:-.2px">Turn your WhatsApp and SMS/Voice messages into an Autonomous Operational Terminal.</div>
-    <div class="slider-sub">Swipe through the full dashboard — from AI conversations to analytics to WhatsApp setup.</div>
-  </div>
+  <div id="main">
+    <div id="topbar">
+      <div><div id="topbar-title">Overview</div><div id="topbar-sub">cartchat.ai admin console</div></div>
+      <div class="live-pill"><div class="live-dot"></div>System Live</div>
+    </div>
 
-  <div class="slider-wrap">
-    <div class="slider-track" id="sliderTrack">
+    <!-- OVERVIEW -->
+    <div class="panel active" id="panel-overview">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="st-customers" style="color:#60a5fa">0</div><div class="stat-lbl">Total Customers</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-revenue" style="color:#4ade80">$0</div><div class="stat-lbl">Total Revenue</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-pending-pay" style="color:#fbbf24">0</div><div class="stat-lbl">Pending Payments</div></div>
+        <div class="stat-card"><div class="stat-val" id="st-pending-orders" style="color:#fbbf24">0</div><div class="stat-lbl">Orders Awaiting Approval</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-card-head"><h3>Recent Activity</h3></div>
+        <div id="activity-feed"></div>
+      </div>
+    </div>
 
-      <!-- SLIDE 1: Overview -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item active">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item">📦 Orders</div>
-            <div class="ss-nav-item">🛍️ Product Catalog</div>
-            <div class="ss-nav-item">🔄 Cart Recovery</div>
-            <div class="ss-nav-item">📣 Social Campaigns</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">Overview</span><span class="ss-live">● Live</span></div>
-            <div class="ss-stats">
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#60a5fa">247</div><div class="ss-stat-lbl">Conversations Today</div></div>
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#4ade80">$1,840</div><div class="ss-stat-lbl">Recovered Revenue</div></div>
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#fbbf24">18%</div><div class="ss-stat-lbl">Cart Recovery Rate</div></div>
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#a78bfa">1.1s</div><div class="ss-stat-lbl">Avg. Response</div></div>
-            </div>
-            <div class="ss-card">
-              <div class="ss-card-title">Recent Activity</div>
-              <div class="ss-activity-row"><span class="ss-dot green"></span>Order #4471 tracked — replied in 0.9s</div>
-              <div class="ss-activity-row"><span class="ss-dot blue"></span>Cart recovery sent to +961 70 *** ***</div>
-              <div class="ss-activity-row"><span class="ss-dot yellow"></span>New product inquiry — Rose Serum</div>
-              <div class="ss-activity-row"><span class="ss-dot green"></span>Return initiated — Order #4438</div>
-            </div>
+    <!-- CUSTOMERS -->
+    <div class="panel" id="panel-customers">
+      <div class="table-card">
+        <div class="table-card-head">
+          <h3>Registered Customers &amp; Leads</h3>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input class="table-search" id="customer-search" placeholder="Search by name or email…" oninput="renderCustomers()"/>
+            <button class="row-btn approve" style="padding:8px 14px;white-space:nowrap" onclick="openCreateUser()">＋ Add Customer</button>
           </div>
         </div>
-        <div class="slide-label"><span class="slide-icon">📊</span><span class="slide-name">Overview</span><span class="slide-desc">Real-time performance at a glance</span></div>
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Store</th><th>Plan</th><th>Status</th><th>Total Spent</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody id="customers-body"></tbody>
+        </table>
       </div>
+    </div>
 
-      <!-- SLIDE 2: Conversations -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item active">💬 Conversations</div>
-            <div class="ss-nav-item">📦 Orders</div>
-            <div class="ss-nav-item">🛍️ Product Catalog</div>
-            <div class="ss-nav-item">🔄 Cart Recovery</div>
-            <div class="ss-nav-item">📣 Social Campaigns</div>
-          </div>
-          <div class="ss-main" style="padding:0">
-            <div class="ss-topbar" style="padding:12px 16px"><span class="ss-page-title">Conversations</span><span class="ss-live">● 3 Active</span></div>
-            <div style="display:flex;height:calc(100% - 40px)">
-              <div style="width:180px;border-right:1px solid #e5e7eb;overflow:hidden">
-                <div class="ss-conv-item active"><div style="font-size:11px;font-weight:700">Dana F.</div><div style="font-size:10px;color:#6b7280">Where's my order? 📦</div></div>
-                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Ahmad K.</div><div style="font-size:10px;color:#6b7280">Do you have the rose serum?</div></div>
-                <div class="ss-conv-item"><div style="font-size:11px;font-weight:700">Sara M.</div><div style="font-size:10px;color:#6b7280">I want to return my order</div></div>
-              </div>
-              <div style="flex:1;padding:12px;display:flex;flex-direction:column;gap:8px">
-                <div class="ss-bubble in">Hi! Where's my order #4471? 😬</div>
-                <div class="ss-bubble out">Hi Dana! 📦 Order #4471 shipped yesterday and is in transit — expected tomorrow by 6 PM. Here's your tracking link!</div>
-                <div class="ss-bubble in">Oh amazing, thank you! 🙏</div>
-                <div class="ss-bubble out">You're welcome! Is there anything else I can help with? 😊</div>
-              </div>
+    <!-- PAYMENTS -->
+    <div class="panel" id="panel-payments">
+      <div class="table-card">
+        <div class="table-card-head"><h3>Payment Receipts &amp; Approvals</h3></div>
+        <table>
+          <thead><tr><th>Customer</th><th>Method</th><th>Amount</th><th>Reference</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
+          <tbody id="payments-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BROADCAST ORDERS -->
+    <div class="panel" id="panel-orders">
+      <div class="table-card">
+        <div class="table-card-head"><h3>Broadcast Orders Queue</h3></div>
+        <table>
+          <thead><tr><th>Customer</th><th>List Type</th><th>List</th><th>Message Preview</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LISTS / MAILING LIST MANAGER -->
+    <div class="panel" id="panel-lists">
+
+      <div class="table-card" style="margin-bottom:24px">
+        <div class="table-card-head"><h3>＋ Add New Mailing List</h3></div>
+        <div style="padding:20px">
+          <div class="mlm-row">
+            <div class="mlm-field">
+              <label>List Name</label>
+              <input type="text" id="seg-name" placeholder="e.g. Active Online Shoppers — UAE"/>
             </div>
+            <div class="mlm-field">
+              <label>Audience Type</label>
+              <select id="seg-type" onchange="refreshCategoryOptions()">
+                <option value="B2C">B2C — Consumer</option>
+                <option value="B2B">B2B — Business</option>
+              </select>
+            </div>
+          </div>
+          <div class="mlm-row">
+            <div class="mlm-field">
+              <label>Segment Category</label>
+              <select id="seg-category"></select>
+            </div>
+            <div class="mlm-field">
+              <label>Notes (internal)</label>
+              <input type="text" id="seg-notes" placeholder="e.g. Sourced from partner event, opted in"/>
+            </div>
+          </div>
+
+          <div class="mlm-source-toggle">
+            <button class="mlm-tab active" data-v="paste" onclick="selectSegSource(this)">Paste Contacts</button>
+            <button class="mlm-tab" data-v="upload" onclick="selectSegSource(this)">Upload CSV / TXT File</button>
+          </div>
+
+          <div id="seg-paste-panel">
+            <div class="mlm-field" style="margin-top:14px">
+              <label>Contacts (one phone number per line)</label>
+              <textarea id="seg-contacts" rows="5" placeholder="+961 70 111 222&#10;+961 71 222 333&#10;+961 76 333 444"></textarea>
+            </div>
+          </div>
+
+          <div id="seg-upload-panel" style="display:none">
+            <div class="upload-zone" id="seg-upload-zone" onclick="document.getElementById('seg-file').click()" style="margin-top:14px">
+              <input type="file" id="seg-file" accept=".csv,.txt" style="display:none" onchange="handleSegFileUpload(this)"/>
+              <div class="upload-zone-text" id="seg-file-label"><strong>Click to upload</strong> a .csv or .txt file — one contact per line</div>
+            </div>
+            <div id="seg-upload-preview" style="display:none;margin-top:10px;font-size:11.5px;color:var(--t2);font-family:var(--mono)"></div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:18px">
+            <button class="row-btn approve" style="padding:9px 22px;font-size:12px" onclick="submitNewSegment()">＋ Add Mailing List</button>
           </div>
         </div>
-        <div class="slide-label"><span class="slide-icon">💬</span><span class="slide-name">Conversations</span><span class="slide-desc">AI replies to every customer in real-time</span></div>
       </div>
 
-      <!-- SLIDE 3: Orders -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item active">📦 Orders</div>
-            <div class="ss-nav-item">🛍️ Product Catalog</div>
-            <div class="ss-nav-item">🔄 Cart Recovery</div>
-            <div class="ss-nav-item">📣 Social Campaigns</div>
+      <div class="table-card">
+        <div class="table-card-head">
+          <h3>House Lists (Managed by You)</h3>
+          <input class="table-search" id="segment-search" placeholder="Search lists…" oninput="renderSegments()"/>
+        </div>
+        <table>
+          <thead><tr><th>List Name</th><th>Type</th><th>Category</th><th>Contacts</th><th>Source</th><th>Added</th><th>Action</th></tr></thead>
+          <tbody id="segments-body"></tbody>
+        </table>
+      </div>
+
+      <div class="table-card" style="margin-top:20px">
+        <div class="table-card-head"><h3>Customer-Submitted Lists</h3></div>
+        <div id="customer-lists"></div>
+      </div>
+    </div>
+
+    <!-- CHANNEL SETUP — Twilio connection status & docs -->
+    <div class="panel" id="panel-channels">
+      <div class="proto-banner">📡 These channels are powered by Twilio — an official Meta Business Solution Provider. Connection status below is informational; actual setup happens in your Vercel Environment Variables and Twilio Console.</div>
+
+      <div class="table-card" style="margin-bottom:20px">
+        <div class="table-card-head"><h3>📱 WhatsApp via Twilio</h3></div>
+        <div style="padding:20px">
+          <div class="chan-status-row">
+            <span class="chan-dot" id="chan-dot-wa"></span>
+            <span id="chan-status-wa">Checking…</span>
           </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">Orders</span><span class="ss-live">247 this month</span></div>
-            <div class="ss-table">
-              <div class="ss-table-head"><span>Order</span><span>Customer</span><span>Amount</span><span>Status</span></div>
-              <div class="ss-table-row"><span>#4471</span><span>Dana F.</span><span>$48</span><span class="ss-badge blue">In Transit</span></div>
-              <div class="ss-table-row"><span>#4470</span><span>Ahmad K.</span><span>$112</span><span class="ss-badge green">Delivered</span></div>
-              <div class="ss-table-row"><span>#4469</span><span>Sara M.</span><span>$67</span><span class="ss-badge yellow">Return</span></div>
-              <div class="ss-table-row"><span>#4468</span><span>Karim R.</span><span>$29</span><span class="ss-badge green">Delivered</span></div>
-              <div class="ss-table-row"><span>#4467</span><span>Lina H.</span><span>$88</span><span class="ss-badge blue">Processing</span></div>
-            </div>
+          <div class="chan-detail">Webhook URL to paste into Twilio Console → Messaging → WhatsApp Senders:</div>
+          <div class="chan-code" id="chan-url-wa">—</div>
+          <div class="chan-detail" style="margin-top:14px">Required Vercel environment variables:</div>
+          <div class="chan-env-list">
+            <div class="chan-env-item"><span>TWILIO_ACCOUNT_SID</span><span class="chan-env-status" id="env-sid">—</span></div>
+            <div class="chan-env-item"><span>TWILIO_AUTH_TOKEN</span><span class="chan-env-status" id="env-token">—</span></div>
+            <div class="chan-env-item"><span>TWILIO_WHATSAPP_NUMBER</span><span class="chan-env-status" id="env-wa">—</span></div>
           </div>
         </div>
-        <div class="slide-label"><span class="slide-icon">📦</span><span class="slide-name">Orders</span><span class="slide-desc">Track and manage every order status</span></div>
       </div>
 
-      <!-- SLIDE 4: Product Catalog -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item">📦 Orders</div>
-            <div class="ss-nav-item active">🛍️ Product Catalog</div>
-            <div class="ss-nav-item">🔄 Cart Recovery</div>
-            <div class="ss-nav-item">📣 Social Campaigns</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">Product Catalog</span><span class="ss-live">48 products</span></div>
-            <div class="ss-product-grid">
-              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"></div><div class="ss-product-name">Rose Serum</div><div class="ss-product-price">$28</div></div>
-              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#0f3460,#533483)"></div><div class="ss-product-name">Glow Oil</div><div class="ss-product-price">$42</div></div>
-              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#1a1a2e,#e94560)"></div><div class="ss-product-name">Night Cream</div><div class="ss-product-price">$55</div></div>
-              <div class="ss-product"><div class="ss-product-img" style="background:linear-gradient(135deg,#2d6a4f,#40916c)"></div><div class="ss-product-name">Toner</div><div class="ss-product-price">$22</div></div>
-            </div>
-            <div style="font-size:10px;color:#6b7280;margin-top:10px;font-family:monospace;text-transform:uppercase;letter-spacing:.5px">AI recommends these based on customer queries</div>
+      <div class="table-card" style="margin-bottom:20px">
+        <div class="table-card-head"><h3>💬 SMS via Twilio</h3></div>
+        <div style="padding:20px">
+          <div class="chan-detail">Webhook URL to paste into Twilio Console → Phone Numbers → your number → "A message comes in":</div>
+          <div class="chan-code" id="chan-url-sms">—</div>
+          <div class="chan-detail" style="margin-top:14px">Required Vercel environment variable:</div>
+          <div class="chan-env-list">
+            <div class="chan-env-item"><span>TWILIO_SMS_NUMBER</span><span class="chan-env-status" id="env-sms">—</span></div>
           </div>
         </div>
-        <div class="slide-label"><span class="slide-icon">🛍️</span><span class="slide-name">Product Catalog</span><span class="slide-desc">AI browses and recommends for every customer</span></div>
       </div>
 
-      <!-- SLIDE 5: Cart Recovery -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item">📦 Orders</div>
-            <div class="ss-nav-item">🛍️ Product Catalog</div>
-            <div class="ss-nav-item active">🔄 Cart Recovery</div>
-            <div class="ss-nav-item">📣 Social Campaigns</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">Cart Recovery</span><span class="ss-live" style="color:#4ade80">18% recovered</span></div>
-            <div class="ss-stats" style="grid-template-columns:1fr 1fr;margin-bottom:12px">
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#4ade80">$1,840</div><div class="ss-stat-lbl">Revenue Recovered</div></div>
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#60a5fa">63</div><div class="ss-stat-lbl">Carts Recovered</div></div>
-            </div>
-            <div class="ss-card">
-              <div class="ss-card-title">Latest Recovery Messages Sent</div>
-              <div class="ss-activity-row"><span class="ss-dot green"></span>+961 70 *** *** — $48 cart — Opened ✓</div>
-              <div class="ss-activity-row"><span class="ss-dot yellow"></span>+961 71 *** *** — $112 cart — Sent</div>
-              <div class="ss-activity-row"><span class="ss-dot green"></span>+961 76 *** *** — $29 cart — Purchased ✓</div>
-            </div>
-          </div>
+      <div class="table-card" style="margin-bottom:20px">
+        <div class="table-card-head"><h3>📞 Voice via Twilio</h3></div>
+        <div style="padding:20px">
+          <div class="chan-detail">Webhook URL to paste into Twilio Console → Phone Numbers → your number → "A call comes in":</div>
+          <div class="chan-code" id="chan-url-voice">—</div>
+          <div class="chan-detail" style="margin-top:14px">Calls your AI agent answers automatically using speech recognition + text-to-speech. No extra environment variables beyond ANTHROPIC_API_KEY.</div>
         </div>
-        <div class="slide-label"><span class="slide-icon">🔄</span><span class="slide-name">Cart Recovery</span><span class="slide-desc">Automatic WhatsApp follow-ups for abandoned carts</span></div>
       </div>
 
-      <!-- SLIDE 6: Social Campaigns -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item">📦 Orders</div>
-            <div class="ss-nav-item">🛍️ Product Catalog</div>
-            <div class="ss-nav-item">🔄 Cart Recovery</div>
-            <div class="ss-nav-item active">📣 Social Campaigns</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">Social Campaigns</span></div>
-            <div class="ss-card" style="margin-bottom:10px">
-              <div class="ss-card-title">Generate Campaign Post</div>
-              <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:9px 12px;font-size:11px;color:#374151;margin-bottom:8px">Summer Glow Collection Launch →</div>
-              <div style="background:#eef3fb;border:1px solid #bfdbfe;border-radius:8px;padding:11px 13px;font-size:11px;color:#1d4ed8;line-height:1.55">✨ Summer Glow is HERE! Our bestselling Rose Serum + Glow Oil bundle is now 20% off for 48 hours only. Limited stock — tap the link to shop now! 🌹<br/><br/>#LumiereBeauty #SummerGlow #SkincareMENA</div>
+      <div class="table-card">
+        <div class="table-card-head"><h3>🧪 Send a Test Message</h3></div>
+        <div style="padding:20px">
+          <div class="mlm-row">
+            <div class="mlm-field">
+              <label>Channel</label>
+              <select id="test-channel"><option value="whatsapp">WhatsApp</option><option value="sms">SMS</option></select>
             </div>
-            <div style="display:flex;gap:6px">
-              <div style="flex:1;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:9px;font-size:10px;color:#374151;text-align:center;font-weight:600">📸 Instagram</div>
-              <div style="flex:1;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:9px;font-size:10px;color:#374151;text-align:center;font-weight:600">👤 Facebook</div>
-              <div style="flex:1;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;padding:9px;font-size:10px;color:#374151;text-align:center;font-weight:600">🎵 TikTok</div>
+            <div class="mlm-field">
+              <label>To (phone number, e.g. +96170123456)</label>
+              <input type="text" id="test-to" placeholder="+96170123456"/>
             </div>
           </div>
+          <div class="mlm-field" style="margin-bottom:14px">
+            <label>Message</label>
+            <textarea id="test-message" rows="2" placeholder="This is a test message from CartChat via Twilio."></textarea>
+          </div>
+          <button class="row-btn approve" style="padding:9px 22px;font-size:12px" onclick="sendTestMessage()">Send Test Message</button>
+          <div id="test-result" style="margin-top:12px;font-size:12.5px;font-family:var(--mono)"></div>
         </div>
-        <div class="slide-label"><span class="slide-icon">📣</span><span class="slide-name">Social Campaigns</span><span class="slide-desc">AI-generated posts for Instagram, Facebook, TikTok</span></div>
       </div>
+    </div>
 
-      <!-- SLIDE 7: Analytics -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item">📦 Orders</div>
-            <div class="ss-nav-item">🛍️ Product Catalog</div>
-            <div class="ss-nav-item active">📈 Analytics</div>
-            <div class="ss-nav-item">⚙️ AI Config</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">Analytics</span><span class="ss-live">Last 30 days</span></div>
-            <div class="ss-stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#4ade80;font-size:18px">↑ 34%</div><div class="ss-stat-lbl">Response Rate</div></div>
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#60a5fa;font-size:18px">4.8★</div><div class="ss-stat-lbl">Satisfaction</div></div>
-              <div class="ss-stat"><div class="ss-stat-val" style="color:#fbbf24;font-size:18px">92%</div><div class="ss-stat-lbl">Resolved by AI</div></div>
-            </div>
-            <div class="ss-card">
-              <div class="ss-card-title">Top Queries This Month</div>
-              <div class="ss-bar-row"><span style="font-size:11px;width:110px;color:#374151">Order tracking</span><div class="ss-bar" style="width:80%;background:#0047ab"></div><span style="font-size:11px;color:#374151;font-weight:700">312</span></div>
-              <div class="ss-bar-row"><span style="font-size:11px;width:110px;color:#374151">Product price</span><div class="ss-bar" style="width:55%;background:#6b9ef4"></div><span style="font-size:11px;color:#374151;font-weight:700">214</span></div>
-              <div class="ss-bar-row"><span style="font-size:11px;width:110px;color:#374151">Returns</span><div class="ss-bar" style="width:30%;background:#a5c0f8"></div><span style="font-size:11px;color:#374151;font-weight:700">118</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="slide-label"><span class="slide-icon">📈</span><span class="slide-name">Analytics</span><span class="slide-desc">Peak hours, top queries, sentiment, response time</span></div>
-      </div>
-
-      <!-- SLIDE 8: AI Agent Config -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item">📦 Orders</div>
-            <div class="ss-nav-item">🛍️ Product Catalog</div>
-            <div class="ss-nav-item active">⚙️ AI Config</div>
-            <div class="ss-nav-item">🔌 Integrations</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">AI Agent Config</span></div>
-            <div class="ss-card" style="margin-bottom:10px">
-              <div class="ss-card-title">Store Identity</div>
-              <div class="ss-cfg-row"><span>Store Name</span><span>Lumière Beauty Store</span></div>
-              <div class="ss-cfg-row"><span>Persona</span><span>Warm, expert, bilingual</span></div>
-              <div class="ss-cfg-row"><span>Language</span><span>Arabic + English (auto)</span></div>
-            </div>
-            <div class="ss-card">
-              <div class="ss-card-title">Policies</div>
-              <div class="ss-cfg-row"><span>Shipping</span><span>Free over $50</span></div>
-              <div class="ss-cfg-row"><span>Returns</span><span>14 days, no questions</span></div>
-              <div class="ss-cfg-row"><span>Support Hours</span><span>AI: 24/7 · Human: 9–6</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="slide-label"><span class="slide-icon">⚙️</span><span class="slide-name">AI Agent Config</span><span class="slide-desc">Set your store identity, policies, and AI personality</span></div>
-      </div>
-
-      <!-- SLIDE 9: Integrations -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item active">🔌 Integrations</div>
-            <div class="ss-nav-item">📱 WhatsApp Setup</div>
-            <div class="ss-nav-item">⚙️ AI Config</div>
-            <div class="ss-nav-item">📈 Analytics</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">Integrations</span></div>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <div class="ss-integration-row"><span class="ss-int-icon">🛒</span><span class="ss-int-name">Shopify</span><span class="ss-badge green">Connected</span></div>
-              <div class="ss-integration-row"><span class="ss-int-icon">🌐</span><span class="ss-int-name">WooCommerce</span><span class="ss-badge grey">Not connected</span></div>
-              <div class="ss-integration-row"><span class="ss-int-icon">📦</span><span class="ss-int-name">Aramex</span><span class="ss-badge green">Connected</span></div>
-              <div class="ss-integration-row"><span class="ss-int-icon">🚚</span><span class="ss-int-name">DHL Express</span><span class="ss-badge grey">Not connected</span></div>
-              <div class="ss-integration-row"><span class="ss-int-icon">💳</span><span class="ss-int-name">Stripe</span><span class="ss-badge green">Connected</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="slide-label"><span class="slide-icon">🔌</span><span class="slide-name">Integrations</span><span class="slide-desc">Shopify, WooCommerce, couriers, payments</span></div>
-      </div>
-
-      <!-- SLIDE 10: WhatsApp Setup -->
-      <div class="slide">
-        <div class="slide-screen">
-          <div class="ss-sidebar">
-            <div class="ss-logo">Cart·Chat</div>
-            <div class="ss-nav-item">📊 Overview</div>
-            <div class="ss-nav-item">💬 Conversations</div>
-            <div class="ss-nav-item">🔌 Integrations</div>
-            <div class="ss-nav-item active">📱 WhatsApp</div>
-            <div class="ss-nav-item">⚙️ AI Config</div>
-            <div class="ss-nav-item">📈 Analytics</div>
-          </div>
-          <div class="ss-main">
-            <div class="ss-topbar"><span class="ss-page-title">WhatsApp Setup</span></div>
-            <div class="ss-card" style="margin-bottom:10px">
-              <div class="ss-card-title">Connected Numbers</div>
-              <div class="ss-cfg-row"><span>+961 70 XXX XXX</span><span class="ss-badge green">Active</span></div>
-              <div class="ss-cfg-row"><span>+961 71 XXX XXX</span><span class="ss-badge blue">Pending</span></div>
-            </div>
-            <div class="ss-card">
-              <div class="ss-card-title">Channel Status</div>
-              <div class="ss-cfg-row"><span>📱 WhatsApp</span><span class="ss-badge green">● Live</span></div>
-              <div class="ss-cfg-row"><span>💬 SMS</span><span class="ss-badge green">● Live</span></div>
-              <div class="ss-cfg-row"><span>📞 Voice IVR</span><span class="ss-badge green">● Live</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="slide-label"><span class="slide-icon">📱</span><span class="slide-name">WhatsApp Setup</span><span class="slide-desc">Manage your numbers, SMS, and Voice channels</span></div>
-      </div>
-
-    </div><!-- end slider-track -->
-
-    <!-- Navigation arrows -->
-    <button class="slider-arrow left" id="sliderPrev" onclick="slideMove(-1)">‹</button>
-    <button class="slider-arrow right" id="sliderNext" onclick="slideMove(1)">›</button>
-  </div>
-
-  <!-- Dot indicators -->
-  <div class="slider-dots" id="sliderDots"></div>
-
-  <!-- Tab nav below slider -->
-  <div class="slider-tabs" id="sliderTabs">
-    <button onclick="slideTo(0)">📊 Overview</button>
-    <button onclick="slideTo(1)">💬 Conversations</button>
-    <button onclick="slideTo(2)">📦 Orders</button>
-    <button onclick="slideTo(3)">🛍️ Catalog</button>
-    <button onclick="slideTo(4)">🔄 Recovery</button>
-    <button onclick="slideTo(5)">📣 Social</button>
-    <button onclick="slideTo(6)">📈 Analytics</button>
-    <button onclick="slideTo(7)">⚙️ AI Config</button>
-    <button onclick="slideTo(8)">🔌 Integrations</button>
-    <button onclick="slideTo(9)">📱 WhatsApp</button>
-  </div>
-
-  <div style="text-align:center;margin-top:28px">
-    <a href="pages/demo-request.html" style="display:inline-block;padding:18px 44px;background:var(--blue);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;border:1px solid var(--blue);transition:all .15s" onmouseover="this.style.background='var(--ink)';this.style.borderColor='var(--ink)'" onmouseout="this.style.background='var(--blue)';this.style.borderColor='var(--blue)'">Get Your Own Dashboard →</a>
   </div>
 </div>
 
-<!-- VISUAL -->
-<!-- FEATURES LEDGER -->
-<section id="features">
-  <div class="section-head">
-    <div class="section-num">02</div>
-    <div class="section-title"><h2>Full specification.</h2></div>
-    <div class="section-desc"><p>Every capability included in the Growth plan. Unlock full interaction inside your sandbox.</p></div>
-  </div>
-  <div class="ledger">
-    <div class="ledger-row head"><div></div><div>Capability</div><div>Description</div><div>Access</div></div>
-    <div class="ledger-row" onclick="showLockToast()"><div class="ledger-icon">01</div><div class="ledger-name">Order Tracking</div><div class="ledger-desc">Real-time shipment status pulled from your store or courier, shared instantly.</div><div class="ledger-tag">🔒 Locked</div></div>
-    <div class="ledger-row" onclick="showLockToast()"><div class="ledger-icon">02</div><div class="ledger-name">Product Recs</div><div class="ledger-desc">AI suggests products based on what customers ask for, like a shop assistant.</div><div class="ledger-tag">🔒 Locked</div></div>
-    <div class="ledger-row" onclick="showLockToast()"><div class="ledger-icon">03</div><div class="ledger-name">Cart Recovery</div><div class="ledger-desc">Automatic, personalized WhatsApp follow-ups for incomplete checkouts.</div><div class="ledger-tag">🔒 Locked</div></div>
-    <div class="ledger-row" onclick="showLockToast()"><div class="ledger-icon">04</div><div class="ledger-name">Arabic &amp; English</div><div class="ledger-desc">Automatic language detection and response in the customer's language.</div><div class="ledger-tag">🔒 Locked</div></div>
-    <div class="ledger-row" onclick="showLockToast()"><div class="ledger-icon">05</div><div class="ledger-name">Returns &amp; Refunds</div><div class="ledger-desc">AI walks customers through your return policy and initiates requests.</div><div class="ledger-tag">🔒 Locked</div></div>
-    <div class="ledger-row" onclick="showLockToast()"><div class="ledger-icon">06</div><div class="ledger-name">Social Campaigns</div><div class="ledger-desc">Generate Instagram, Facebook, and TikTok posts for new drops in one click.</div><div class="ledger-tag">🔒 Locked</div></div>
-  </div>
-</section>
+<!-- MODAL -->
 
-<!-- OUR LISTS — B2B/B2C Segment Section -->
-<section id="our-lists">
-  <div class="section-head">
-    <div class="section-num">03</div>
-    <div class="section-title"><h2>Our Lists.<br/>Your audience.</h2></div>
-    <div class="section-desc"><p>Pre-built, precision-segmented B2B and B2C contact lists. Choose the audience that fits your message — or submit your own.</p></div>
-  </div>
-
-  <div class="lists-intro">Audience Intelligence</div>
-  <div class="lists-tagline">"Navigating regional macroeconomics and volatile markets requires precision. You need the signal, not the noise."</div>
-
-  <div class="lists-two-col">
-    <!-- B2B -->
-    <div class="lists-col">
-      <div class="lists-col-label">B2B — The Strategic Ecosystem</div>
-      <div class="lists-col-title">Business Lists</div>
-      <div class="lists-col-desc">B2B segmentation focuses on logic, ROI, and organizational structures. These lists are typically used for partnership building, capital raising, and enterprise sales.</div>
-      <div class="lists-cats">
-        <div class="lists-cat">
-          <div class="lists-cat-num">01</div>
-          <div>
-            <div class="lists-cat-name">Firmographic</div>
-            <div class="lists-cat-sub">Company Attributes</div>
-            <div class="lists-cat-desc">Industry vertical, headcount, revenue, geographic focus (MENA, GCC), or operating model (NGO vs. corporate).</div>
-          </div>
-        </div>
-        <div class="lists-cat">
-          <div class="lists-cat-num">02</div>
-          <div>
-            <div class="lists-cat-name">Technographic</div>
-            <div class="lists-cat-sub">Technology Stack</div>
-            <div class="lists-cat-desc">Legacy vs. cloud-native. Companies integrating Agentic AI workflows and multi-agent systems.</div>
-          </div>
-        </div>
-        <div class="lists-cat">
-          <div class="lists-cat-num">03</div>
-          <div>
-            <div class="lists-cat-name">Persona &amp; Role-Based</div>
-            <div class="lists-cat-sub">The Decision Makers</div>
-            <div class="lists-cat-desc">Diaspora investors, policy directors, C-suite executives, university innovation scouts.</div>
-          </div>
-        </div>
-        <div class="lists-cat">
-          <div class="lists-cat-num">04</div>
-          <div>
-            <div class="lists-cat-name">Intent &amp; Lifecycle</div>
-            <div class="lists-cat-sub">Active Behavior Now</div>
-            <div class="lists-cat-desc">Early-stage ventures seeking sandboxes, recently funded companies, enterprises scaling internationally.</div>
-          </div>
-        </div>
-      </div>
-      <div class="lists-cta">
-        <a href="pages/lists.html" class="primary">Explore B2B Lists →</a>
-        <a href="pages/broadcast-order.html?type=B2B">Order a Broadcast</a>
-      </div>
-    </div>
-
-    <!-- B2C -->
-    <div class="lists-col">
-      <div class="lists-col-label">B2C — The Consumer Audience</div>
-      <div class="lists-col-title">Consumer Lists</div>
-      <div class="lists-col-desc">B2C segmentation relies on behavior, identity, and engagement rhythms. These lists drive direct sales, subscriptions, and brand loyalty.</div>
-      <div class="lists-cats">
-        <div class="lists-cat">
-          <div class="lists-cat-num">01</div>
-          <div>
-            <div class="lists-cat-name">Demographic &amp; Geographic</div>
-            <div class="lists-cat-sub">Fundamental Descriptors</div>
-            <div class="lists-cat-desc">Age brackets, income, education, Beirut residents vs. international diaspora.</div>
-          </div>
-        </div>
-        <div class="lists-cat">
-          <div class="lists-cat-num">02</div>
-          <div>
-            <div class="lists-cat-name">Behavioral &amp; Engagement</div>
-            <div class="lists-cat-sub">Platform Interaction</div>
-            <div class="lists-cat-desc">Daily news readers, cart abandoners, inactive subscribers, highly engaged content advocates.</div>
-          </div>
-        </div>
-        <div class="lists-cat">
-          <div class="lists-cat-num">03</div>
-          <div>
-            <div class="lists-cat-name">Psychographic</div>
-            <div class="lists-cat-sub">Interests &amp; Lifestyles</div>
-            <div class="lists-cat-desc">Early tech adopters, smart-citizenship advocates, artisanal product buyers, sports fans.</div>
-          </div>
-        </div>
-        <div class="lists-cat">
-          <div class="lists-cat-num">04</div>
-          <div>
-            <div class="lists-cat-name">Transactional &amp; Geospatial</div>
-            <div class="lists-cat-sub">Purchase &amp; Location</div>
-            <div class="lists-cat-desc">High-frequency buyers, seasonal purchasers, foot-traffic segments for localized activations.</div>
-          </div>
-        </div>
-      </div>
-      <div class="lists-cta">
-        <a href="pages/lists.html" class="primary">Explore B2C Lists →</a>
-        <a href="pages/broadcast-order.html?type=B2C">Order a Broadcast</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA — after Our Lists -->
-<div class="cta-section">
-  <div class="cta-inner">
-    <h2>Stop reading about it.<br/>Talk to your<span class="accent"> ai salesperson.</span></h2>
-    <p>Two-minute qualifier form. Instant 24-hour sandbox. No credit card required.</p>
-    <a href="pages/demo-request.html" class="cta-big-btn">Request a Demo</a>
-    <div class="cta-sub">100% free for 24 hours · Configured for your store</div>
+<div id="modal-overlay">
+  <div id="modal-card">
+    <div id="modal-head"><div id="modal-title">Details</div><button id="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modal-body"></div>
   </div>
 </div>
 
-<!-- BROADCAST SERVICE BANNER -->
-<div class="broadcast-banner">
-  <div class="bb-head section-head" style="margin-bottom:0">
-    <div class="bb-title" style="grid-column:1/8">
-      <h2>Build your own list.<br/>Or use ours.</h2>
-      <div class="bb-tagline">"Navigating regional macroeconomics and volatile markets requires precision. You need the signal, not the noise."</div>
-      <div class="bb-actions" style="margin-top:28px">
-        <a href="pages/lists.html" class="primary">Browse All Lists →</a>
-        <a href="pages/segments.html">Segment Guide</a>
-        <a href="pages/broadcast.html">Start a Broadcast</a>
-      </div>
-    </div>
-    <div class="bb-stats" style="grid-column:9/13">
-      <div class="bb-stat">
-        <div class="bb-stat-num">$29</div>
-        <div class="bb-stat-lbl">First Broadcast</div>
-      </div>
-      <div class="bb-stat">
-        <div class="bb-stat-num">-10%</div>
-        <div class="bb-stat-lbl">Every Broadcast After</div>
-      </div>
-      <div class="bb-stat">
-        <div class="bb-stat-num">24h</div>
-        <div class="bb-stat-lbl">Review Turnaround</div>
-      </div>
-      <div class="bb-stat">
-        <div class="bb-stat-num">B2B+B2C</div>
-        <div class="bb-stat-lbl">Segment Coverage</div>
-      </div>
-    </div>
-  </div>
-</div>
+<div id="toast"></div>
 
-<footer>
-  <div>Cart·Chat — © 2026</div>
-  <div class="footer-links">
-    <a href="pages/about.html">About</a>
-    <a href="pages/faq.html">FAQ</a>
-    <a href="pages/lists.html">Our Lists</a>
-    <a href="pages/pricing.html">Pricing</a>
-    <a href="pages/privacy.html">Privacy</a>
-    <a href="pages/terms.html">Terms</a>
-    <a href="pages/acceptable-use.html">Acceptable Use</a>
-    <a href="pages/demo-request.html">Request a Demo</a>
-  </div>
-</footer>
-
-<div id="lock-toast"><span class="lt-icon">🔒</span><span>This feature unlocks inside your 24-hour demo — request access above</span></div>
-
+<script src="/admin/data.js"></script>
 <script>
-let toastTimer;
-function showLockToast() {
-  const t = document.getElementById("lock-toast");
-  t.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove("show"), 3200);
+// ── Auth guard ──────────────────────────────────────────────────────────────
+const adminToken = localStorage.getItem("cc_admin_token");
+const adminUser  = JSON.parse(localStorage.getItem("cc_admin_user") || "null");
+if (!adminToken || !adminUser) { window.location.href = "/admin/login.html"; }
+
+if (adminUser) {
+  document.getElementById("admin-name").textContent = adminUser.name || "Admin";
+  document.getElementById("admin-role").textContent = (adminUser.role || "admin").replace("_"," ");
+  document.getElementById("admin-av").textContent = (adminUser.name||"A").charAt(0).toUpperCase();
 }
-document.querySelectorAll(".locked-nav").forEach(el => el.addEventListener("click", showLockToast));
 
-// ── Dashboard Slider ──────────────────────────────────────────────────────────
-let currentSlide = 0;
-const totalSlides = 10;
+function adminLogout() { localStorage.removeItem("cc_admin_token"); localStorage.removeItem("cc_admin_user"); window.location.href = "/admin/login.html"; }
 
-function buildDots() {
-  const dotsEl = document.getElementById("sliderDots");
-  dotsEl.innerHTML = "";
-  for (let i = 0; i < totalSlides; i++) {
-    const d = document.createElement("div");
-    d.className = "slider-dot" + (i === currentSlide ? " active" : "");
-    d.onclick = () => slideTo(i);
-    dotsEl.appendChild(d);
+// ── Live data layer (Supabase via /api/admin/*) ────────────────────────────────
+// LIVE holds customers/leads/payments/broadcasts/orders fetched from the server.
+// Contact lists & segments remain in the local AdminData store for now.
+let LIVE = { customers: [], leads: [], payments: [], broadcasts: [], orders: [] };
+
+async function apiGet(path) {
+  const res = await fetch(path, { headers: { Authorization: `Bearer ${adminToken}` } });
+  if (res.status === 401) { adminLogout(); throw new Error("Session expired"); }
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Request failed");
+  return data;
+}
+async function apiPost(path, body) {
+  const res = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 401) { adminLogout(); throw new Error("Session expired"); }
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Request failed");
+  return data;
+}
+
+async function loadLiveData() {
+  const d = await apiGet("/api/admin/data");
+  LIVE = d;
+}
+
+// Payment verified => "paid" money counts; broadcast pending_review => needs action.
+const PAY_BADGE   = { pending_review: "pending", verified: "paid", rejected: "rejected" };
+const BCAST_BADGE = { pending_review: "pending", approved: "approved", sent: "sent", rejected: "rejected" };
+function payAmount(p) { return Number(p.amount_usd ?? p.raw?.amount ?? 0); }
+function bestName(email, fallback) {
+  const c = LIVE.customers.find(x => (x.email || "").toLowerCase() === (email || "").toLowerCase());
+  return c?.name || fallback || (email || "—").split("@")[0];
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove("show"), 2400);
+}
+function escH(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtDate(ts){ return new Date(ts).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+function fmtMoney(n){ return "$"+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+const panelTitles = {overview:"Overview",customers:"Customers & Leads",payments:"Payments",orders:"Broadcast Orders",lists:"Contact Lists",channels:"Channel Setup"};
+function switchPanel(name, btn) {
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-link").forEach(b=>b.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  if (btn) btn.classList.add("active");
+  document.getElementById("topbar-title").textContent = panelTitles[name]||name;
+  if (name === "channels") renderChannelSetup();
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+function openModal(title, bodyHtml) {
+  document.getElementById("modal-title").textContent = title;
+  document.getElementById("modal-body").innerHTML = bodyHtml;
+  document.getElementById("modal-overlay").classList.add("show");
+}
+function closeModal() { document.getElementById("modal-overlay").classList.remove("show"); }
+document.getElementById("modal-overlay").addEventListener("click", e => { if (e.target.id === "modal-overlay") closeModal(); });
+
+// ── Render: Overview ───────────────────────────────────────────────────────────
+function renderOverview() {
+  const merchants = LIVE.customers.filter(c => c.role === "merchant" || !c.role);
+  const revenue   = LIVE.payments.filter(p => p.status === "verified").reduce((s,p) => s + payAmount(p), 0);
+  const pendPay   = LIVE.payments.filter(p => p.status === "pending_review").length;
+  const pendBcast = LIVE.broadcasts.filter(o => o.status === "pending_review").length;
+  document.getElementById("st-customers").textContent = merchants.length;
+  document.getElementById("st-revenue").textContent = fmtMoney(revenue);
+  document.getElementById("st-pending-pay").textContent = pendPay;
+  document.getElementById("st-pending-orders").textContent = pendBcast;
+  document.getElementById("badge-payments").textContent = pendPay;
+  document.getElementById("badge-orders").textContent = pendBcast;
+
+  const feed = document.getElementById("activity-feed");
+  const events = [
+    ...merchants.map(c=>({type:"customer", time:+new Date(c.created_at), text:`New customer account: ${c.name} (${c.store||"no store set"})`})),
+    ...LIVE.leads.map(l=>({type:"customer", time:+new Date(l.created_at), text:`New demo lead: ${l.name||l.email} (${l.business})`})),
+    ...LIVE.payments.map(p=>({type:"payment", time:+new Date(p.created_at), text:`Payment ${PAY_BADGE[p.status]||p.status} — ${fmtMoney(payAmount(p))} via ${p.method} from ${p.customer_email}`})),
+    ...LIVE.broadcasts.map(o=>({type:"order", time:+new Date(o.created_at), text:`Broadcast order ${BCAST_BADGE[o.status]||o.status} from ${o.customer_email}`})),
+  ].sort((a,b)=>b.time-a.time).slice(0,10);
+
+  if (!events.length) { feed.innerHTML = `<div class="empty-state">No activity yet</div>`; return; }
+  feed.innerHTML = events.map(e => `
+    <table style="margin:0"><tr><td style="border-top:1px solid var(--border)">
+      <span style="margin-right:10px">${e.type==="customer"?"👤":e.type==="payment"?"💳":"📋"}</span>
+      ${escH(e.text)}
+      <span style="float:right;color:var(--t3);font-family:var(--mono);font-size:11px">${fmtDate(e.time)}</span>
+    </td></tr></table>
+  `).join("");
+}
+
+// ── Render: Customers ──────────────────────────────────────────────────────────
+function renderCustomers() {
+  const q = (document.getElementById("customer-search").value || "").toLowerCase();
+  const body = document.getElementById("customers-body");
+
+  const spentBy = {};
+  LIVE.payments.filter(p=>p.status==="verified").forEach(p=>{
+    const k=(p.customer_email||"").toLowerCase(); spentBy[k]=(spentBy[k]||0)+payAmount(p);
+  });
+
+  const merchants = LIVE.customers
+    .filter(c => c.role === "merchant" || !c.role)
+    .map(c => ({ kind:"account", id:c.id, name:c.name||"—", email:c.email||"—", store:c.store||"—",
+                 plan:c.plan||"trial", status:"active", spent:spentBy[(c.email||"").toLowerCase()]||0, joined:c.created_at }));
+  const leads = LIVE.leads
+    .filter(l => !LIVE.customers.some(c => (c.email||"").toLowerCase() === (l.email||"").toLowerCase()))
+    .map(l => ({ kind:"lead", id:l.id, name:l.name||"—", email:l.email, store:l.business||"—",
+                 plan:"—", status:l.status||"new", spent:0, joined:l.created_at, phone:l.phone }));
+
+  const rows = [...merchants, ...leads]
+    .filter(c => !q || c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q))
+    .sort((a,b)=>+new Date(b.joined)-+new Date(a.joined));
+
+  if (!rows.length) { body.innerHTML = `<tr><td colspan="8" class="empty-state">No customers found</td></tr>`; return; }
+  body.innerHTML = rows.map(c => `
+    <tr>
+      <td><strong>${escH(c.name)}</strong></td>
+      <td class="cell-mono">${escH(c.email)}</td>
+      <td>${escH(c.store)}</td>
+      <td><span class="badge badge-trial">${escH(c.plan)}</span></td>
+      <td><span class="badge badge-${c.kind==="account"?"paid":"pending"}">${c.kind==="account"?"account":"lead · "+escH(c.status)}</span></td>
+      <td class="cell-mono">${fmtMoney(c.spent)}</td>
+      <td class="cell-mono">${fmtDate(c.joined)}</td>
+      <td>${c.kind==="lead"
+            ? `<button class="row-btn approve" onclick="openCreateUser('${escH(c.email)}','${escH(c.name)}','${escH(c.store)}')">Open Account</button>`
+            : `<button class="row-btn view" onclick="openChangePlan('${c.id}','${escH(c.plan)}','${escH(c.name)}')">Plan</button>`}</td>
+    </tr>
+  `).join("");
+}
+
+// ── Render: Payments ────────────────────────────────────────────────────────────
+function renderPayments() {
+  const body = document.getElementById("payments-body");
+  if (!LIVE.payments.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">No payments submitted yet</td></tr>`; return; }
+  body.innerHTML = LIVE.payments.map(p => {
+    const badge = PAY_BADGE[p.status] || p.status;
+    const hasAccount = LIVE.customers.some(c => (c.email||"").toLowerCase() === (p.customer_email||"").toLowerCase());
+    return `
+    <tr>
+      <td><strong>${escH(bestName(p.customer_email, p.raw?.customerName))}</strong><br/><span class="cell-mono">${escH(p.customer_email)}</span></td>
+      <td>${escH(p.method)}</td>
+      <td class="cell-mono">${fmtMoney(payAmount(p))}</td>
+      <td class="cell-mono">${escH(p.reference||"—")}</td>
+      <td><span class="badge badge-${badge}">${escH(badge)}</span></td>
+      <td class="cell-mono">${fmtDate(p.created_at)}</td>
+      <td>
+        <button class="row-btn view" onclick="viewPayment('${p.id}')">View</button>
+        ${p.status==="pending_review" ? `<button class="row-btn approve" onclick="updatePaymentStatus('${p.id}','verified')">Verify</button><button class="row-btn reject" onclick="updatePaymentStatus('${p.id}','rejected')">Reject</button>` : ""}
+        ${p.status==="verified" && !hasAccount ? `<button class="row-btn approve" onclick="openCreateUser('${escH(p.customer_email)}','${escH(p.raw?.customerName||"")}','${escH(p.raw?.store||"")}')">Open Account</button>` : ""}
+      </td>
+    </tr>
+  `;}).join("");
+}
+
+function viewPayment(id) {
+  const p = LIVE.payments.find(x=>x.id===id);
+  if (!p) return;
+  const badge = PAY_BADGE[p.status] || p.status;
+  const hasAccount = LIVE.customers.some(c => (c.email||"").toLowerCase() === (p.customer_email||"").toLowerCase());
+  openModal("Payment Details", `
+    <div class="modal-field"><label>Customer</label><div class="val">${escH(bestName(p.customer_email, p.raw?.customerName))} — ${escH(p.customer_email)}</div></div>
+    <div class="modal-field"><label>Method</label><div class="val">${escH(p.method)}</div></div>
+    <div class="modal-field"><label>Amount</label><div class="val">${fmtMoney(payAmount(p))}</div></div>
+    <div class="modal-field"><label>Reference / Transaction ID</label><div class="val">${escH(p.reference||"Not provided")}</div></div>
+    <div class="modal-field"><label>Receipt</label><div class="val">${p.receipt_url ? `<span class="cell-mono">${escH(p.receipt_url)}</span>` : "Not uploaded"}</div></div>
+    <div class="modal-field"><label>Notes from customer</label><div class="val">${escH(p.raw?.notes||"—")}</div></div>
+    <div class="modal-field"><label>Status</label><div class="val"><span class="badge badge-${badge}">${escH(badge)}</span></div></div>
+    <div class="modal-field"><label>Submitted</label><div class="val">${fmtDate(p.created_at)}</div></div>
+    ${p.status==="pending_review" ? `
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="updatePaymentStatus('${p.id}','verified');closeModal()">✓ Verify Payment</button>
+      <button class="row-btn reject" style="flex:1;padding:10px" onclick="updatePaymentStatus('${p.id}','rejected');closeModal()">✕ Reject</button>
+    </div>` : ""}
+    ${p.status==="verified" && !hasAccount ? `
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="closeModal();openCreateUser('${escH(p.customer_email)}','${escH(p.raw?.customerName||"")}','${escH(p.raw?.store||"")}')">👤 Open Account for this Customer</button>
+    </div>` : ""}
+  `);
+}
+
+async function updatePaymentStatus(id, status) {
+  try {
+    await apiPost("/api/admin/update", { table: "payments", id, status });
+    toast(status === "verified" ? "✅ Payment verified" : "Payment rejected");
+    await refreshAll();
+    if (status === "verified") {
+      const p = LIVE.payments.find(x=>x.id===id);
+      const hasAccount = p && LIVE.customers.some(c => (c.email||"").toLowerCase() === (p.customer_email||"").toLowerCase());
+      if (p && !hasAccount) openCreateUser(p.customer_email, p.raw?.customerName || "", p.raw?.store || "");
+    }
+  } catch (e) { toast("✕ " + e.message); }
+}
+
+// ── Render: Broadcast Orders ────────────────────────────────────────────────────
+function renderOrders() {
+  const body = document.getElementById("orders-body");
+  if (!LIVE.broadcasts.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">No broadcast orders yet</td></tr>`; return; }
+  body.innerHTML = LIVE.broadcasts.map(o => {
+    const badge = BCAST_BADGE[o.status] || o.status;
+    return `
+    <tr>
+      <td><strong>${escH(bestName(o.customer_email, o.raw?.customerName))}</strong><br/><span class="cell-mono">${escH(o.customer_email)}</span></td>
+      <td><span class="badge badge-trial">${escH(o.raw?.listType||"—")}</span></td>
+      <td>${escH(o.audience || o.raw?.listName || "—")}</td>
+      <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(o.message)}</td>
+      <td><span class="badge badge-${badge}">${escH(badge)}</span></td>
+      <td class="cell-mono">${fmtDate(o.created_at)}</td>
+      <td>
+        <button class="row-btn view" onclick="viewOrder('${o.id}')">View</button>
+        ${o.status==="pending_review" ? `<button class="row-btn approve" onclick="updateOrderStatus('${o.id}','approved')">Approve</button><button class="row-btn reject" onclick="updateOrderStatus('${o.id}','rejected')">Reject</button>` : ""}
+        ${o.status==="approved" ? `<button class="row-btn approve" onclick="updateOrderStatus('${o.id}','sent')">Mark Sent</button>` : ""}
+      </td>
+    </tr>
+  `;}).join("");
+}
+
+function viewOrder(id) {
+  const o = LIVE.broadcasts.find(x=>x.id===id);
+  if (!o) return;
+  const badge = BCAST_BADGE[o.status] || o.status;
+  openModal("Broadcast Order Details", `
+    <div class="modal-field"><label>Customer</label><div class="val">${escH(bestName(o.customer_email, o.raw?.customerName))} — ${escH(o.customer_email)}</div></div>
+    <div class="modal-field"><label>List Type</label><div class="val">${escH(o.raw?.listType||"—")}</div></div>
+    <div class="modal-field"><label>Audience / List</label><div class="val">${escH(o.audience || o.raw?.listName || "—")}</div></div>
+    <div class="modal-field"><label>Contacts</label><div class="val" style="white-space:pre-wrap;max-height:140px;overflow-y:auto">${escH(o.raw?.listContacts||"(house list — managed separately)")}</div></div>
+    <div class="modal-field"><label>Message</label><div class="val" style="white-space:pre-wrap">${escH(o.message)}</div></div>
+    <div class="modal-field"><label>Scheduled for</label><div class="val">${o.scheduled_for ? fmtDate(o.scheduled_for) : "ASAP"}</div></div>
+    <div class="modal-field"><label>Status</label><div class="val"><span class="badge badge-${badge}">${escH(badge)}</span></div></div>
+    <div class="modal-field"><label>Submitted</label><div class="val">${fmtDate(o.created_at)}</div></div>
+    ${o.status==="pending_review" ? `
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="updateOrderStatus('${o.id}','approved');closeModal()">✓ Approve Order</button>
+      <button class="row-btn reject" style="flex:1;padding:10px" onclick="updateOrderStatus('${o.id}','rejected');closeModal()">✕ Reject</button>
+    </div>` : ""}
+    ${o.status==="approved" ? `
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="updateOrderStatus('${o.id}','sent');closeModal()">✓ Mark as Sent via WhatsApp</button>
+    </div>` : ""}
+  `);
+}
+
+async function updateOrderStatus(id, status) {
+  try {
+    await apiPost("/api/admin/update", { table: "broadcast_orders", id, status });
+    toast(`Order marked as ${status}`);
+    await refreshAll();
+  } catch (e) { toast("✕ " + e.message); }
+}
+
+// ── Mailing List Manager — segments CRUD ───────────────────────────────────────
+let segSource = "paste"; // 'paste' | 'upload'
+let segUploadedText = "";
+
+function refreshCategoryOptions() {
+  const type = document.getElementById("seg-type").value;
+  const catSelect = document.getElementById("seg-category");
+  const cats = AdminData.SEGMENT_CATEGORIES[type] || [];
+  catSelect.innerHTML = cats.map(c => `<option value="${c.key}">${escH(c.label)} — ${escH(c.sub)}</option>`).join("");
+}
+
+function selectSegSource(btn) {
+  segSource = btn.dataset.v;
+  document.querySelectorAll(".mlm-tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("seg-paste-panel").style.display = segSource === "paste" ? "block" : "none";
+  document.getElementById("seg-upload-panel").style.display = segSource === "upload" ? "block" : "none";
+}
+
+function handleSegFileUpload(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const zone = document.getElementById("seg-upload-zone");
+  const label = document.getElementById("seg-file-label");
+  const preview = document.getElementById("seg-upload-preview");
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    segUploadedText = e.target.result;
+    const parsed = AdminData.parseContactsText(segUploadedText);
+    zone.classList.add("has-file");
+    label.innerHTML = `<strong>✓ ${escH(file.name)}</strong> uploaded — click to change`;
+    preview.style.display = "block";
+    preview.textContent = `Parsed ${parsed.count} contact line(s) from file.`;
+  };
+  reader.readAsText(file);
+}
+
+function submitNewSegment() {
+  const name = document.getElementById("seg-name").value.trim();
+  const type = document.getElementById("seg-type").value;
+  const category = document.getElementById("seg-category").value;
+  const notes = document.getElementById("seg-notes").value.trim();
+
+  if (!name) { toast("⚠ Please enter a list name"); return; }
+
+  let contactsText = "", source = "Manually entered";
+  if (segSource === "paste") {
+    contactsText = document.getElementById("seg-contacts").value.trim();
+    if (!contactsText) { toast("⚠ Please paste at least one contact"); return; }
+  } else {
+    if (!segUploadedText) { toast("⚠ Please upload a file first"); return; }
+    contactsText = segUploadedText;
+    source = "CSV upload: " + (document.getElementById("seg-file").files[0]?.name || "uploaded file");
+  }
+
+  const parsed = AdminData.parseContactsText(contactsText);
+  const cats = AdminData.SEGMENT_CATEGORIES[type] || [];
+  const catMeta = cats.find(c => c.key === category);
+
+  AdminData.addSegment({
+    id: "seg_" + Math.random().toString(36).slice(2,9),
+    name, type, category,
+    categoryLabel: catMeta ? catMeta.label : category,
+    count: parsed.count,
+    contacts: parsed.contacts,
+    notes, source,
+    addedAt: Date.now(),
+  });
+
+  // Reset form
+  document.getElementById("seg-name").value = "";
+  document.getElementById("seg-notes").value = "";
+  document.getElementById("seg-contacts").value = "";
+  segUploadedText = "";
+  document.getElementById("seg-upload-zone").classList.remove("has-file");
+  document.getElementById("seg-file-label").innerHTML = "<strong>Click to upload</strong> a .csv or .txt file — one contact per line";
+  document.getElementById("seg-upload-preview").style.display = "none";
+
+  toast(`✅ Added "${name}" — ${parsed.count} contacts`);
+  renderSegments();
+}
+
+function renderSegments() {
+  const db = AdminData.load();
+  const q = (document.getElementById("segment-search")?.value || "").toLowerCase();
+  const body = document.getElementById("segments-body");
+  const rows = db.segments.filter(s => !q || s.name.toLowerCase().includes(q));
+
+  if (!rows.length) { body.innerHTML = `<tr><td colspan="7" class="empty-state">No mailing lists yet — add one above</td></tr>`; return; }
+
+  body.innerHTML = rows.slice().reverse().map(s => `
+    <tr>
+      <td><strong>${escH(s.name)}</strong>${s.notes ? `<br/><span style="color:var(--t3);font-size:11px">${escH(s.notes)}</span>` : ""}</td>
+      <td><span class="badge badge-trial">${escH(s.type)}</span></td>
+      <td><span class="cat-pill">${escH(s.categoryLabel || s.category)}</span></td>
+      <td class="cell-mono">${s.count}</td>
+      <td class="cell-mono" style="font-size:10.5px">${escH(s.source||"—")}</td>
+      <td class="cell-mono">${fmtDate(s.addedAt)}</td>
+      <td>
+        <button class="row-btn view" onclick="viewSegment('${s.id}')">View</button>
+        <button class="row-btn" onclick="editSegment('${s.id}')">Edit</button>
+        <button class="row-btn reject" onclick="deleteSegmentConfirm('${s.id}')">Delete</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function viewSegment(id) {
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  if (!s) return;
+  openModal(s.name, `
+    <div class="modal-field"><label>Type / Category</label><div class="val">${escH(s.type)} — ${escH(s.categoryLabel||s.category)}</div></div>
+    <div class="modal-field"><label>Notes</label><div class="val">${escH(s.notes||"—")}</div></div>
+    <div class="modal-field"><label>Source</label><div class="val">${escH(s.source||"—")}</div></div>
+    <div class="modal-field"><label>Contacts (${s.count})</label><div class="val" style="white-space:pre-wrap;max-height:240px;overflow-y:auto;font-family:var(--mono);font-size:12px">${escH(s.contacts||"(no contact data stored)")}</div></div>
+  `);
+}
+
+function editSegment(id) {
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  if (!s) return;
+  const cats = AdminData.SEGMENT_CATEGORIES[s.type] || [];
+  openModal("Edit: " + s.name, `
+    <div class="modal-field"><label>List Name</label><input type="text" class="val" id="edit-seg-name" value="${escH(s.name)}" style="width:100%;border:1px solid var(--border);background:var(--bg2);color:var(--t1);padding:10px;border-radius:7px;font-size:13px"/></div>
+    <div class="modal-field"><label>Category</label>
+      <select id="edit-seg-category" style="width:100%;border:1px solid var(--border);background:var(--bg2);color:var(--t1);padding:10px;border-radius:7px;font-size:13px">
+        ${cats.map(c => `<option value="${c.key}" ${c.key===s.category?"selected":""}>${escH(c.label)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="modal-field"><label>Notes</label><input type="text" id="edit-seg-notes" value="${escH(s.notes||"")}" style="width:100%;border:1px solid var(--border);background:var(--bg2);color:var(--t1);padding:10px;border-radius:7px;font-size:13px"/></div>
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="saveSegmentEdit('${s.id}')">✓ Save Changes</button>
+    </div>
+  `);
+}
+
+function saveSegmentEdit(id) {
+  const name = document.getElementById("edit-seg-name").value.trim();
+  const category = document.getElementById("edit-seg-category").value;
+  const notes = document.getElementById("edit-seg-notes").value.trim();
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  const cats = AdminData.SEGMENT_CATEGORIES[s.type] || [];
+  const catMeta = cats.find(c => c.key === category);
+  AdminData.updateSegment(id, { name, category, categoryLabel: catMeta?catMeta.label:category, notes });
+  toast("✅ List updated");
+  closeModal();
+  renderSegments();
+}
+
+function deleteSegmentConfirm(id) {
+  const db = AdminData.load();
+  const s = db.segments.find(x=>x.id===id);
+  if (!s) return;
+  openModal("Delete List?", `
+    <p style="font-size:13.5px;line-height:1.6;margin-bottom:20px">Are you sure you want to delete <strong>${escH(s.name)}</strong>? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="row-btn reject" style="flex:1;padding:10px" onclick="AdminData.deleteSegment('${id}');closeModal();renderSegments();toast('List deleted')">Delete Permanently</button>
+    </div>
+  `);
+}
+
+// ── Render: Customer-Submitted Lists (unchanged read-only view) ────────────────
+function renderCustomerSubmittedLists() {
+  const db = AdminData.load();
+  const custEl = document.getElementById("customer-lists");
+  custEl.innerHTML = db.customerLists.length ? db.customerLists.map(l => `
+    <div class="list-card">
+      <div class="list-icon">📥</div>
+      <div class="list-info">
+        <div class="list-name">${escH(l.name)} <span style="color:var(--t3);font-weight:400">— submitted by ${escH(l.submittedBy)}</span></div>
+        <div class="list-meta">${escH(l.type)} • ${l.count} contacts • ${fmtDate(l.addedAt)}</div>
+      </div>
+      <button class="row-btn view" onclick="viewCustomerList('${l.id}')">View Contacts</button>
+    </div>
+  `).join("") : `<div class="empty-state">No customer-submitted lists yet</div>`;
+}
+
+function renderLists() {
+  refreshCategoryOptions();
+  renderSegments();
+  renderCustomerSubmittedLists();
+}
+
+function viewCustomerList(id) {
+  const db = AdminData.load();
+  const l = db.customerLists.find(x=>x.id===id);
+  if (!l) return;
+  openModal(l.name, `
+    <div class="modal-field"><label>Submitted By</label><div class="val">${escH(l.submittedBy)}</div></div>
+    <div class="modal-field"><label>List Type</label><div class="val">${escH(l.type)}</div></div>
+    <div class="modal-field"><label>Contacts (${l.count})</label><div class="val" style="white-space:pre-wrap;max-height:240px;overflow-y:auto;font-family:var(--mono);font-size:12px">${escH(l.contacts)}</div></div>
+  `);
+}
+
+// ── Channel Setup (Twilio) ──────────────────────────────────────────────────────
+async function renderChannelSetup() {
+  const origin = window.location.origin;
+  document.getElementById("chan-url-wa").textContent = `${origin}/api/twilio/whatsapp`;
+  document.getElementById("chan-url-sms").textContent = `${origin}/api/twilio/sms`;
+  document.getElementById("chan-url-voice").textContent = `${origin}/api/twilio/voice`;
+
+  // Best-effort status check — calls a lightweight status endpoint that reports
+  // which env vars are set, WITHOUT exposing their actual values.
+  try {
+    const res = await fetch("/api/twilio/status");
+    const data = await res.json();
+    const dot = document.getElementById("chan-dot-wa");
+    const status = document.getElementById("chan-status-wa");
+    if (data.waConfigured) {
+      dot.classList.add("live"); dot.classList.remove("off");
+      status.textContent = "WhatsApp channel configured";
+    } else {
+      dot.classList.add("off"); dot.classList.remove("live");
+      status.textContent = "WhatsApp channel not yet configured";
+    }
+    document.getElementById("env-sid").textContent = data.sidSet ? "✓ Set" : "✕ Missing";
+    document.getElementById("env-token").textContent = data.tokenSet ? "✓ Set" : "✕ Missing";
+    document.getElementById("env-wa").textContent = data.waSet ? "✓ Set" : "✕ Missing";
+    document.getElementById("env-sms").textContent = data.smsSet ? "✓ Set" : "✕ Missing";
+  } catch {
+    document.getElementById("chan-status-wa").textContent = "Could not check status — verify manually in Vercel";
   }
 }
 
-function updateTabs() {
-  document.querySelectorAll(".slider-tabs button").forEach((btn, i) => {
-    btn.classList.toggle("active", i === currentSlide);
-  });
+async function sendTestMessage() {
+  const channel = document.getElementById("test-channel").value;
+  const to = document.getElementById("test-to").value.trim();
+  const message = document.getElementById("test-message").value.trim() || "This is a test message from CartChat via Twilio.";
+  const resultEl = document.getElementById("test-result");
+
+  if (!to) { resultEl.textContent = "⚠ Enter a phone number first"; resultEl.style.color = "var(--amber)"; return; }
+
+  resultEl.textContent = "Sending…";
+  resultEl.style.color = "var(--t2)";
+  try {
+    const res = await fetch("/api/twilio/send", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ channel, to, message })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Send failed");
+    resultEl.textContent = `✓ Sent — Twilio SID: ${data.sid} (status: ${data.status})`;
+    resultEl.style.color = "var(--green)";
+  } catch (e) {
+    resultEl.textContent = "✕ " + e.message;
+    resultEl.style.color = "var(--red)";
+  }
 }
 
-function applySlide() {
-  document.getElementById("sliderTrack").style.transform = `translateX(-${currentSlide * 100}%)`;
-  buildDots();
-  updateTabs();
+// ── Open Account (create merchant user) ────────────────────────────────────────
+function openCreateUser(email = "", name = "", store = "") {
+  openModal("Open Customer Account", `
+    <div class="modal-field"><label>Full name *</label><div class="val" style="padding:0"><input type="text" id="nu-name" value="${escH(name)}" style="width:100%;background:transparent;border:none;color:inherit;font:inherit;padding:10px" placeholder="e.g. Rania Khoury"/></div></div>
+    <div class="modal-field"><label>Email (their login) *</label><div class="val" style="padding:0"><input type="email" id="nu-email" value="${escH(email)}" style="width:100%;background:transparent;border:none;color:inherit;font:inherit;padding:10px" placeholder="customer@store.com"/></div></div>
+    <div class="modal-field"><label>Store name</label><div class="val" style="padding:0"><input type="text" id="nu-store" value="${escH(store)}" style="width:100%;background:transparent;border:none;color:inherit;font:inherit;padding:10px" placeholder="e.g. Lumière Beauty"/></div></div>
+    <div class="modal-field"><label>Phone (WhatsApp)</label><div class="val" style="padding:0"><input type="text" id="nu-phone" style="width:100%;background:transparent;border:none;color:inherit;font:inherit;padding:10px" placeholder="+961 70 123 456"/></div></div>
+    <div class="modal-field"><label>Plan</label><div class="val" style="padding:0"><select id="nu-plan" style="width:100%;background:transparent;border:none;color:inherit;font:inherit;padding:10px"><option value="starter">Starter</option><option value="growth">Growth</option><option value="scale">Scale</option><option value="trial">Trial</option></select></div></div>
+    <div style="font-size:12px;color:var(--t3);margin:8px 0 4px">A strong temporary password is generated automatically — you'll see it once after creation. Share it with the customer; they log in at <span class="cell-mono">/pages/login.html</span>.</div>
+    <div class="modal-actions">
+      <button class="row-btn approve" style="flex:1;padding:10px" onclick="createUserSubmit()">👤 Create Account</button>
+    </div>
+    <div id="nu-result" style="margin-top:10px;font-size:12.5px"></div>
+  `);
 }
 
-function slideTo(n) {
-  currentSlide = Math.max(0, Math.min(n, totalSlides - 1));
-  applySlide();
+async function createUserSubmit() {
+  const name  = document.getElementById("nu-name").value.trim();
+  const email = document.getElementById("nu-email").value.trim();
+  const store = document.getElementById("nu-store").value.trim();
+  const phone = document.getElementById("nu-phone").value.trim();
+  const plan  = document.getElementById("nu-plan").value;
+  const out   = document.getElementById("nu-result");
+  if (!name || !email) { out.textContent = "✕ Name and email are required"; out.style.color = "var(--red)"; return; }
+  out.textContent = "Creating account…"; out.style.color = "var(--t2)";
+  try {
+    const res = await apiPost("/api/admin/users/create", { name, email, store, phone, plan });
+    out.style.color = "var(--green)";
+    out.innerHTML = `✓ Account created for <strong>${escH(email)}</strong><br/>Temporary password: <span class="cell-mono" style="user-select:all;font-size:14px">${escH(res.temporaryPassword)}</span><br/><span style="color:var(--t3)">Copy it now — it won't be shown again. Send it to the customer with the login link.</span>`;
+    await refreshAll();
+  } catch (e) { out.textContent = "✕ " + e.message; out.style.color = "var(--red)"; }
 }
 
-function slideMove(dir) {
-  slideTo(currentSlide + dir);
+// ── Change Plan ────────────────────────────────────────────────────────────────
+function openChangePlan(userId, currentPlan, name) {
+  openModal("Change Plan — " + name, `
+    <div class="modal-field"><label>Plan</label><div class="val" style="padding:0">
+      <select id="cp-plan" style="width:100%;background:transparent;border:none;color:inherit;font:inherit;padding:10px">
+        ${["trial","starter","growth","scale"].map(p=>`<option value="${p}" ${p===currentPlan?"selected":""}>${p}</option>`).join("")}
+      </select></div></div>
+    <div class="modal-actions"><button class="row-btn approve" style="flex:1;padding:10px" onclick="changePlanSubmit('${userId}')">Save Plan</button></div>
+  `);
+}
+async function changePlanSubmit(userId) {
+  try {
+    await apiPost("/api/admin/update", { table: "profiles", id: userId, plan: document.getElementById("cp-plan").value });
+    toast("Plan updated"); closeModal(); await refreshAll();
+  } catch (e) { toast("✕ " + e.message); }
 }
 
-// Keyboard navigation
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowLeft") slideMove(-1);
-  if (e.key === "ArrowRight") slideMove(1);
-});
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function refreshAll() {
+  await loadLiveData();
+  renderOverview(); renderCustomers(); renderPayments(); renderOrders();
+}
 
-// Touch/swipe support
-let touchStartX = 0;
-const track = document.getElementById("sliderTrack");
-track.addEventListener("touchstart", e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-track.addEventListener("touchend", e => {
-  const diff = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 40) slideMove(diff > 0 ? 1 : -1);
-});
-
-// Auto-advance every 5 seconds
-let autoPlay = setInterval(() => slideMove(1), 8000);
-track.addEventListener("touchstart", () => clearInterval(autoPlay), { passive: true });
-document.querySelectorAll(".slider-arrow, .slider-tabs button").forEach(el => {
-  el.addEventListener("click", () => { clearInterval(autoPlay); });
-});
-
-// Init
-buildDots();
-updateTabs();
+(async () => {
+  try {
+    await refreshAll();
+  } catch (e) {
+    toast("✕ Could not load live data: " + e.message);
+    document.getElementById("activity-feed").innerHTML =
+      `<div class="empty-state">Could not load data from the server — check that the Supabase environment variables are set and that your account has the admin role.<br/><span class="cell-mono">${escH(e.message)}</span></div>`;
+  }
+  renderLists(); // contact lists/segments — still local, per data.js
+  setInterval(() => refreshAll().catch(()=>{}), 60000); // auto-refresh every minute
+})();
 </script>
 </body>
 </html>
